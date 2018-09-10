@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-">
+    <title th:text="${userModel.title}">users : view</title>
+    <!--<link rel="icon" href="/favicon.ico" type="image/x-icon" />-->
+    <link rel="icon" href="/static/icon.ico" type="image/x-icon"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<h1>你好啊 啊动态加载 </h1>
+</body>
+</html>
