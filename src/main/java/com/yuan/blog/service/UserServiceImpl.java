@@ -16,10 +16,11 @@ public class UserServiceImpl implements UserService {
     private final ConcurrentMap<Long, User> userMap = new ConcurrentHashMap<Long, User>();
 
     public UserServiceImpl(){
-        User user = new User();
-        user.setAge(30);
-        user.setName("Way Lau");
-        this.saveOrUpateUser(user);
+        // 创建默认值
+//        User user = new User();
+//        user.setAge(30);
+//        user.setName("milo");
+//        this.saveOrUpateUser(user);
     }
 
     /* (non-Javadoc)
