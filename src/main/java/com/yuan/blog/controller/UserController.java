@@ -67,9 +67,6 @@ public class UserController {
 
 	/**
 	 * 新建用户
-	 * @param user
-	 * @param user
-	 * @return
 	 */
 	@PostMapping
 	public ModelAndView create(User user) {
@@ -79,8 +76,6 @@ public class UserController {
 
 	/**
 	 * 删除用户
-	 * @param id
-	 * @return
 	 */
 	@GetMapping(value = "delete/{id}")
 	public ModelAndView delete(@PathVariable("id") Long id, Model model) {
@@ -88,12 +83,12 @@ public class UserController {
  
 		model.addAttribute("userList", getUserlist());
 		model.addAttribute("title", "删除用户");
+		// 删除完 跳转list页面
 		return new ModelAndView("users/list", "userModel", model);
 	}
 
 	/**
 	 * 修改用户
-	 * @param id  model
 	 */
 	@GetMapping(value = "modify/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") Long id, Model model) {

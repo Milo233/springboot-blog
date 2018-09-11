@@ -4,32 +4,32 @@
 <head>
     <meta charset="UTF-">
     <title th:text="${userModel.title}">users : view</title>
-    <link rel="icon" href="/static/icon.ico" type="image/x-icon"/>
+    <!-- 引入静态资源 static下的 图片 -->
+    <link rel="icon" href="../icon.ico" type="image/x-icon"/>
 </head>
 <body>
 <!-- 引入头部-->
 <div th:replace="~{fragments/header :: header}"></div>
 <h2 th:text="${userModel.title}">hello world</h2>
 <div>
-    <a href="/users/form.html">创建用户</a>
+    <a href="/users/form" style="color: red">创建用户</a>
 </div>
-<table border="1">
+<table border="1" cellspacing="0">
     <thead>
         <tr>
-            <td>ID</td>
-            <td>Age</td>
-            <td>Name</td>
+            <td style="width: 160px">ID</td>
+            <td style="width: 160px">Age</td>
+            <td style="width: 160px">Name</td>
         </tr>
     </thead>
     <tbody>
-    <!--  todo  未完待续 -->
         <tr th:if="${userModel.userList.size()}  eq 0">
             <td colspan="3"> no user info</td>
         </tr>
         <tr th:each="user : ${userModel.userList}">
-            <td th:text="${user.id}">1</td>
+            <td th:text="${user.id}" >1</td>
             <td th:text="${user.age}">1</td>
-            <td><a href="view:html" th:href="@{'/user/' + ${user.id}}"
+            <td><a href="view:html" th:href="@{'/users/' + ${user.id}}"
                 th:text="${user.name}">milo</a></td>
         </tr>
     </tbody>
@@ -37,6 +37,5 @@
 
 <!-- 引入footer-->
 <div th:replace="~{fragments/footer :: footer}"></div>
-<h1>你好啊 啊动态加载 </h1>
 </body>
 </html>
