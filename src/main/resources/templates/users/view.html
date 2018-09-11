@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-">
+    <title th:text="${userModel.title}">users : view</title>
+    <link rel="icon" href="/static/icon.ico" type="image/x-icon"/>
+</head>
+<body>
+    <!-- 引入头部-->
+    <div th:replace="~{fragments/header :: header}"></div>
+    <h2 th:text="${userModel.title}">hello world</h2>
+    <div>
+        <a href="/users/form">创建用户</a>
+    </div>
+
+    <div th:each="user : ${userModel.user}">
+        Name:<span th:text="${user.name}"></span><br>
+        age:<span th:text="${user.age}"></span><br>
+        <a href="view:html" th:href="@{'/users/delete/' + ${user.id}}">删除</a>
+        <a href="view:html" th:href="@{'/users/modify/' + ${user.id}}">修改</a>
+    </div>
+
+    <!-- 引入footer-->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
