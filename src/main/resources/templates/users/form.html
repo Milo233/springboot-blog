@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <h2 th:text="${userModel.title}">hello world</h2>
 <div>
-    <a href="/user">返回主页</a>
+    <a href="/users">返回主页</a>
 </div>
 
 <form action="/users" method="POST" th:object="${userModel.user}">
@@ -25,6 +25,5 @@
 
 <!-- 引入footer-->
 <div th:replace="~{fragments/footer :: footer}"></div>
-<h1>你好啊 啊动态加载 </h1>
 </body>
 </html>
