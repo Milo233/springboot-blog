@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 用户控制器.
@@ -26,7 +27,8 @@ public class UserController {
 	 * @return
 	 */
 	private List<User> getUserlist() {
- 		return userService.listUser();
+// 		return userService.listUser();
+		return null;
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class UserController {
 	 */
 	@GetMapping
 	public ModelAndView list(Model model) {
-		model.addAttribute("userList", getUserlist());
+		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("title", "用户管理");
 		return new ModelAndView("users/list", "userModel", model);
 	}
@@ -47,7 +49,8 @@ public class UserController {
 	 */
 	@GetMapping("{id}")
 	public ModelAndView view(@PathVariable("id") Long id, Model model) {
-		User user = userService.getUserById(id);
+		// 早期版本是 getOne()
+		User user = userService.findById(id).get();
 		model.addAttribute("user", user);
 		model.addAttribute("title", "查看用户");
 		return new ModelAndView("users/view", "userModel", model);
@@ -60,7 +63,7 @@ public class UserController {
 	 */
 	@GetMapping("/form")
 	public ModelAndView createForm(Model model) {
-		model.addAttribute("user", new User());
+		model.addAttribute("user", new User(null,null));
 		model.addAttribute("title", "创建用户");
 		return new ModelAndView("users/form", "userModel", model);
 	}
@@ -70,7 +73,7 @@ public class UserController {
 	 */
 	@PostMapping
 	public ModelAndView create(User user) {
- 		user = userService.saveOrUpateUser(user);
+ 		userService.save(user);
 		return new ModelAndView("redirect:/users");
 	}
 
@@ -79,9 +82,9 @@ public class UserController {
 	 */
 	@GetMapping(value = "delete/{id}")
 	public ModelAndView delete(@PathVariable("id") Long id, Model model) {
-		userService.deleteUser(id);
+		userService.deleteById(id);
  
-		model.addAttribute("userList", getUserlist());
+		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("title", "删除用户");
 		// 删除完 跳转list页面
 		return new ModelAndView("users/list", "userModel", model);
@@ -92,7 +95,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "modify/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") Long id, Model model) {
-		User user = userService.getUserById(id);
+		User user = userService.findById(id).get();
  
 		model.addAttribute("user", user);
 		model.addAttribute("title", "修改用户");
