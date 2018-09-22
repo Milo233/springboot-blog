@@ -9,9 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 @Repository
-public class UserServiceImpl implements UserService {
-
-    private static AtomicLong counter = new AtomicLong();
+public class UserServiceImpl {
+//public class UserServiceImpl implements UserService {
+    // 原来是实现UserService 要重写service方法。改成jpa的以后有自动实现的基础方法
+    /*private static AtomicLong counter = new AtomicLong();
 
     private final ConcurrentMap<Long, User> userMap = new ConcurrentHashMap<Long, User>();
 
@@ -23,9 +24,9 @@ public class UserServiceImpl implements UserService {
 //        this.saveOrUpateUser(user);
     }
 
-    /* (non-Javadoc)
+    *//* (non-Javadoc)
      * @see com.waylau.spring.boot.thymeleaf.repository.UserRepository#saveUser(com.waylau.spring.boot.thymeleaf.vo.UserVO)
-     */
+     *//*
     @Override
     public User saveOrUpateUser(User user) {
         Long id = user.getId();
@@ -37,27 +38,27 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    /* (non-Javadoc)
+    *//* (non-Javadoc)
      * @see com.waylau.spring.boot.thymeleaf.repository.UserRepository#deleteUser(java.lang.Long)
-     */
+     *//*
     @Override
     public void deleteUser(Long id) {
         this.userMap.remove(id);
     }
 
-    /* (non-Javadoc)
+    *//* (non-Javadoc)
      * @see com.waylau.spring.boot.thymeleaf.repository.UserRepository#getUserById(java.lang.Long)
-     */
+     *//*
     @Override
     public User getUserById(Long id) {
         return this.userMap.get(id);
     }
 
-    /* (non-Javadoc)
+    *//* (non-Javadoc)
      * @see com.waylau.spring.boot.thymeleaf.repository.UserRepository#listUser()
-     */
+     *//*
     @Override
     public List<User> listUser() {
         return new ArrayList<User>(this.userMap.values());
-    }
+    }*/
 }
