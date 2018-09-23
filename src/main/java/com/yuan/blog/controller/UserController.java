@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 用户控制器.
@@ -50,7 +49,7 @@ public class UserController {
 	@GetMapping("{id}")
 	public ModelAndView view(@PathVariable("id") Long id, Model model) {
 		// 早期版本是 getOne()
-		User user = userService.findById(id).get();
+		User user = userService.findOne(id);
 		model.addAttribute("user", user);
 		model.addAttribute("title", "查看用户");
 		return new ModelAndView("users/view", "userModel", model);
@@ -82,7 +81,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "delete/{id}")
 	public ModelAndView delete(@PathVariable("id") Long id, Model model) {
-		userService.deleteById(id);
+		userService.delete(id);
  
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("title", "删除用户");
@@ -95,7 +94,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "modify/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") Long id, Model model) {
-		User user = userService.findById(id).get();
+		User user = userService.findOne(id);
  
 		model.addAttribute("user", user);
 		model.addAttribute("title", "修改用户");

@@ -1,6 +1,7 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.4.RELEASE'
+//		springBootVersion = '2.0.4.RELEASE'
+		springBootVersion = '1.5.2.RELEASE'
 	}
 
 	// 自定义  Hibernate 的版本
@@ -27,6 +28,12 @@ repositories {
 	mavenCentral()
 }
 
+// 打包的类型为 jar，并指定了生成的打包的文件名称和版本
+jar {
+	baseName = 'elasticsearch'
+	version = '1.0.0'
+}
+
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -38,7 +45,15 @@ dependencies {
 	// 添加 MySQL连接驱动 的依赖 运行时的 不配置DataSource 启动会报错
 	compile('mysql:mysql-connector-java:6.0.5')
 
+	// 添加  Spring Data Elasticsearch 的依赖
+	compile('org.springframework.boot:spring-boot-starter-data-elasticsearch')
+
+	// 添加  JNA 的依赖
+	compile('net.java.dev.jna:jna:4.3.0')
+
 	runtime('com.h2database:h2:1.4.193')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+// 添加完依赖后可以去根目录下运行下面的，
+// .\gradlew bootRun // 检查是否有冲突
