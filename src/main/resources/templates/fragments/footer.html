@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>Milo's Blog</title>
 </head>
 <body>
-<div th:fragment="footer">
-    <a href="https://www.baidu.com">I am 页脚</a>
-</div>
+<footer class="blog-footer" data-th-fragment="footer">
+    <p>Welcome to <a href="https://waylau.com">milo.com</a></p>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../js/jquery-3.1.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+</footer>
 </body>
 </html>

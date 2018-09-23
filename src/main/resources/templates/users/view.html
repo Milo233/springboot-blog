@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8"/>
-    <title th:text="${userModel.title}">users : view</title>
-    <link rel="icon" href="/static/icon.ico" type="image/x-icon"/>
-</head>
+<head th:replace="fragments/header :: header"></head>
 <body>
-    <!-- 引入头部-->
-    <!--<div th:replace="~{fragments/header :: header}"></div>-->
-    <h2 th:text="${userModel.title}">hello world</h2>
-    <div>
-        <a href="/users/form">创建用户</a>
-    </div>
+    <div class="container">
+        <div class="row">
+            <h2 th:text="${userModel.title}">Welcome to waylau.com</h2>
+        </div><!-- /.row -->
+        <div class="row">
+            <p>
+                <a class="btn btn-primary" href="/users" role="button">返回</a>
+            </p>
+        </div><!-- /.row -->
+        <div class="row">
+            <p class="text-left"><strong>ID:</strong><span id="id" th:text="${userModel.user.id}">123</span></p>
+        </div><!-- /.row -->
+        <div class="row">
+            <p class="text-left"><strong>Name:</strong><span id="name" th:text="${userModel.user.name}">waylau</span></p>
+        </div><!-- /.row -->
+        <div class="row">
+            <p class="text-left"><strong>Age:</strong><span id="age" th:text="${userModel.user.age}">30</span></p>
+        </div><!-- /.row -->
 
-    <div th:each="user : ${userModel.user}">
-        Name:<span th:text="${user.name}"></span><br/>
-        age:<span th:text="${user.age}"></span><br/>
-        <a href="view:html" th:href="@{'/users/delete/' + ${user.id}}">删除</a>
-        <a href="view:html" th:href="@{'/users/modify/' + ${user.id}}">修改</a>
-    </div>
-
-    <!-- 引入footer-->
-    <!--<div th:replace="~{fragments/footer :: footer}"></div>-->
+        <div class="row">
+            <a th:href="@{'/users/delete/' + ${userModel.user.id}}">删除 </a>
+            | <a th:href="@{'/users/modify/' + ${userModel.user.id}}">修改</a>
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+    <div th:replace="fragments/footer :: footer">...</div>
 </body>
 </html>
