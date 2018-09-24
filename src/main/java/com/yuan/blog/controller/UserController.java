@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * 用户控制器.
- * @author <a href="https://waylau.com">Way Lau</a>
- * @date 2017年2月26日
  */
 @RestController
 @RequestMapping("/users")
@@ -36,10 +34,18 @@ public class UserController {
 	 */
 	@GetMapping
 	public ModelAndView list(Model model) {
-
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("title", "用户管理");
 		return new ModelAndView("users/list", "userModel", model);
+	}
+
+	/**
+	 * 查询所用用户
+	 *  todo 要改么。。
+	 */
+	@GetMapping("/version2")
+	public ModelAndView list2() {
+		return new ModelAndView("users/list");
 	}
  
 	/**

@@ -21,6 +21,13 @@ public class BlogController {
     private EsBlogService esBlogService;
 
     @GetMapping
+    public String listBlogs(@RequestParam(value="order",required=false,defaultValue="new") String order,
+                            @RequestParam(value="tag",required=false) Long tag) {
+        System.out.print("order:" +order + ";tag:" +tag );
+        return "redirect:/index?order="+order+"&tag="+tag;
+    }
+
+/*    @GetMapping
     public List<EsBlog> list(@RequestParam(value="summary",required=false,defaultValue="") String summary,
                              @RequestParam(value="content",required=false,defaultValue="") String content,
                              @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
@@ -29,7 +36,7 @@ public class BlogController {
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<EsBlog> page = esBlogService.findBySummaryLikeOrContentLike(summary, content, pageable);
         return page.getContent();
-    }
+    }*/
 }
 
 
