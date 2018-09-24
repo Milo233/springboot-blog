@@ -36,6 +36,7 @@ public class UserController {
 	 */
 	@GetMapping
 	public ModelAndView list(Model model) {
+
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("title", "用户管理");
 		return new ModelAndView("users/list", "userModel", model);
@@ -49,7 +50,7 @@ public class UserController {
 	@GetMapping("{id}")
 	public ModelAndView view(@PathVariable("id") Long id, Model model) {
 		// 早期版本是 getOne()
-		User user = userService.findOne(id);
+		User user = userService.findById(id).get();
 		model.addAttribute("user", user);
 		model.addAttribute("title", "查看用户");
 		return new ModelAndView("users/view", "userModel", model);
@@ -81,7 +82,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "delete/{id}")
 	public ModelAndView delete(@PathVariable("id") Long id, Model model) {
-		userService.delete(id);
+		userService.deleteById(id);
  
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("title", "删除用户");
@@ -94,7 +95,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "modify/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") Long id, Model model) {
-		User user = userService.findOne(id);
+		User user = userService.findById(id).get();
  
 		model.addAttribute("user", user);
 		model.addAttribute("title", "修改用户");
