@@ -16,7 +16,7 @@ public class UserspaceController {
 	@GetMapping("/{username}")
 	public String userSpace(@PathVariable("username") String username) {
 		System.out.println("username" + username);
-		return "u";
+		return "/userspace/u";
 	}
  
 	@GetMapping("/{username}/blogs")
@@ -29,31 +29,31 @@ public class UserspaceController {
 			
 			System.out.print("category:" +category );
 			System.out.print("selflink:" + "redirect:/u/"+ username +"/blogs?category="+category);
-			return "/u";
+			return "/userspace/u";
 			
 		} else if (keyword != null && keyword.isEmpty() == false) {
 			
 			System.out.print("keyword:" +keyword );
 			System.out.print("selflink:" + "redirect:/u/"+ username +"/blogs?keyword="+keyword);
-			return "/u";
+			return "/userspace/u";
 		}  
 		
 		System.out.print("order:" +order);
 		System.out.print("selflink:" + "redirect:/u/"+ username +"/blogs?order="+order);
-		return "/u";
+		return "/userspace/u";
 	}
 	
 	@GetMapping("/{username}/blogs/{id}")
 	public String listBlogsByOrder(@PathVariable("id") Long id) {
 		 
 		System.out.print("blogId:" + id);
-		return "/blog";
+		return "/userspace/blog";
 	}
 	
 	
 	@GetMapping("/{username}/blogs/edit")
 	public String editBlog() {
  
-		return "/blogedit";
+		return "/userspace/blogedit";
 	}
 }

@@ -24,15 +24,15 @@ public class EsBlogServiceTest {
 
     @Test
     public void test(){
-        Pageable pageable = new PageRequest(0, 20);
-        Page<EsBlog> page = esBlogService.findBySummaryLikeOrContentLike("妹妹", "酒", pageable);
-        long totalElements = page.getTotalElements();
+//        Pageable pageable = new PageRequest(0, 20);
+//        Page<EsBlog> page = esBlogService.findBySummaryLikeOrContentLike("妹妹", "酒", pageable);
+//        long totalElements = page.getTotalElements();
     }
 
     // 测试方法执行前执行该初始化方法
     @Before
     public void initEsBlog(){
-        esBlogService.deleteAll();
+        /*esBlogService.deleteAll();
         esBlogService.save(new EsBlog("1","老卫跟你谈谈安装 Elasticsearch",
                 "关于如何来安装 Elasticsearch，这个请看我的博客 https://waylau.com"));
         esBlogService.save(new EsBlog("2","老卫跟你谈谈 Elasticsearch 的几个用法妹妹",
@@ -45,6 +45,6 @@ public class EsBlogServiceTest {
         esBlogService.save(new EsBlog("5","02-19 Thymeleaf 3 引入了新的解析系统",
                 "如果你的代码使用了 HTML5 的标准，而Thymeleaf 版本来停留在 2.x ，那么如果没有把闭合"));
         esBlogService.save(new EsBlog("6","02-19 使用 GFM Eclipse 插件时，不在项目里面生成 HTML 文件",
-                "GFM 是 GitHub Flavored Markdown Viewer 的简称，是一款对 GitHub 友好的 Markdown 编辑器 。"));
+                "GFM 是 GitHub Flavored Markdown Viewer 的简称，是一款对 GitHub 友好的 Markdown 编辑器 。"));*/
     }
 }
