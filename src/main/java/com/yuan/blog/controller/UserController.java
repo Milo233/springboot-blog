@@ -1,6 +1,8 @@
 package com.yuan.blog.controller;
 
+import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
+import com.yuan.blog.service.AuthorityService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.vo.Response;
@@ -27,6 +29,8 @@ public class UserController {
 	
 	@Autowired 
 	private UserService userService;
+	@Autowired
+	private AuthorityService authorityService;
 
 	/**
 	 * 从 用户存储库 获取用户列表
@@ -103,9 +107,9 @@ public class UserController {
 	 */
 	@PostMapping
 	public ResponseEntity<Response> create(User user, Long authorityId) {
-//		List<Authority> authorities = new ArrayList<>();
-//		authorities.add(authorityService.getAuthorityById(authorityId));
-//		user.setAuthorities(authorities);
+		List<Authority> authorities = new ArrayList<>();
+		authorities.add(authorityService.getAuthorityById(authorityId).get());
+		user.setAuthorities(authorities);
 
 		if(user.getId() == null) {
 //			user.setEncodePassword(user.getPassword()); // 加密密码
