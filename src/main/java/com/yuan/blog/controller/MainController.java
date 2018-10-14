@@ -1,6 +1,8 @@
 package com.yuan.blog.controller;
 
+import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
+import com.yuan.blog.service.AuthorityService;
 import com.yuan.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,9 +18,12 @@ import java.util.List;
  */
 @Controller
 public class MainController {
+    private static final Long ROLE_USER_AUTHORITY_ID = 2L; // 用户权限（博主）
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private AuthorityService authorityService;
 
     @GetMapping("/")
     public String root() {
@@ -57,9 +62,9 @@ public class MainController {
      */
     @PostMapping("/register")
     public String registerUser(User user) {
-/*        List<Authority> authorities = new ArrayList<>();
+        List<Authority> authorities = new ArrayList<>();
         authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID).get());
-        user.setAuthorities(authorities);*/
+        user.setAuthorities(authorities);
         userService.registerUser(user);
         return "redirect:/login";
     }
