@@ -18,9 +18,12 @@
 *.ipr
 /out/
 
+/class/
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
+
