@@ -7,6 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Milo's Blog</title>
     <link rel="icon" href="../icon.ico" type="image/x-icon"/>
+
+    <!-- CSRF 处理跨域防护后 除了get请求的其他请求会被拦截的问题
+        除了携带token 也可以禁用crsf不过不安全-->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <!-- Tether core CSS -->
     <link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}" rel="stylesheet">
 
