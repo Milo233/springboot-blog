@@ -18,7 +18,7 @@
 *.ipr
 /out/
 
-/class/
+/classes/
 
 ### NetBeans ###
 /nbproject/private/
