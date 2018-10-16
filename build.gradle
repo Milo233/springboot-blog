@@ -7,7 +7,8 @@ buildscript {
 	ext['hibernate.version'] = '5.2.8.Final'
 
 	repositories {
-		mavenCentral()
+//		mavenCentral() 使用阿里的仓库
+		maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
