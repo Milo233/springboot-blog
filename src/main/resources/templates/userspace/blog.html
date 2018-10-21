@@ -35,9 +35,9 @@
 						<a href="/u/waylau" th:href="'/u/' + ${blogModel.user.username}"
 							class="card-link" th:text="${blogModel.user.username}">waylau</a>
 						发表于 [[${#dates.format(blogModel.createTime, 'yyyy-MM-dd
-						HH:mm')}]] <i class="fa fa-eye" aria-hidden="true">[[${blogModel.readSize}]]</i>
-						<i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
-						<i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
+						HH:mm')}]] <i class="fa fa-eye" aria-hidden="true">[[${blogModel.reading}]]</i>
+						<i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.likes}]]</i>
+						<i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.comments}]]</i>
 						<a href="/u/waylau" th:if="${isBlogOwner}"
 							th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"
 							class="btn btn-primary float-right">编辑</a> <a
@@ -55,17 +55,17 @@
 	
 	
 						<h5>
-							分类：<a
-								th:href="'/u/'+${blogModel.user.username} + '/blogs?catalog='+${blogModel.catalog.id} "
-								th:text="${blogModel.catalog.name}"> Spring Boot </a>
+							<!--
+							分类：<a th:href="'/u/'+${blogModel.user.username} + '/blogs?catalog='+${blogModel.catalog.id}"
+							th:text="${blogModel.catalog.name}"> Spring Boot </a> -->
 						</h5>
 	
 						<h5>
-							标签： <a
-								th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
+							标签：
+<!--							   <a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
 								th:href="'/u/' + ${blogModel.user.username}  + '/blogs?keyword='+ ${tag}">
 								<span class="badge badge-default" th:text="${tag}">Web
-									Design</span>
+									Design</span>-->
 							</a>
 						</h5>
 					</div>
