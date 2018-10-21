@@ -3,6 +3,8 @@ package com.yuan.blog.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -100,6 +102,13 @@ public class User implements UserDetails {
 			simpleAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
 		}
 		return simpleAuthorities;
+	}
+
+	// 加密密码
+	public void setEncodePassword(String password){
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		String encodePwd = encoder.encode(password);
+		this.password = encodePwd;
 	}
 
 
