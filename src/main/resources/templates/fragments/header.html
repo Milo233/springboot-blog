@@ -18,9 +18,10 @@
     <link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
-          crossorigin="anonymous">
+          crossorigin="anonymous">-->
+    <link href="../../css/bootstrap.min_4.0.0-alpha.6.css" th:href="@{/css/bootstrap.min_4.0.0-alpha.6.css}" rel="stylesheet">
     <!-- Font-Awesome CSS -->
     <link href="../../css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
     <!-- toastr CSS -->
@@ -77,14 +78,20 @@
                     </form>
                 </ul>
 
-                <div sec:authorize="isAuthenticated()" class="row">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <span class="nav-link" sec:authentication="name"></span>
-                        </li>
-                    </ul>
+                <div sec:authorize="isAuthenticated()"  class="row" >
+                    <div class="dropdown">
+                        <a class=" dropdown-toggle" href="/u/waylau" th:href="@{'/u/' + ${#authentication.name}}" data-toggle="dropdown"><span sec:authentication="name"></span></a>
+                        <div class="dropdown-menu" >
+                            <a class=" dropdown-item" href="/u/waylau" th:href="@{'/u/' + ${#authentication.name}}">个人主页</a>
+                            <a class="dropdown-item" href="/u/waylau/profile" th:href="@{'/u/' + ${#authentication.name} + '/profile'}" >个人设置</a>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="/u/waylau/blogs/edit" th:href="'/u/' + ${#authentication.name} + '/blogs/edit'" class="btn btn-outline-success my-2 my-sm-0">写博客</a>
+                    </div>
+
                     <form action="/logout" th:action="@{/logout}" method="post">
-                        <input class="btn btn-outline-success " type="submit" value="退出"/>
+                        <input class="btn btn-outline-success " type="submit" value="退出">
                     </form>
                 </div>
                 <div sec:authorize="isAnonymous()">
