@@ -1,9 +1,11 @@
 package com.yuan.blog.controller;
 
 import com.yuan.blog.domain.Blog;
+import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.domain.Vote;
 import com.yuan.blog.service.BlogService;
+import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.vo.Response;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 用户主页空间控制器.
@@ -39,6 +42,10 @@ public class UserspaceController {
 	private UserService userService;
 	@Autowired
 	private UserDetailsService userDetailsService;
+
+	@Autowired
+	private CatalogService catalogService;
+
 	@Value("$(file.server.url)")
 	private String fileServerUrl;
 	@Autowired
@@ -112,15 +119,18 @@ public class UserspaceController {
 	// 根据用户名 获取用户信息
 	@GetMapping("/{username}")
 	public String userSpace(@PathVariable("username") String username, Model model) {
-		//todo 哪里掉这里了？？？
-		if(StringUtils.isEmpty(username)){
+		//fixme 哪里掉这里了？？？ 点击个人主页后会调两次这里 第二次时 username 是 icon.ico
+		if(StringUtils.isEmpty(username) || "icon.ico".equals(username)){
 			username = "milo";
 		}
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
 		return "redirect:/u/" + username + "/blogs";
 	}
- 
+
+	/**
+	 * 获取用户的博客列表
+	 */
 	@GetMapping("/{username}/blogs")
 	public String listBlogsByOrder(@PathVariable("username") String username,
 								   @RequestParam(value="order",required=false,defaultValue="new") String order,
@@ -132,13 +142,19 @@ public class UserspaceController {
 								   Model model) {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
-		if (categoryId != null) {
-			System.out.print("category:" + categoryId);
-			System.out.print("selflink:" + "redirect:/u/"+ username +"/blogs?category="+ categoryId);
-			return "/userspace/u";
-		}
+
 
 		Page<Blog> page = null;
+		if (categoryId != null &&categoryId > 0) {
+			Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
+			Catalog catalog = null;
+			if (optionalCatalog.isPresent()) {
+				catalog = optionalCatalog.get();
+				Pageable pageable = PageRequest.of(pageIndex, pageSize);
+				page = blogService.listBlogsByCatalog(catalog, pageable);
+				order = "";
+			}
+		}
 		if (order.equals("hot")) { // 最热查询 阅读/评论/点赞量
 			Sort sort = new Sort(Sort.Direction.DESC,"reading","comments","likes");
 			Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
@@ -214,6 +230,11 @@ public class UserspaceController {
 	 */
 	@GetMapping("/{username}/blogs/edit")
 	public ModelAndView createBlog(@PathVariable("username") String username,Model model) {
+		// 获取用户分类列表
+		User user = (User)userDetailsService.loadUserByUsername(username);
+		List<Catalog> catalogs = catalogService.listCatalogs(user);
+
+		model.addAttribute("catalogs", catalogs);
 		model.addAttribute("blog", new Blog(null, null, null));
 		model.addAttribute("username", username);
 		// fileServerUrl 文件服务器的地址返回给客户端
@@ -229,8 +250,9 @@ public class UserspaceController {
 								 @PathVariable("id") Long id, Model model) {
 		// 获取用户分类列表
 		User user = (User)userDetailsService.loadUserByUsername(username);
-//		List<Catalog> catalogs = catalogService.listCatalogs(user);
-//		model.addAttribute("catalogs", catalogs);
+		List<Catalog> catalogs = catalogService.listCatalogs(user);
+
+		model.addAttribute("catalogs", catalogs);
 		model.addAttribute("blog", blogService.getBlogById(id));
 		model.addAttribute("fileServerUrl", "http://localhost:8081/upload");
 		return new ModelAndView("/userspace/blogedit", "blogModel", model);
@@ -244,6 +266,12 @@ public class UserspaceController {
 	@PostMapping("/{username}/blogs/edit")
 	@PreAuthorize("authentication.name.equals(#username)")
 	public ResponseEntity<Response> saveBlog(@PathVariable("username") String username, @RequestBody Blog blog) {
+
+		// 对 Catalog 进行空处理
+		if (blog.getCatalog().getId() == null) {
+			return ResponseEntity.ok().body(new Response(false,"未选择分类"));
+		}
+
 		User user = (User)userDetailsService.loadUserByUsername(username);
 		blog.setUser(user);
 		try {
@@ -254,7 +282,7 @@ public class UserspaceController {
 					exitBlog.setTitle(blog.getTitle());
 					exitBlog.setContent(blog.getContent());
 					exitBlog.setSummary(blog.getSummary());
-//					exitBlog.set(blog.getCatalog()); // 增加对分类的处理
+					exitBlog.setCatalog(blog.getCatalog()); // 增加对分类的处理
 //					exitBlog.sett(blog.getTags());  // 增加对标签的处理
 					blogService.saveBlog(exitBlog);
 				}

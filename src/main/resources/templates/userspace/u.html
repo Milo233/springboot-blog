@@ -4,10 +4,11 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
+	<!-- 用户个人主页 -->
 	<!-- Page Content -->
 	<div class="container blog-content-container">
 
-		<div class="row">
+		<div class="row" >
 
 			<!-- 左侧栏目 -->
 			<div class="col-md-4 col-xl-3">
@@ -54,7 +55,7 @@
 								data-target="#flipFlop" role="button"><i class="fa fa-plus"
 								aria-hidden="true"></i></a>
 						</h5>
-
+						<!-- 遍历分类 -->
 						<ul class="list-group" th:each="catalog : ${catalogs}"
 							th:object="${catalog}">
 							<div class="blog-list-group-item">
@@ -105,8 +106,6 @@
 
 
 				</ul>
-
-
 
 				<!-- Blog Post -->
 				<div id="mainContainer">

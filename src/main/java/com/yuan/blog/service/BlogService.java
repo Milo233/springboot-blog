@@ -1,6 +1,7 @@
 package com.yuan.blog.service;
 
 import com.yuan.blog.domain.Blog;
+import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +53,7 @@ public interface BlogService {
 	 * @param user
 	 * @return
 	 */
-	Page<Blog> listBlogsByTitleLikeAndSort(User suser, String title, Pageable pageable);
+	Page<Blog> listBlogsByTitleLikeAndSort(User user, String title, Pageable pageable);
 	
 	/**
 	 * 阅读量递增
@@ -90,4 +91,12 @@ public interface BlogService {
 	 * @return
 	 */
 	void removeVote(Long blogId, Long voteId);
+
+	/**
+	 * 根据分类进行查询
+	 * @param catalog
+	 * @param pageable
+	 * @return
+	 */
+	Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
 }
