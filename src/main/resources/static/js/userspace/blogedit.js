@@ -5,7 +5,7 @@
 //# sourceURL=blogedit.js
 // DOM 加载完再执行
 $(function() {
-	
+
 	// 初始化 md 编辑器
     $("#md").markdown({
         language: 'zh',
@@ -13,7 +13,20 @@ $(function() {
             enable: true
         },
         resize:'vertical',
-        localStorage:'md'
+        localStorage:'md',
+        imgurl: 'http://localhost:8081',
+        base64url: 'http://localhost:8081'
+        // todo 干嘛的？？
+    });
+
+    // 初始化标签控件
+    $('.form-control-tag').tagEditor({
+        initialTags: [],
+        maxTags: 5,
+        delimiter: ', ',
+        forceLowercase: false,
+        animateDelete: 0,
+        placeholder: '请输入标签'
     });
         
     $('.form-control-chosen').chosen();
@@ -37,10 +50,4 @@ $(function() {
         }).fail(function(res) {});
     })
 
-
-    
-    // 初始化标签
-    $('.form-control-tag').tagsInput({
-    	'defaultText':'输入标签'
-    });
 });

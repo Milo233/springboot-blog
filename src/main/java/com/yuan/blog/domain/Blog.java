@@ -62,6 +62,9 @@ public class Blog implements Serializable {
 	@Column(name="voteSize")
 	private Integer voteSize = 0;  // 点赞量
 
+	@Column(name="tags", length = 100)
+	private String tags;  // 标签 多个用英文 ， 分隔
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "blog_comment", joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
@@ -129,6 +132,14 @@ public class Blog implements Serializable {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 	public Timestamp getCreateTime() {
