@@ -2,6 +2,7 @@ package com.yuan.blog.controller;
 
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.User;
+import com.yuan.blog.domain.Vote;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
@@ -163,7 +164,8 @@ public class UserspaceController {
 
 	/**
 	 * 获取博客展示界面
-	 * @param id
+	 * @param id 博客id
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -171,20 +173,37 @@ public class UserspaceController {
 	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id, Model model) {
 		// 每次读取，简单的可以认为阅读量增加1次
 		blogService.readingIncrease(id);
+		Blog blog = blogService.getBlogById(id);
 
 		boolean isBlogOwner = false;
 
+		User principal = null;
 		// 判断操作用户是否是博客的所有者
 		if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
 				&&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-			User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal !=null && username.equals(principal.getUsername())) {
 				isBlogOwner = true;
 			}
 		}
 
+		// 判断操作用户的点赞情况 有的话前端展示取消，没有的话可以点赞
+		List<Vote> votes = blog.getVotes();
+		Vote currentVote = null; // 当前用户的点赞情况
+
+		if (principal !=null) {
+			for (Vote vote : votes) {
+				// 从博客的vote列表里查出当前用户的点赞 vote 返回给页面
+				if (vote.getUser().getUsername().equals(principal.getUsername())) {
+					currentVote = vote;
+					break;
+				}
+			}
+		}
+
 		model.addAttribute("isBlogOwner", isBlogOwner);
 		model.addAttribute("blogModel",blogService.getBlogById(id));
+		model.addAttribute("currentVote",currentVote);
 		return "/userspace/blog";
 	}
 
