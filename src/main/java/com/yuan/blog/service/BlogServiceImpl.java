@@ -1,9 +1,6 @@
 package com.yuan.blog.service;
 
-import com.yuan.blog.domain.Blog;
-import com.yuan.blog.domain.Comment;
-import com.yuan.blog.domain.User;
-import com.yuan.blog.domain.Vote;
+import com.yuan.blog.domain.*;
 import com.yuan.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,36 +23,24 @@ public class BlogServiceImpl implements BlogService {
 	@Autowired
 	private BlogRepository blogRepository;
 
-	/* (non-Javadoc)
-	 * @see com.waylau.spring.boot.blog.service.BlogService#saveBlog(com.waylau.spring.boot.blog.domain.Blog)
-	 */
 	@Transactional
 	@Override
 	public Blog saveBlog(Blog blog) {
 		return blogRepository.save(blog);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.waylau.spring.boot.blog.service.BlogService#removeBlog(java.lang.Long)
-	 */
 	@Transactional
 	@Override
 	public void removeBlog(Long id) {
 		blogRepository.deleteById(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.waylau.spring.boot.blog.service.BlogService#updateBlog(com.waylau.spring.boot.blog.domain.Blog)
-	 */
 	@Transactional
 	@Override
 	public Blog updateBlog(Blog blog) {
 		return blogRepository.save(blog);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.waylau.spring.boot.blog.service.BlogService#getBlogById(java.lang.Long)
-	 */
 	@Override
 	public Blog getBlogById(Long id) {
 		Optional<Blog> byId = blogRepository.findById(id);
@@ -133,4 +118,10 @@ public class BlogServiceImpl implements BlogService {
 		blogRepository.save(originalBlog);
 	}
 
+
+	@Override
+	public Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable) {
+		Page<Blog> blogs = blogRepository.findByCatalog(catalog, pageable);
+		return blogs;
+	}
 }
