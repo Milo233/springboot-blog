@@ -258,8 +258,6 @@ public class UserspaceController {
 		return new ModelAndView("/userspace/blogedit", "blogModel", model);
 	}
 
-
-
 	/**
 	 * 保存博客
 	 */
@@ -283,7 +281,7 @@ public class UserspaceController {
 					exitBlog.setContent(blog.getContent());
 					exitBlog.setSummary(blog.getSummary());
 					exitBlog.setCatalog(blog.getCatalog()); // 增加对分类的处理
-//					exitBlog.sett(blog.getTags());  // 增加对标签的处理
+					exitBlog.setTags(blog.getTags());  // 增加对标签的处理
 					blogService.saveBlog(exitBlog);
 				}
 			} else {

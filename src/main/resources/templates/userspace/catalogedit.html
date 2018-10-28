@@ -2,9 +2,9 @@
 	<input type="hidden" name="id" th:value="*{id}" id="catalogId">
 
 	<div class="form-group">
-		<label for="name" class="col-form-label">名称</label> <input
-			type="text" class="form-control" id="catalogName" name="name"
-			th:value="*{name}" maxlength="30" placeholder="请输入姓名，至少2个字符，至多30个">
+		<label for="name" class="col-form-label">名称</label>
+		<input type="text" class="form-control" id="catalogName" name="name"
+			   th:value="*{name}" maxlength="30" placeholder="请输入姓名，至少2个字符，至多30个">
 	</div>
 </div>
 
@@ -12,11 +12,11 @@
 	// 给元素绑定事件 js要写到html下面
 	$(function () {
         $('#catalogName').bind('keypress',function(event){
-            console.log("i am working ！")
             if(event.keyCode == "13"){
                 $("#submitEditCatalog").click();
             }
         });
+        setTimeout(function(){$('#catalogName').focus()},1000);
     })
 </script>
 

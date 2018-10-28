@@ -59,13 +59,12 @@
 							分类：<a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
 							th:text="${blogModel.catalog.name}"> Spring Boot </a>
 						</h5>
-	
+
 						<h5>
-							标签：
-<!--							   <a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
+							标签：<!---->
+							   <a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
 								th:href="'/u/' + ${blogModel.user.username}  + '/blogs?keyword='+ ${tag}">
-								<span class="badge badge-default" th:text="${tag}">Web
-									Design</span>-->
+								<span class="badge badge-default" th:text="${tag}">Web Design</span>
 							</a>
 						</h5>
 					</div>
