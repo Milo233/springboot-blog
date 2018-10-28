@@ -1,11 +1,13 @@
 package com.yuan.blog.service;
 
 import com.yuan.blog.domain.Blog;
+import com.yuan.blog.domain.Comment;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -86,13 +88,29 @@ public class BlogServiceImpl implements BlogService {
 			Optional<Blog> byId = blogRepository.findById(id);
 			if(byId != null && byId.isPresent()){
 				Blog blog =byId.get();
-				blog.setReading(blog.getReading()+1);
+				blog.setReadSize(blog.getReadSize()+1);
 				blogRepository.save(blog);
 			}
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}
 	}
- 
+
+
+	@Override
+	public Blog createComment(Long blogId, String commentContent) {
+		Blog originalBlog = blogRepository.findById(blogId).get();
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Comment comment = new Comment(user, commentContent);
+		originalBlog.addComment(comment);
+		return blogRepository.save(originalBlog);
+	}
+
+	@Override
+	public void removeComment(Long blogId, Long commentId) {
+		Blog originalBlog = blogRepository.findById(blogId).get();
+		originalBlog.removeComment(commentId);
+		blogRepository.save(originalBlog);
+	}
 
 }
