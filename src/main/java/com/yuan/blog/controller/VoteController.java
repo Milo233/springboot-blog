@@ -33,7 +33,6 @@ public class VoteController {
 	/**
 	 * 发表点赞 todo 每次点赞都刷新博客 导致浏览量加1 这不科学！！！
 	 * @param blogId
-	 * @param VoteContent
 	 * @return
 	 */
 	@PostMapping

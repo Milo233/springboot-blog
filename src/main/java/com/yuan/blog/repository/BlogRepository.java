@@ -21,7 +21,10 @@ public interface BlogRepository extends JpaRepository<Blog, Long>{
 	 */
 	Page<Blog> findByUserAndTitleLikeOrderByCreateTimeDesc(User user, String title, Pageable pageable);
 
-	Page<Blog> findByUserAndTitleOrTagsLikeOrderByCreateTimeDesc(User user, String title, Pageable pageable);
+	/**
+	 * 根据用户 && (博客标题 || 博客标签) 分页查询博客列表
+	 */
+	Page<Blog> findByUserAndTitleLikeOrUserAndTagsLike(User user, String title, User user2, String tag, Pageable pageable);
 
 	/**
 	 * 根据用户名分页查询博客列表

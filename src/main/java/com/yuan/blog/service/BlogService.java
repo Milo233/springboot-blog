@@ -4,7 +4,9 @@ import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 /**
  * Blog 服务接口.
@@ -15,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 public interface BlogService {
 	/**
 	 * 保存Blog
-	 * @param Blog
+	 * @param blog
 	 * @return
 	 */
 	Blog saveBlog(Blog blog);
@@ -29,7 +31,7 @@ public interface BlogService {
 	
 	/**
 	 * 更新Blog
-	 * @param Blog
+	 * @param blog
 	 * @return
 	 */
 	Blog updateBlog(Blog blog);
@@ -40,20 +42,15 @@ public interface BlogService {
 	 * @return
 	 */
 	Blog getBlogById(Long id);
-	
+
+	Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable);
+ 
 	/**
 	 * 根据用户名进行分页模糊查询（最新）
 	 * @param user
 	 * @return
 	 */
-	Page<Blog> listBlogsByTitleLike(User user, String title, Pageable pageable);
- 
-	/**
-	 * 根据用户名进行分页模糊查询（最热）
-	 * @param user
-	 * @return
-	 */
-	Page<Blog> listBlogsByTitleLikeAndSort(User user, String title, Pageable pageable);
+	Page<Blog> listBlogsByUserAndKeywordByTime(User user, String title, Pageable pageable);
 	
 	/**
 	 * 阅读量递增
