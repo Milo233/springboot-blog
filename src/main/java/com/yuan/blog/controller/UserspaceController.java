@@ -46,7 +46,8 @@ public class UserspaceController {
 	@Autowired
 	private CatalogService catalogService;
 
-	@Value("$(file.server.url)")
+	// 从配置文件获取参数 是大括号
+	@Value("${file.server.url}")
 	private String fileServerUrl;
 	@Autowired
 	private BlogService blogService;
@@ -63,7 +64,7 @@ public class UserspaceController {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
 		model.addAttribute("fileServerUrl", fileServerUrl);
-		return new ModelAndView("/userspace/profile", "userModel", model);
+		return new ModelAndView("userspace/profile", "userModel", model);
 	}
 
 	/**
@@ -97,7 +98,7 @@ public class UserspaceController {
 	public ModelAndView avatar(@PathVariable("username") String username, Model model) {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
-		return new ModelAndView("/userspace/avatar", "userModel", model);
+		return new ModelAndView("userspace/avatar", "userModel", model);
 	}
 
 	/**
@@ -133,7 +134,7 @@ public class UserspaceController {
 	 */
 	@GetMapping("/{username}/blogs")
 	public String listBlogsByOrder(@PathVariable("username") String username,
-								   @RequestParam(value="order",required=false,defaultValue="new") String order,
+								   @RequestParam(value="order",required=false,defaultValue="hot") String order,
 								   @RequestParam(value="categoryId",required=false ) Long categoryId,
 								   @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,
 								   @RequestParam(value="async",required=false) boolean async,
@@ -142,7 +143,6 @@ public class UserspaceController {
 								   Model model) {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
-
 
 		Page<Blog> page = null;
 		if (categoryId != null &&categoryId > 0) {
@@ -157,17 +157,15 @@ public class UserspaceController {
 		}
 		if (order.equals("hot")) { // 最热查询 阅读/评论/点赞量
 			Sort sort = new Sort(Sort.Direction.DESC,"reading","comments","likes");
-			Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-			page = blogService.listBlogsByTitleLikeAndSort(user, keyword, pageable);
+			Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+			page = blogService.listBlogsByUserAndKeywordByHot(user, keyword, pageable);
 		}
 		if (order.equals("new")) { // 最新查询
-			Pageable pageable = new PageRequest(pageIndex, pageSize);
-			page = blogService.listBlogsByTitleLike(user, keyword, pageable);
+			Pageable pageable = PageRequest.of(pageIndex, pageSize);
+			page = blogService.listBlogsByUserAndKeywordByTime(user, keyword, pageable);
 		}
 
-
 		List<Blog> list = page.getContent();	// 当前所在页面数据列表
-
 
 		model.addAttribute("user", user);
 		model.addAttribute("categoryId", categoryId);
@@ -175,7 +173,7 @@ public class UserspaceController {
 		model.addAttribute("page", page);
 		model.addAttribute("keyword",keyword);
 		model.addAttribute("blogList", list);
-		return (async==true?"/userspace/u :: #mainContainerRepleace":"/userspace/u");
+		return (async?"userspace/u :: #mainContainerRepleace":"userspace/u");
 	}
 
 	/**
@@ -204,7 +202,7 @@ public class UserspaceController {
 		}
 
 		// 判断操作用户的点赞情况 有的话前端展示取消，没有的话可以点赞
-		List<Vote> votes = blog.getVotes();
+		List<Vote> votes = blog.getVotes(); // todo ava.lang.NullPointerException: null 某些情况下会npe
 		Vote currentVote = null; // 当前用户的点赞情况
 
 		if (principal !=null) {
@@ -220,7 +218,7 @@ public class UserspaceController {
 		model.addAttribute("isBlogOwner", isBlogOwner);
 		model.addAttribute("blogModel",blogService.getBlogById(id));
 		model.addAttribute("currentVote",currentVote);
-		return "/userspace/blog";
+		return "userspace/blog";
 	}
 
 	/**
@@ -238,8 +236,8 @@ public class UserspaceController {
 		model.addAttribute("blog", new Blog(null, null, null));
 		model.addAttribute("username", username);
 		// fileServerUrl 文件服务器的地址返回给客户端
-		model.addAttribute("fileServerUrl", "http://localhost:8081/upload");
-		return new ModelAndView("/userspace/blogedit", "blogModel", model);
+		model.addAttribute("fileServerUrl", fileServerUrl);
+		return new ModelAndView("userspace/blogedit", "blogModel", model);
 	}
 
 	/**
@@ -254,8 +252,8 @@ public class UserspaceController {
 
 		model.addAttribute("catalogs", catalogs);
 		model.addAttribute("blog", blogService.getBlogById(id));
-		model.addAttribute("fileServerUrl", "http://localhost:8081/upload");
-		return new ModelAndView("/userspace/blogedit", "blogModel", model);
+		model.addAttribute("fileServerUrl", fileServerUrl);
+		return new ModelAndView("userspace/blogedit", "blogModel", model);
 	}
 
 	/**

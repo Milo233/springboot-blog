@@ -4,7 +4,9 @@ import com.yuan.blog.domain.*;
 import com.yuan.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -52,18 +54,24 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public Page<Blog> listBlogsByTitleLike(User user, String title, Pageable pageable) {
+	public Page<Blog> listBlogsByUserAndKeywordByTime(User user, String title, Pageable pageable) {
 		// 模糊查询
 		title = "%" + title + "%";
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrderByCreateTimeDesc(user, title, pageable);
+		// 按时间先后查询
+		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLike(user, title,user, title, pageable);
 		return blogs;
 	}
 
 	@Override
-	public Page<Blog> listBlogsByTitleLikeAndSort(User user, String title, Pageable pageable) {
-		// 模糊查询
-		title = "%" + title + "%";
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLike(user, title, pageable);
+	public Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable) {
+		String title = "%" + keyword + "%";
+		String tag = title;
+		// 按根据点赞量 阅读量 创建时间作为热度查询
+		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLike(user, title, user, tag, pageable);
 		return blogs;
 	}
 
