@@ -24,11 +24,26 @@ public class BlogServiceImpl implements BlogService {
 
 	@Autowired
 	private BlogRepository blogRepository;
+	@Autowired
+	private EsBlogService esBlogService;
 
 	@Transactional
 	@Override
 	public Blog saveBlog(Blog blog) {
-		return blogRepository.save(blog);
+		boolean isNew = (blog.getId() == null);
+		Blog returnBlog = blogRepository.save(blog);
+
+		// 存到数据库以后还要存到 ES里 用于全文检索
+		EsBlog esBlog = null;
+		if (isNew) {
+			esBlog = new EsBlog(returnBlog);
+		} else {
+			esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
+			esBlog.update(returnBlog);
+		}
+
+		esBlogService.updateEsBlog(esBlog);
+		return returnBlog;
 	}
 
 	@Transactional
