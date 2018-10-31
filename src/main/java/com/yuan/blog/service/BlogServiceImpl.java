@@ -34,7 +34,7 @@ public class BlogServiceImpl implements BlogService {
 		Blog returnBlog = blogRepository.save(blog);
 
 		// 存到数据库以后还要存到 ES里 用于全文检索
-		EsBlog esBlog = null;
+/*		EsBlog esBlog = null;
 		if (isNew) {
 			esBlog = new EsBlog(returnBlog);
 		} else {
@@ -42,7 +42,7 @@ public class BlogServiceImpl implements BlogService {
 			esBlog.update(returnBlog);
 		}
 
-		esBlogService.updateEsBlog(esBlog);
+		esBlogService.updateEsBlog(esBlog);*/
 		return returnBlog;
 	}
 
