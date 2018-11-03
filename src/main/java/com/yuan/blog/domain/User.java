@@ -48,7 +48,7 @@ public class User implements UserDetails {
 	@Column(length = 100)
 	private String password; // 登录时密码
 
-	@Column(length = 200)
+	@Column(length = 500)
 	private String avatar; // 头像图片地址
 
 	protected User() { // JPA 的规范要求无参构造函数；设为 protected 防止直接使用
