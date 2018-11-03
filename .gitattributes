@@ -1,0 +1,4 @@
+*.properties filter=yourFilterName
+
+git config --global filter.yourFilterName.clean "sed '/\/\/#BEGIN/,/\/\/#END$/d'"
+git config --global filter.yourFilterName.smudge cat  
