@@ -36,6 +36,7 @@ public class BlogServiceImpl implements BlogService {
 		// 存到数据库以后还要存到 ES里 用于全文检索
 /*		EsBlog esBlog = null;
 		if (isNew) {
+			// 从Blog对象 生成一个 EsBlog对象。id不一定一样
 			esBlog = new EsBlog(returnBlog);
 		} else {
 			esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
@@ -50,6 +51,9 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public void removeBlog(Long id) {
 		blogRepository.deleteById(id);
+		// 删除es
+		//EsBlog esblog = esBlogService.getEsBlogByBlogId(id);
+		//esBlogService.removeEsBlog(esblog.getId());
 	}
 
 	@Transactional
@@ -76,6 +80,28 @@ public class BlogServiceImpl implements BlogService {
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLike(user, title,user, title, pageable);
+		return blogs;
+	}
+
+	@Override
+	public Page<Blog> listBlogsByKeywordByTime(String title, Pageable pageable) {
+		// 模糊查询
+		title = "%" + title + "%";
+		// 按时间先后查询
+		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLike(title, title, pageable);
+		return blogs;
+	}
+
+	@Override
+	public Page<Blog> listBlogsByKeywordByHot( String keyword, Pageable pageable) {
+		String title = "%" + keyword + "%";
+		String tag = title;
+		// 按根据点赞量 阅读量 创建时间作为热度查询
+		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLike(title, tag, pageable);
 		return blogs;
 	}
 
