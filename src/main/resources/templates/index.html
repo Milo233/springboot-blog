@@ -5,19 +5,6 @@
 <head th:replace="fragments/header :: header">
 </head>
 <body>
-<!--  用了spring security的写法
-    <div class="container blog-content-container">
-        <div sec:authorize="isAuthenticated()">
-            <p>已经登录</p>
-            <p>登录用户为：<span sec:authentication="name"></span></p>
-            <p>用户角色为：<span sec:authentication="principal.authorities"></span></p>
-            <p>已经登录</p>
-        </div>
-        <div sec:authorize="isAnonymous()">
-            <p>尚未登录</p>
-        </div>
-    </div>-->
-
 <!-- Page Content 静态页面 2018年9月24日18:16:31
     点击logo跳转的首页 -->
 <div class="container blog-content-container">
@@ -25,25 +12,25 @@
         <!--博客内容 左侧栏目-->
         <div class="col-md-8 mb-3">
             <div id="mainContainer">
-                <div id="mainContainerReplace">
+                <div id="mainContainerRepleace">
                     <div class="card">
                         <div class="card-body" th:each="blog : ${blogList}">
                             <h4 class="card-title ">
-                                <a href="javascript:void(0)" th:href="'/u/' + ${blog.username}"
-                                   th:title="${blog.username}">
+                                <a href="javascript:void(0)" th:href="'/u/' + ${blog.user.username}"
+                                   th:title="${blog.user.username}">
                                     <img src=""
-                                         th:src="${blog.avatar} == null ? '/images/avatar-default.jpg' : ${blog.avatar}"
-                                         class="blog-avatar-40">
+                                         th:src="${blog.user.avatar} == null ? '/images/avatar-default.jpg' : ${blog.user.avatar}"
+                                         class="blog-avatar-40" style="width: 40px;height: 40px">
                                 </a>
                                 <a href="javascript:void(0)" class="card-link" th:text="${blog.title}"
-                                   th:href="'/u/' + ${blog.username} + '/blogs/' + ${blog.blogId}"></a>
+                                   th:href="'/u/' + ${blog.user.username} + '/blogs/' + ${blog.id}"></a>
                             </h4>
                             <p class="card-text" th:text="${blog.summary}">
                             </p>
                             <div class="row">
                                 <div class="ml-3 mr-auto ">
-                                    <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.username}"
-                                       th:text="*{blog.username}"></a>&nbsp;&nbsp;
+                                    <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.user.username}"
+                                       th:text="*{blog.user.username}"></a>&nbsp;&nbsp;
                                     <i class="fa fa-calendar"></i>&nbsp;[[${#dates.format(blog.createTime,
                                     'yyyy-MM-dd')}]]
                                 </div>
@@ -54,17 +41,13 @@
                             </div>
                         </div>
 
-                        <!--分页条 todo 这里注释掉了 2018年10月29日11:45:38
-                        移到readme里去了  注释了这里还是报错
-                        -->
-
+                        <!--<div th:if="${#lists.size(blogList)}" class="mt-2" id="pageTool"></div>-->
+                        <span id="jinrishici-sentence">正在加载今日诗词....</span>
                     </div>
+                    <div th:replace="~{fragments/page :: page}">...</div>
                 </div>
             </div>
-
-
         </div>
-
         <!-- 右侧栏目 -->
         <div class="col-md-4">
             <!--热门标签-->
@@ -100,37 +83,11 @@
                 </div>
             </div>
 
-            <!--热门文章
-            <div class="card my-3">
-                <h5 class="card-header"><i class="fa fa-fire"></i> 热门文章</h5>
-                <ul class="list-group">
-                    <a href="javascript:void (0)"
-                       class="list-group-item d-flex justify-content-between align-items-center"
-                       th:each="esBlog, blogStat : ${hotest}" th:object="${esBlog}"
-                       th:href="'/u/' + *{username} + '/blogs/' + *{blogId}">
-                        [[*{title}]]
-                        <span class="badge badge-pill" th:classappend="${blogStat.index} eq 0
-							? 'badge-danger': (${blogStat.index} eq 1
-							? 'badge-warning':(${blogStat.index} eq 2
-							? 'badge-info':'badge-secondary'))" th:text="*{readSize}"></span>
-                    </a>
-                </ul>
-            </div>-->
 
-            <!--最新发布
-            <div class="card">
-                <h5 class="card-header"><i class="fa  fa-file-text"></i> 最新发布</h5>
-                <ul class="list-group">
-                    <a class="list-group-item" th:each="esBlog : ${newest}" th:object="${esBlog}"
-                       th:href="'/u/' + *{username} + '/blogs/' + *{blogId}" th:text="*{title}"></a>
-                </ul>
-            </div>-->
         </div>
-asdsAd
     </div>
 </div>
-
     <div th:replace="fragments/footer :: footer">...</div>
-    <script src="../static/js/paging.js" th:src="@{/js/paging.js}"></script>
+    <script src="../../js/index.js" th:src="@{/js/index.js}"></script>
 </body>
 </html>

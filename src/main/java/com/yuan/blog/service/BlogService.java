@@ -44,14 +44,18 @@ public interface BlogService {
 	Blog getBlogById(Long id);
 
 	Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable);
- 
+
+	Page<Blog> listBlogsByKeywordByHot(String keyword, Pageable pageable);
 	/**
 	 * 根据用户名进行分页模糊查询（最新）
 	 * @param user
 	 * @return
 	 */
 	Page<Blog> listBlogsByUserAndKeywordByTime(User user, String title, Pageable pageable);
-	
+
+	// （最新）
+	Page<Blog> listBlogsByKeywordByTime(String title, Pageable pageable);
+
 	/**
 	 * 阅读量递增
 	 * @param id

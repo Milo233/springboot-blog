@@ -27,6 +27,11 @@ public interface BlogRepository extends JpaRepository<Blog, Long>{
 	Page<Blog> findByUserAndTitleLikeOrUserAndTagsLike(User user, String title, User user2, String tag, Pageable pageable);
 
 	/**
+	 * (博客标题 || 博客标签) 分页查询博客列表 不含用户
+	 */
+	Page<Blog> findByTitleLikeOrTagsLike(String title,String tag, Pageable pageable);
+
+	/**
 	 * 根据用户名分页查询博客列表
 	 * @param user
 	 * @param title
