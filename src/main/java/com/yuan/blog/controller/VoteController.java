@@ -2,7 +2,9 @@ package com.yuan.blog.controller;
 
 import javax.validation.ConstraintViolationException;
 
+import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.User;
+import com.yuan.blog.domain.Vote;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.VoteService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
@@ -31,23 +33,27 @@ public class VoteController {
 	private VoteService voteService;
  
 	/**
-	 * 发表点赞 todo 每次点赞都刷新博客 导致浏览量加1 这不科学！！！
+	 * 发表点赞
 	 * @param blogId
 	 * @return
 	 */
 	@PostMapping
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
 	public ResponseEntity<Response> createVote(Long blogId) {
- 
+
+		Long voteId = null;
 		try {
-			blogService.createVote(blogId);
+			Blog blog = blogService.createVote(blogId);
+			if(blog != null &&  blog.getVotes().size() > 0){
+				Vote vote = blog.getVotes().get(blog.getVotes().size() - 1);
+				voteId = vote == null? 0L:vote.getId();
+			}
 		} catch (ConstraintViolationException e)  {
 			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
 		} catch (Exception e) {
 			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
 		}
-		
-		return ResponseEntity.ok().body(new Response(true, "点赞成功", null));
+		return ResponseEntity.ok().body(new Response(true, "点赞成功", voteId));
 	}
 	
 	/**
@@ -59,7 +65,11 @@ public class VoteController {
 	public ResponseEntity<Response> delete(@PathVariable("id") Long id, Long blogId) {
 		
 		boolean isOwner = false;
-		User user = voteService.getVoteById(id).getUser();
+		Vote vote = voteService.getVoteById(id);
+		if(vote == null){
+			return ResponseEntity.ok().body(new Response(false, "没有点过赞！"));
+		}
+		User user = vote.getUser();
 		
 		// 判断操作用户是否是点赞的所有者
 		if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()

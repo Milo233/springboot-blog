@@ -5,6 +5,8 @@ import com.yuan.blog.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class VoteServiceImpl implements VoteService {
 
@@ -13,7 +15,12 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote getVoteById(Long id) {
-        return voteRepository.findById(id).get();
+        Optional<Vote> byId = voteRepository.findById(id);
+        if(byId.isPresent()){
+            return byId.get();
+        } else {
+            return null;
+        }
     }
 
     @Override
