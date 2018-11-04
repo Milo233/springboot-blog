@@ -23,7 +23,7 @@ $(function() {
 				 "async":true, 
 				 "pageIndex":pageIndex,
 				 "pageSize":pageSize,
-				 "catalog": catalogId,
+				 "categoryId": catalogId,
 				 "keyword":$("#keyword").val()
 			 },
 			 success: function(data){
@@ -48,6 +48,7 @@ $(function() {
    
 	// 关键字搜索
 	$("#searchBlogs").click(function() {
+        catalogId = null; // 关键字搜索时 不用分类搜索
 		getBlogsByName(0, _pageSize);
 	});
 	
@@ -188,9 +189,9 @@ $(function() {
 	});
 		
 	// 根据分类查询
-	$(".blog-content-container").on("click",".blog-query-by-catalog", function () { 
+	$(".blog-content-container").on("click",".blog-query-by-catalog", function () {
 		catalogId = $(this).attr('catalogId');
-		getBlogsByName(0, _pageSize);
+        getBlogsByName(0, _pageSize);
 	});
 
 	getCatalogs(username);

@@ -32,6 +32,9 @@ repositories {
 
 
 dependencies {
+	// devtools 用于调试阶段热部署的 不用每次都重启
+	compile("org.springframework.boot:spring-boot-devtools")
+
 	// 该依赖用于编译阶段
 	compile('org.springframework.boot:spring-boot-starter-web')
 

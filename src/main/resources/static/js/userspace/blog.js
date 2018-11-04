@@ -129,8 +129,9 @@ $(function() {
 			 success: function(data){
 				 if (data.success) {
 					 toastr.info(data.message);
-						// 成功后，重定向
-					 window.location = blogUrl;
+                     $("#submitVote").remove();//
+					 $("#comment-vote").append('<button class="btn btn-primary float-right" id="cancelVote" voteid="' +
+                         data.body +  '">取消点赞</button>')
 				 } else {
 					 toastr.error(data.message);
 				 }
@@ -156,8 +157,8 @@ $(function() {
 			 success: function(data){
 				 if (data.success) {
 					 toastr.info(data.message);
-					// 成功后，重定向
-					 window.location = blogUrl;
+                     $("#cancelVote").remove();
+                     $("#comment-vote").append('<button class="btn btn-primary float-right" id="submitVote">点赞</button>')
 				 } else {
 					 toastr.error(data.message);
 				 }
