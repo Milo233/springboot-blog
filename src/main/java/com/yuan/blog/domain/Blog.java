@@ -213,6 +213,8 @@ public class Blog implements Serializable {
 	public boolean addVote(Vote vote) {
 		boolean isExist = false;
 		// 判断重复
+		// 点赞用户id
+		// Long voteUserId = vote.getUser().getId();
 		for (int index=0; index < this.votes.size(); index ++ ) {
 			if (this.votes.get(index).getUser().getId() == vote.getUser().getId()) {
 				isExist = true;

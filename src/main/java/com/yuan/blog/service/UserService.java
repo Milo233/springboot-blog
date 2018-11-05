@@ -17,7 +17,7 @@ public interface UserService {
     /**
      *
       */
-    User registerUser(User user);
+    User registerUser(User user) throws Exception;
 
     /**
      * 删除用户

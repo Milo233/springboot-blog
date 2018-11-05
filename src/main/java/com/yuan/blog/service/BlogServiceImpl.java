@@ -150,6 +150,7 @@ public class BlogServiceImpl implements BlogService {
 
 	@Override
 	public Blog createVote(Long blogId) {
+		// 判断用户是否点过赞
 		Blog originalBlog = blogRepository.findById(blogId).get();
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Vote vote = new Vote(user);

@@ -29,7 +29,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public User registerUser(User user) {
+    public User registerUser(User user) throws Exception {
+        // 判断email重复
+        User byEmail = userRepository.findByEmail(user.getEmail());
+        if(byEmail != null){
+            throw new Exception("邮箱重复!");
+        }
+        User byUsername = userRepository.findByUsername(user.getUsername());
+        if(byUsername != null){
+            throw new Exception("账号重复!");
+        }
         return userRepository.save(user);
     }
 
