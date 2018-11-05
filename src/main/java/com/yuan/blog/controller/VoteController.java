@@ -28,14 +28,12 @@ public class VoteController {
 	
 	@Autowired
 	private BlogService blogService;
-	
 	@Autowired
 	private VoteService voteService;
  
 	/**
 	 * 发表点赞
-	 * @param blogId
-	 * @return
+	 * @return 点赞成功返回vote 的id 用于前端展示
 	 */
 	@PostMapping
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
@@ -58,7 +56,6 @@ public class VoteController {
 	
 	/**
 	 * 删除点赞
-	 * @return
 	 */
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法

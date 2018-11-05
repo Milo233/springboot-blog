@@ -32,7 +32,7 @@
 					</h5>
 					<div class="card-block">
 						<form th:action="'/u/'+${userModel.user.username}+'/profile'"
-							method="post" th:object="${userModel.user}" id="userForm">
+							method="post" th:object="${userModel.user}" id="userForm" onsubmit="return toVaild()">
 							<input type="hidden" name="id" id="userId" th:value="*{id}">
 							<div class="form-group ">
 								<label for="username" class="col-form-label">账号</label> <input
@@ -52,10 +52,10 @@
 									placeholder="请输入姓名，至少2个字符，至多20个">
 							</div>
 							<div class="form-group">
-								<label for="password" class="col-form-label">密码</label> <input
-									type="password" class="form-control" id="password"
-									name="password" th:value="*{password}" maxlength="30"
-									placeholder="请输入密码，至少3个字符，至多30个">
+								<label for="password" class="col-form-label">密码</label>
+								<input type="password" class="form-control" id="password"
+									name="password" value="******" maxlength="30"
+									placeholder="请输入密码，至少3个字符，至多30个" onfocus="removePassword()">
 							</div>
 							<div class="form-group">
 								<button type="submit" class="btn btn-primary">保存</button>
@@ -94,12 +94,28 @@
 
 	<div th:replace="~{fragments/footer :: footer}">...</div>
 
-	<!-- JavaScript -->
 	<script th:inline="javascript">
     	var fileServerUrl = [[${userModel.fileServerUrl}]];
+    	// 第一次点击密码框时移除密码
+    	var isFirst = true
+		function removePassword() {
+			if(isFirst){
+			    document.getElementById("password").value = ""
+				isFirst = false
+			}
+        }
+		// form表单提交前校验
+        function toVaild(){
+            var val = document.getElementById("password").value;
+            if(val.length >= 3){
+                return true;
+            } else{
+                alert("请输入最少三位密码，不进行提交");
+                return false;
+            }
+        }
 	</script>
-	<script src="../../js/userspace/main.js"
-		th:src="@{/js/userspace/main.js}"></script>
+	<script src="../../js/userspace/main.js" th:src="@{/js/userspace/main.js}"></script>
 
 </body>
 </html>

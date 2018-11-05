@@ -20,7 +20,6 @@ import java.util.List;
 @Entity  // 实体 javax
 //@XmlRootElement // mediatype 转为xml
 public class User implements UserDetails {
-	// extends UserDetail
 	private static final long serialVersionUID = 1L;
 
 	@Id // javax 主键
@@ -29,17 +28,17 @@ public class User implements UserDetails {
 
 	// 映射为字段，值不能为空
 	@NotEmpty(message = "姓名不能为空")
-	@Size(min=2, max=20)
+	@Size(max=20,min=2,message="姓名长度2-30位")
 	@Column(nullable = false, length = 20) // 映射为字段，值不能为空
  	private String name;
 
 	@NotEmpty(message = "邮箱不能为空")
-	@Size(max=50)@Email(message= "邮箱格式不对" )
+	@Size(max=50,message="邮箱长度最多50位")@Email(message= "邮箱格式不对" )
 	@Column(nullable = false, length = 50, unique = true)
 	private String email;
 
 	@NotEmpty(message = "账号不能为空")
-	@Size(min=3, max=20)
+	@Size(max=20,min=3,message="账号长度2-30位")
 	@Column(nullable = false, length = 20, unique = true)
 	private String username; // 用户账号，用户登录时的唯一标识
 
@@ -156,11 +155,4 @@ public class User implements UserDetails {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-
-/*	@Override
-	public String toString() {
-		return String.format(
-				"User[id=%d, name='%s', age='%d']",
-				id, name, age);
-	}*/
 }

@@ -8,6 +8,7 @@ import com.yuan.blog.service.AuthorityService;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
+import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -115,15 +117,24 @@ public class MainController {
     }
     /**
      * 注册用户
-     * @param user
-     * @return
      */
     @PostMapping("/register")
-    public String registerUser(User user) {
-        List<Authority> authorities = new ArrayList<>();
-        authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID).get());
-        user.setAuthorities(authorities);
-        userService.registerUser(user);
+    public String registerUser(User user,Model model) {
+        try{
+            List<Authority> authorities = new ArrayList<>();
+            authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID).get());
+            user.setAuthorities(authorities);
+            userService.registerUser(user);
+        }catch (ConstraintViolationException e){
+            // 从校验异常中提取 错误信息返回给前端
+            model.addAttribute("registerError", true);
+            model.addAttribute("errorMsg", ConstraintViolationExceptionHandler.getMessage(e));
+            return "register";
+        } catch (Exception e){
+            model.addAttribute("registerError", true);
+            model.addAttribute("errorMsg", e.getMessage());
+            return "register";
+        }
         return "redirect:/login";
     }
 
