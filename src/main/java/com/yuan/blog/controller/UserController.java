@@ -100,13 +100,11 @@ public class UserController {
 	/**
 	 * 新建用户
 	 * @param user
-	 * @param result
-	 * @param redirect
-	 * @return
 	 */
 	@PostMapping
 	public ResponseEntity<Response> create(User user, Long authorityId) {
 		List<Authority> authorities = new ArrayList<>();
+		// todo 下面会报错 选择角色的前端写死了
 		authorities.add(authorityService.getAuthorityById(authorityId).get());
 		user.setAuthorities(authorities);
 

@@ -1,48 +1,3 @@
-<!--
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
-<head th:replace="fragments/header :: header">
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <h2 th:text="${userModel.title}">Welcome
-                to milo.com</h2>
-        </div>&lt;!&ndash; /.row &ndash;&gt;
-
-        <div class="row">
-            <p>
-                <a class="btn btn-primary" href="/users/form" role="button">创建用户</a>
-            </p>
-        </div>&lt;!&ndash; /.row &ndash;&gt;
-        <div class="row">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>Age</td>
-                    <td>Name</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${userModel.userList.size()} eq 0">
-                    <td colspan="3">没有用户信息！！</td>
-                </tr>
-                <tr th:each="user : ${userModel.userList}">
-                    <td th:text="${user.id}">1</td>
-                    <td th:text="${user.age}">11</td>
-                    <td><a href="view:html" th:href="@{'/users/' + ${user.id}}"
-                           th:text="${user.name}">waylau</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>&lt;!&ndash; /.row &ndash;&gt;
-    </div>&lt;!&ndash; /.container &ndash;&gt;
-    <div th:replace="fragments/footer :: footer">...</div>
-</body>
-</html>-->
-
 <div class="card-header bg-dark font-white">
 
     <div class="input-group col-md-7 col-xl-6">
@@ -85,11 +40,12 @@
                     <div>
                         <a class="blog-edit-user" data-toggle="modal"
                            data-target="#flipFlop" role="button"
-                           data-th-attr="userId=${user.id}"> <i
-                                class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </a> <a class="blog-delete-user" role="button"
-                                data-th-attr="userId=${user.id}"> <i class="fa fa-times"
-                                                                     aria-hidden="true"></i>
+                           data-th-attr="userId=${user.id}">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </a>
+                        <a class="blog-delete-user" role="button"
+                                data-th-attr="userId=${user.id}">
+                        <i class="fa fa-times" aria-hidden="true"></i>
                     </a>
                     </div>
                 </td>

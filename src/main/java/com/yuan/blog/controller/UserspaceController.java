@@ -82,7 +82,8 @@ public class UserspaceController {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodePasswd = encoder.encode(user.getPassword());
 		boolean isMatch = encoder.matches(rawPassword, encodePasswd);
-		if (!isMatch) {
+		// 页面用****** 来填充密码框，如果是****** 就不修改密码
+		if (!isMatch && !"******".equals(user.getPassword())) {
 			originalUser.setEncodePassword(user.getPassword());
 		}
 
@@ -110,7 +111,6 @@ public class UserspaceController {
 		String avatarUrl = user.getAvatar();
 
 		User originalUser = userService.getUserById(user.getId());
-		// localhost:8081/view/5bcc58649e76f8d8e4f9cd90
 		// 存的是mongodb 的id
 		originalUser.setAvatar(avatarUrl);
 		userService.saveOrUpdateUser(originalUser);
@@ -134,7 +134,7 @@ public class UserspaceController {
 	 */
 	@GetMapping("/{username}/blogs")
 	public String listBlogsByOrder(@PathVariable("username") String username,
-								   @RequestParam(value="order",required=false,defaultValue="hot") String order,
+								   @RequestParam(value="order",required=false,defaultValue="new") String order,
 								   @RequestParam(value="categoryId",required=false ) Long categoryId,
 								   @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,
 								   @RequestParam(value="async",required=false) boolean async,
@@ -223,8 +223,6 @@ public class UserspaceController {
 
 	/**
 	 * 获取新增博客的界面
-	 * @param model
-	 * @return
 	 */
 	@GetMapping("/{username}/blogs/edit")
 	public ModelAndView createBlog(@PathVariable("username") String username,Model model) {

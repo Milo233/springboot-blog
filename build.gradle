@@ -45,7 +45,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 
 	// 添加 MySQL 连接驱动的依赖
-	compile('mysql:mysql-connector-java:6.0.5')
+	compile('mysql:mysql-connector-java:8.0.11')
 
 	// 添加 Apache Commons Lang 依赖
 	compile('org.apache.commons:commons-lang3:3.6')

@@ -1,6 +1,6 @@
 <div class="container">
  
-<form th:action="@{/users}" method="post" th:object="${userModel.user}" id="userForm">
+<form th:action="@{/users}" method="post" th:object="${userModel.user}" id="userForm" onsubmit="return toVaild()">
 	<input type="hidden" name="id" th:value="*{id}">
 	
 	<div class="form-group ">
@@ -18,7 +18,8 @@
 	</div>
 	<div class="form-group">
 		<label for="password" class="col-form-label">密码</label>
-		<input type="password" class="form-control" id="password" name="password"  th:value="*{password}" maxlength="30" placeholder="请输入密码，字母或特殊符号和数字结合" >
+		<input type="password" class="form-control" id="password" name="password"  value="******"
+			   maxlength="30" placeholder="请输入密码，字母或特殊符号和数字结合" onfocus="removePassword()">
 	</div>
 	<div class="form-group">
 		<label for="authorities" class="col-form-label">角色</label>
@@ -31,4 +32,24 @@
  
 </div>
 <!-- /.container -->
+<script th:inline="javascript">
+    // 第一次点击密码框时移除密码
+    var isFirst = true
+    function removePassword() {
+        if(isFirst){
+            document.getElementById("password").value = ""
+            isFirst = false
+        }
+    }
+    // form表单提交前校验
+    function toVaild(){
+        var val = document.getElementById("password").value;
+        if(val.length >= 3){
+            return true;
+        } else{
+            alert("请输入最少三位密码，不进行提交");
+            return false;
+        }
+    }
+</script>
  

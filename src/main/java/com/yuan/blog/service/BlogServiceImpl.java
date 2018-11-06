@@ -15,9 +15,6 @@ import java.util.Optional;
 
 /**
  * Blog 服务.
- * 
- * @since 1.0.0 2017年4月7日
- * @author <a href="https://waylau.com">Way Lau</a>
  */
 @Service
 public class BlogServiceImpl implements BlogService {

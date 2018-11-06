@@ -6,14 +6,25 @@ import java.util.Optional;
 
 /**
  * Authority 服务接口.
- * 
- * @since 1.0.0 2017年5月30日
- * @author <a href="https://waylau.com">Way Lau</a> 
  */
 public interface AuthorityService {
+
 	/**
 	 * 根据ID查询 Authority
-	 * @param id
 	 */
 	Optional<Authority> getAuthorityById(Long id);
+
+	/**
+	 * 根据角色名称 查询 Authority
+	 */
+	Optional<Authority> getAuthorityByName(String name);
+
+	/**
+	 * 新增权限
+	 */
+	Authority saveAuthority(Authority authority);
+	/**
+	 * 查询Authority数量
+	 */
+	long count();
 }
