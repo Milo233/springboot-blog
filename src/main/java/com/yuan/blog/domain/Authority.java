@@ -12,6 +12,9 @@ public class Authority implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String NAME_ADMIN = "ROLE_ADMIN";
+	public static final String NAME_USER = "ROLE_USER";
+
     @Id // 主键
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
     private Long id; // 用户的唯一标识
@@ -36,4 +39,9 @@ public class Authority implements GrantedAuthority {
 		this.name = name;
 	}
 
+	protected Authority(){}
+
+	public Authority(String name) {
+		this.name = name;
+	}
 }

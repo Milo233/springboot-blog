@@ -53,11 +53,11 @@ public class User implements UserDetails {
 	protected User() { // JPA 的规范要求无参构造函数；设为 protected 防止直接使用
 	}
 
-	public User(Long id,String name, String username,String email) {
-		this.id = id;
+	public User(String name, String username,String email,String password) {
 		this.name = name;
 		this.email = email;
 		this.username = username;
+		this.password = password;
 	}
 
 	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)

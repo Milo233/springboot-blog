@@ -1,5 +1,6 @@
 package com.yuan.blog.service;
 
+import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @Override
     @Transactional
@@ -80,5 +80,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<User> listUsersByUsernames(Collection<String> usernames) {
         return userRepository.findByUsernameIn(usernames);
+    }
+
+    @Override
+    public List<User> getUserByAuthority(Authority authority) {
+        return userRepository.findByAuthoritiesContains(authority);
     }
 }

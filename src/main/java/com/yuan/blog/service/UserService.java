@@ -1,5 +1,6 @@
 package com.yuan.blog.service;
 
+import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,8 +48,11 @@ public interface UserService {
 
     /**
      * 根据用户名集合，查询用户详细信息列表
-     * @param usernames
-     * @return
      */
     List<User> listUsersByUsernames(Collection<String> usernames);
+
+    /**
+     * 根据 Authority 查询用户列表
+     */
+    List<User> getUserByAuthority(Authority authority);
 }

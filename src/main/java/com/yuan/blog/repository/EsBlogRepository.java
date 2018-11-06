@@ -7,9 +7,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 /**
  * EsBlog Repository接口.
- * 
- * @since 1.0.0 2017年6月8日
- * @author <a href="https://waylau.com">Way Lau</a> 
  */
 public interface EsBlogRepository extends ElasticsearchRepository<EsBlog, String> {
 	
