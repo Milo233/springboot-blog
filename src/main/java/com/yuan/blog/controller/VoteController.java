@@ -36,7 +36,8 @@ public class VoteController {
 	 * @return 点赞成功返回vote 的id 用于前端展示
 	 */
 	@PostMapping
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
+	@PreAuthorize("isAuthenticated()")//验证已登录
+//	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
 	public ResponseEntity<Response> createVote(Long blogId) {
 
 		Long voteId = null;
