@@ -62,6 +62,10 @@ dependencies {
 	// 添加  Spring Data Elasticsearch 的依赖
 	compile('org.springframework.boot:spring-boot-starter-data-elasticsearch')
 
+	compile group: 'commons-io', name: 'commons-io', version: '2.4'
+
+	compile 'com.alibaba:fastjson:1.2.19'
+
 	// 添加 H2 的依赖
 	runtime('com.h2database:h2:1.4.196')
 
