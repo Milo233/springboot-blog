@@ -121,6 +121,8 @@ public class MainController {
     @PostMapping("/register")
     public String registerUser(User user,Model model) {
         try{
+            // 明文密码加密
+            user.setEncodePassword(user.getPassword());
             List<Authority> authorities = new ArrayList<>();
             authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID).get());
             user.setAuthorities(authorities);
