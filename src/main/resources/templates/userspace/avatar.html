@@ -47,7 +47,13 @@
 
 	</div>
 </div>
-<form enctype="multipart/form-data" id="avatarformid"></form>
+<form method="POST" enctype="multipart/form-data" th:action="@{/u/milo/avatar}" id="1avatarformid">
+	<input type="file" name="file" /><br/><br/>
+	<input type="text" name="text" value="hahah"/><br/><br/>
+	<input type="submit" value="Submit" />
+	<!--<input type="file" name="FileUpload" id="FileUpload">-->
+	<!--<a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传图片</a>-->
+</form>
 
 <script>
     $("#testImg").click(function () {

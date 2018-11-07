@@ -1,5 +1,7 @@
 package com.yuan.blog.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
@@ -8,6 +10,7 @@ import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
+import com.yuan.blog.util.MultipartUtility;
 import com.yuan.blog.vo.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +28,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,9 +60,6 @@ public class UserspaceController {
 
 	/**
 	 *  获取用户配置
-	 * @param username
-	 * @param model
-	 * @return
 	 */
 	@GetMapping("/{username}/profile")
 	@PreAuthorize("authentication.name.equals(#username)")
@@ -107,14 +110,48 @@ public class UserspaceController {
 	 */
 	@PostMapping("/{username}/avatar")
 	@PreAuthorize("authentication.name.equals(#username)")
-	public ResponseEntity<Response> saveAvatar(@PathVariable("username") String username, @RequestBody User user) {
-		String avatarUrl = user.getAvatar();
+	public ResponseEntity<Response> saveAvatar(@PathVariable("username") String username,HttpServletRequest request,
+											   @RequestParam(value = "file", required = false) MultipartFile file) {
+		String charset = "UTF-8";
+		String requestURL = "https://upload.cc/image_upload";
+
+		// todo 1.选择文件以后只展示到前端
+		// todo 2.点击 提交以后再把文件丢给后端，然后后端post提交到存图的网站
+		// todo 3.获取图片地址以后存到数据库
+		try {
+/*			MultipartUtility multipart = new MultipartUtility(requestURL, charset);
+			multipart.addHeaderField("User-Agent", "CodeJava");
+			multipart.addHeaderField("Test-Header", "Header-Value");
+			multipart.addFormField("description", "Cool Pictures");
+			multipart.addFormField("keywords", "Java,upload,Spring");
+			multipart.addFilePart("uploaded_file[]",  multipart.analyzeFile(file, request));
+			List<String> response = multipart.finish();
+
+			System.out.println("SERVER REPLIED:");
+
+			for (String line : response) {
+				System.out.println(line);
+			}*/
+			String str = "{\"code\":100,\"total_success\":1,\"total_error\":0,\"success_image\":[{\"name\":\"\\u5948\\u96ea.jpg\",\"url\":\"i1\\/2018\\/11\\/07\\/FGUneX.jpg\",\"thumbnail\":\"i1\\/2018\\/11\\/07\\/FGUneXb.jpg\",\"delete\":\"4$2y$10$ajuKhiKntgsTK7CcitC1UumvYcYl8WIl6nK71w1uVtNwEbp4rbXce1\"}]}";
+			com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(str);
+			Object success_image = jsonObject.get("success_image");
+			JSONArray objects = com.alibaba.fastjson.JSONObject.parseArray(success_image.toString());
+			JSONObject jsonObject1 = JSONObject.parseObject(objects.get(0).toString());
+
+			String perfix = "https://upload.cc/i";
+			System.out.println(jsonObject1.get("url"));
+		} catch (Exception ex) {
+			System.err.println(ex);
+		}
+
+/*		String avatarUrl = user.getAvatar();
 
 		User originalUser = userService.getUserById(user.getId());
 		// 存的是mongodb 的id
 		originalUser.setAvatar(avatarUrl);
 		userService.saveOrUpdateUser(originalUser);
-		return ResponseEntity.ok().body(new Response(true, "处理成功", avatarUrl));
+		return ResponseEntity.ok().body(new Response(true, "处理成功", avatarUrl));*/
+		return ResponseEntity.ok().body(new Response(true, "处理成功", ""));
 	}
 
 	// 根据用户名 获取用户信息
@@ -179,9 +216,6 @@ public class UserspaceController {
 	/**
 	 * 获取博客展示界面
 	 * @param id 博客id
-	 *
-	 * @param model
-	 * @return
 	 */
 	@GetMapping("/{username}/blogs/{id}")
 	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id, Model model) {
