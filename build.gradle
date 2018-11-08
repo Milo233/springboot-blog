@@ -54,9 +54,6 @@ dependencies {
 	// 添加  Thymeleaf Spring Security 依赖
 	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.2.RELEASE')
 
-	// 添加 Markdown parser 依赖
-//	compile('es.nitaur.markdown:txtmark:0.16')
-
 	// 添加  Spring Data Elasticsearch 的依赖
 	compile('org.springframework.boot:spring-boot-starter-data-elasticsearch')
 
