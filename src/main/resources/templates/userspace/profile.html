@@ -81,12 +81,20 @@
 					</button>
 
 				</div>
-				<div class="modal-body" id="avatarFormContainer"></div>
+
+				<div class="modal-body">
+					<img src="/images/upload.jpg" style="width: 200px;height: 200px;" id="show"/>
+				</div>
 				<div class="modal-footer">
-					<button class="btn btn-primary" data-dismiss="modal"
-						id="submitEditAvatar">提交</button>
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">Close</button>
+					<form method="POST" enctype="multipart/form-data" id="avatarformid"
+						  th:object="${user}" th:action="'/u/'+${user.username}+'/avatar'">
+						<input type="file" name="file" id="file"/><br/><br/>
+						<input type="text" name="id" th:value="*{id}" hidden><br/><br/>
+						<button class="btn btn-primary" data-dismiss="modal"
+								id="upload">保存</button>
+						<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">取消</button>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -95,6 +103,48 @@
 	<div th:replace="~{fragments/footer :: footer}">...</div>
 
 	<script th:inline="javascript">
+        $("#upload").click(function () {
+            //这里唯一需要注意的就是这个form-add的id
+			// form必须有action
+            var formData = new FormData($("#avatarformid")[0]);
+            $.ajax({
+                //接口地址
+                url: '/u/milo/avatar' ,
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    //成功的回调
+                    if(data.success){
+                        alert("图片上传成功！");
+                        location.reload();
+                    } else {
+                        alert("图片上传失败，请稍后重试！");
+                    }
+                },
+                error: function (returndata) {
+                    //请求异常的回调
+                    alert("图片上传失败，请稍后重试！");
+                }
+            });
+        });
+
+        // 图片输入框增加监听事件
+        function readFile() {
+            if (this.files && this.files[0]) {
+                var FR= new FileReader();
+                FR.addEventListener("load", function(e) {
+                    document.getElementById("show").src = e.target.result;
+                    // document.getElementById("b64").innerHTML = e.target.result;
+                });
+                FR.readAsDataURL( this.files[0] );
+            }
+        }
+        document.getElementById("file").addEventListener("change", readFile);
+
     	var fileServerUrl = [[${userModel.fileServerUrl}]];
     	// 第一次点击密码框时移除密码
     	var isFirst = true

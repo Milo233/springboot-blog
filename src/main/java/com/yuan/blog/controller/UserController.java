@@ -46,7 +46,7 @@ public class UserController {
 	@GetMapping
 	public ModelAndView list(@RequestParam(value="async",required=false) boolean async,
 							 @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
-							 @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
+							 @RequestParam(value="pageSize",required=false,defaultValue="5") int pageSize,
 							 @RequestParam(value="name",required=false,defaultValue="") String name,
 							 Model model) {
 

@@ -3,6 +3,7 @@
 
 // DOM 加载完再执行
 $(function() {
+
 	var avatarApi;
 	// 获取编辑用户头像的界面
 	$(".blog-content-container").on("click",".blog-edit-avatar", function () {

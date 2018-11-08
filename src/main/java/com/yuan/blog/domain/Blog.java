@@ -1,6 +1,5 @@
 package com.yuan.blog.domain;
 
-import com.github.rjeschke.txtmark.Processor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -125,7 +124,7 @@ public class Blog implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
-		this.htmlContent = Processor.process(content);
+//		this.htmlContent = Processor.process(content);
 	}
 	public User getUser() {
 		return user;
@@ -148,6 +147,10 @@ public class Blog implements Serializable {
 
 	public String getHtmlContent() {
 		return htmlContent;
+	}
+
+	public void setHtmlContent(String htmlContent) {
+		this.htmlContent = htmlContent;
 	}
 
 	public Integer getReadSize() {
