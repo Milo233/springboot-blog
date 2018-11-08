@@ -8,32 +8,28 @@
 <!-- Page Content 静态页面 2018年9月24日18:16:31
     点击logo跳转的首页 -->
 <div class="container blog-content-container">
-    <span id="jinrishici-sentence">正在加载今日诗词....</span>
     <div class="row">
         <!--博客内容 左侧栏目-->
         <div class="col-md-8 mb-3">
             <div id="mainContainer">
                 <div id="mainContainerRepleace">
                     <div class="card">
-                        <div class="card-body" th:each="blog : ${blogList}">
-                            <h4 class="card-title ">
+                        <div class="card-body" th:each="blog : ${blogList}" style="padding: 20px;border: #EEEEEE solid 1px">
+                            <h4 class="card-title" style="">
                                 <a href="javascript:void(0)" th:href="'/u/' + ${blog.user.username}"
                                    th:title="${blog.user.username}">
-                                    <img src=""
-                                         th:src="${blog.user.avatar} == null ? '/images/avatar-default.jpg' : ${blog.user.avatar}"
-                                         class="blog-avatar-40" style="width: 40px;height: 40px">
+                                    <img src="" class="blog-avatar-40"
+                                         th:src="${blog.user.avatar} == null ? '/images/avatar-default.jpg' : ${blog.user.avatar}">
                                 </a>
                                 <a href="javascript:void(0)" class="card-link" th:text="${blog.title}"
                                    th:href="'/u/' + ${blog.user.username} + '/blogs/' + ${blog.id}"></a>
                             </h4>
-                            <p class="card-text" th:text="${blog.summary}">
-                            </p>
+                            <p class="card-text" th:text="${blog.summary}"></p>
                             <div class="row">
                                 <div class="ml-3 mr-auto ">
                                     <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.user.username}"
                                        th:text="*{blog.user.username}"></a>&nbsp;&nbsp;
-                                    <i class="fa fa-calendar"></i>&nbsp;[[${#dates.format(blog.createTime,
-                                    'yyyy-MM-dd')}]]
+                                    <i class="fa fa-calendar"></i>&nbsp;[[${#dates.format(blog.createTime,'yyyy-MM-dd')}]]
                                 </div>
                                 <div class="mr-3 ">
                                     <i class="fa fa-eye">[[${blog.readSize}]]</i>&nbsp;&nbsp;
@@ -41,7 +37,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!--<div th:if="${#lists.size(blogList)}" class="mt-2" id="pageTool"></div>-->
                     </div>
                     <div th:replace="~{fragments/page :: page}">...</div>
@@ -82,7 +77,6 @@
                     </div>
                 </div>
             </div>
-
 
         </div>
     </div>

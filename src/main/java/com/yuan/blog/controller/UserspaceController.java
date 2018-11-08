@@ -131,11 +131,9 @@ public class UserspaceController {
 				System.out.println(line);
 			}
 			String perfix = "https://upload.cc/";
-			String str = sb.toString();
-			// "{\"code\":100,\"total_success\":1,\"total_error\":0,\"success_image\":[{\"name\":\"\\u5948\\u96ea.jpg\",\"url\":\"i1\\/2018\\/11\\/07\\/FGUneX.jpg\",\"thumbnail\":\"i1\\/2018\\/11\\/07\\/FGUneXb.jpg\",\"delete\":\"4$2y$10$ajuKhiKntgsTK7CcitC1UumvYcYl8WIl6nK71w1uVtNwEbp4rbXce1\"}]}";
-			JSONObject jsonObject = JSONObject.parseObject(str);
-			Object code = jsonObject.get("code");
-			if("100".equals(code.toString())){
+			JSONObject jsonObject = JSONObject.parseObject(sb.toString());
+			Object total_success = jsonObject.get("total_success");
+			if("1".equals(total_success.toString())){
 				Object success_image = jsonObject.get("success_image");
 				JSONArray objects = JSONObject.parseArray(success_image.toString());
 				JSONObject jsonObject1 = JSONObject.parseObject(objects.get(0).toString());
@@ -174,7 +172,7 @@ public class UserspaceController {
 								   @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,
 								   @RequestParam(value="async",required=false) boolean async,
 								   @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
-								   @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
+								   @RequestParam(value="pageSize",required=false,defaultValue="5") int pageSize,
 								   Model model) {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
@@ -307,6 +305,7 @@ public class UserspaceController {
 				if (exitBlog != null) {
 					exitBlog.setTitle(blog.getTitle());
 					exitBlog.setContent(blog.getContent());
+					exitBlog.setHtmlContent(blog.getHtmlContent());
 					exitBlog.setSummary(blog.getSummary());
 					exitBlog.setCatalog(blog.getCatalog()); // 增加对分类的处理
 					exitBlog.setTags(blog.getTags());  // 增加对标签的处理

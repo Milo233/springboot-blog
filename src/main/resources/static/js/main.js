@@ -1,14 +1,22 @@
-/**
- * Bolg main JS.
- * Created by waylau.com on 2017/3/9.
- */
 "use strict";
-//# sourceURL=main.js
-
 // DOM 加载完再执行
 $(function() {
- 
-	// 返回顶部的效果事件
+    // 弹窗插件设置
+    toastr.options = {
+        "closeButton": true, //是否显示关闭按钮
+        "debug": false, //是否使用debug模式
+        "positionClass": "toast-bottom-right",//弹出窗的位置
+        "showDuration": "300",//显示的动画时间
+        "hideDuration": "300",//消失的动画时间
+        "timeOut": "2500", //展现时间
+        "extendedTimeOut": "1000",//加长展示时间
+        "showEasing": "swing",//显示时的动画缓冲方式
+        "hideEasing": "linear",//消失时的动画缓冲方式
+        "showMethod": "fadeIn",//显示时的动画方式
+        "hideMethod": "fadeOut" //消失时的动画方式
+    };
+
+    // 返回顶部的效果事件
     NProgress.start();
 
     $(window).scroll(function(){  //只要窗口滚动,就触发下面代码

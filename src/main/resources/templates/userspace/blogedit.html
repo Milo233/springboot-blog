@@ -18,7 +18,8 @@ function submitBlog(){
             "summary": $('#summary').val() ,
             "content": $('#md').val(),
             "catalog":{"id":$('#catalogSelect').val()},
-            "tags":$('.form-control-tag').val()
+            "tags":$('.form-control-tag').val(),
+			"htmlContent":marked($("#md").val())
         }),
         beforeSend: function(request) {
             request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
@@ -30,7 +31,6 @@ function submitBlog(){
             } else {
                 toastr.error("error!"+data.message);
             }
-
         },
         error : function() {
             toastr.error("error!");
@@ -152,8 +152,6 @@ function submitBlog(){
 </script>
 <script src="../../js/userspace/blogedit.js" 
 	th:src="@{/js/userspace/blogedit.js}">
-
-
 
     $(function() {
         // 发布博客
