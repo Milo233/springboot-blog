@@ -9,11 +9,13 @@ import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
+import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,25 +121,14 @@ public class MainController {
      * 注册用户
      */
     @PostMapping("/register")
-    public String registerUser(User user,Model model) {
-        try{
-            // 明文密码加密
-            user.setEncodePassword(user.getPassword());
-            List<Authority> authorities = new ArrayList<>();
-            authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID).get());
-            user.setAuthorities(authorities);
-            userService.registerUser(user);
-        }catch (ConstraintViolationException e){
-            // 从校验异常中提取 错误信息返回给前端
-            model.addAttribute("registerError", true);
-            model.addAttribute("errorMsg", ConstraintViolationExceptionHandler.getMessage(e));
-            return "register";
-        } catch (Exception e){
-            model.addAttribute("registerError", true);
-            model.addAttribute("errorMsg", e.getMessage());
-            return "register";
-        }
-        return "redirect:/login";
+    public ResponseEntity<Response> registerUser(User user) throws Exception {
+        // 明文密码加密
+        user.setEncodePassword(user.getPassword());
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID).get());
+        user.setAuthorities(authorities);
+        userService.registerUser(user);
+        return ResponseEntity.ok().body(new Response(true, "注册成功", user));
     }
 
     @GetMapping("/search")

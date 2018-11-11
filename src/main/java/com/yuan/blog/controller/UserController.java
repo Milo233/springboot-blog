@@ -99,7 +99,6 @@ public class UserController {
 
 	/**
 	 * 新建用户
-	 * @param user
 	 */
 	@PostMapping
 	public ResponseEntity<Response> create(User user, Long authorityId) {
@@ -123,15 +122,7 @@ public class UserController {
 //				user.setPassword(user.getPassword());
 //			}
 		}
-		try {
-			userService.saveOrUpdateUser(user);
-		}  catch (ConstraintViolationException e)  {
-			// org.hibernate.exception.ConstraintViolationException: could not execute statement
-			// 捕获失败 idk why 哭唧唧
-			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
-		}
+		userService.saveOrUpdateUser(user);
 		return ResponseEntity.ok().body(new Response(true, "处理成功", user));
 	}
 

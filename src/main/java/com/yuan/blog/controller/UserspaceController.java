@@ -332,11 +332,7 @@ public class UserspaceController {
 	@PreAuthorize("authentication.name.equals(#username)")
 	public ResponseEntity<Response> deleteBlog(@PathVariable("username") String username,@PathVariable("id") Long id) {
 
-		try {
-			blogService.removeBlog(id);
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
-		}
+		blogService.removeBlog(id);
 
 		String redirectUrl = "/u/" + username + "/blogs";
 		return ResponseEntity.ok().body(new Response(true, "处理成功", redirectUrl));
