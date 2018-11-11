@@ -72,14 +72,7 @@ public class CommentController {
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
 	public ResponseEntity<Response> createComment(Long blogId, String commentContent) {
  
-		try {
-			blogService.createComment(blogId, commentContent);
-		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
-		}
-		
+		blogService.createComment(blogId, commentContent);
 		return ResponseEntity.ok().body(new Response(true, "处理成功", null));
 	}
 	
@@ -105,16 +98,9 @@ public class CommentController {
 		if (!isOwner) {
 			return ResponseEntity.ok().body(new Response(false, "没有操作权限"));
 		}
-		
-		try {
-			blogService.removeComment(blogId, id);
-			commentService.removeComment(id);
-		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
-		}
-		
+		blogService.removeComment(blogId, id);
+		commentService.removeComment(id);
+
 		return ResponseEntity.ok().body(new Response(true, "处理成功", null));
 	}
 }

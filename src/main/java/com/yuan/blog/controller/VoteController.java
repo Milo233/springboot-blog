@@ -1,13 +1,10 @@
 package com.yuan.blog.controller;
 
-import javax.validation.ConstraintViolationException;
-
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.domain.Vote;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.VoteService;
-import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +38,10 @@ public class VoteController {
 	public ResponseEntity<Response> createVote(Long blogId) {
 
 		Long voteId = null;
-		try {
-			Blog blog = blogService.createVote(blogId);
-			if(blog != null &&  blog.getVotes().size() > 0){
-				Vote vote = blog.getVotes().get(blog.getVotes().size() - 1);
-				voteId = vote == null? 0L:vote.getId();
-			}
-		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
+		Blog blog = blogService.createVote(blogId);
+		if(blog != null &&  blog.getVotes().size() > 0){
+			Vote vote = blog.getVotes().get(blog.getVotes().size() - 1);
+			voteId = vote == null? 0L:vote.getId();
 		}
 		return ResponseEntity.ok().body(new Response(true, "点赞成功", voteId));
 	}
@@ -81,15 +72,8 @@ public class VoteController {
 		if (!isOwner) {
 			return ResponseEntity.ok().body(new Response(false, "没有操作权限"));
 		}
-		
-		try {
-			blogService.removeVote(blogId, id);
-			voteService.removeVote(id);
-		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
-		}
+		blogService.removeVote(blogId, id);
+		voteService.removeVote(id);
 		
 		return ResponseEntity.ok().body(new Response(true, "取消点赞成功", null));
 	}

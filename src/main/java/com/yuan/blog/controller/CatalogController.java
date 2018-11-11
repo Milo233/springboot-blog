@@ -77,16 +77,9 @@ public class CatalogController {
 		
 		User user = (User)userDetailsService.loadUserByUsername(username);
 		
-		try {
-			catalog.setUser(user);
-			catalogService.saveCatalog(catalog);
-		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, 
-					ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
-		}
-		
+		catalog.setUser(user);
+		catalogService.saveCatalog(catalog);
+
 		return ResponseEntity.ok().body(new Response(true, "处理成功", null));
 	}
 	
@@ -103,14 +96,8 @@ public class CatalogController {
 			// 好像哪里设置的外键约束。已经有博客使用了这个分类时，就不能删除
 			// 会报DataIntegrityViolationException 异常
 			catalogService.removeCatalog(id);
-		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, 
-					ConstraintViolationExceptionHandler.getMessage(e)));
-		} catch (Exception e) {
-			if(e instanceof DataIntegrityViolationException){
-				return ResponseEntity.ok().body(new Response(false,"已经有博客使用该分类，不可删除！！"));
-			}
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
+		} catch (DataIntegrityViolationException e)  {
+			return ResponseEntity.ok().body(new Response(false,"已经有博客使用该分类，不可删除！！"));
 		}
 		
 		return ResponseEntity.ok().body(new Response(true, "处理成功", null));
@@ -118,8 +105,6 @@ public class CatalogController {
 	
 	/**
 	 * 获取分类编辑界面 没有id是新增
-	 * @param model
-	 * @return
 	 */
 	@GetMapping("/edit")
 	public String getCatalogEdit(Model model) {
@@ -130,9 +115,6 @@ public class CatalogController {
 	
 	/**
 	 * 根据 Id 获取编辑界面
-	 * @param id
-	 * @param model
-	 * @return
 	 */
 	@GetMapping("/edit/{id}")
 	public String getCatalogById(@PathVariable("id") Long id, Model model) {
@@ -146,5 +128,4 @@ public class CatalogController {
 		model.addAttribute("catalog",catalog);
 		return "userspace/catalogedit";
 	}
-	
 }
