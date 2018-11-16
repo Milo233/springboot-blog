@@ -21,8 +21,6 @@ public class BlogServiceImpl implements BlogService {
 
 	@Autowired
 	private BlogRepository blogRepository;
-	@Autowired
-	private EsBlogService esBlogService;
 
 	@Transactional
 	@Override
@@ -76,7 +74,8 @@ public class BlogServiceImpl implements BlogService {
 		// 按时间先后查询
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLike(user, title,user, title, pageable);
+		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title,user,
+				title,user, title, pageable);
 		return blogs;
 	}
 
@@ -87,7 +86,7 @@ public class BlogServiceImpl implements BlogService {
 		// 按时间先后查询
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLike(title, title, pageable);
+		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title, title, pageable);
 		return blogs;
 	}
 
@@ -98,7 +97,7 @@ public class BlogServiceImpl implements BlogService {
 		// 按根据点赞量 阅读量 创建时间作为热度查询
 		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLike(title, tag, pageable);
+		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, tag,title,pageable);
 		return blogs;
 	}
 
@@ -109,7 +108,8 @@ public class BlogServiceImpl implements BlogService {
 		// 按根据点赞量 阅读量 创建时间作为热度查询
 		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLike(user, title, user, tag, pageable);
+		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title, user, tag,
+				user, title, pageable);
 		return blogs;
 	}
 
