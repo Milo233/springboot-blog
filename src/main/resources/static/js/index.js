@@ -1,8 +1,4 @@
-/*!
- * index main JS.
- */
 "use strict";
-//# sourceURL=index.js
 $(function() {
     
 	var _pageSize; // 存储用于搜索

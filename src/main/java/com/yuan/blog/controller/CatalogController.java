@@ -3,7 +3,6 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.service.CatalogService;
-import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.vo.CatalogVO;
 import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 

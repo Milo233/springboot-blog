@@ -4,7 +4,6 @@ import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.service.AuthorityService;
 import com.yuan.blog.service.UserService;
-import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
