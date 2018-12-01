@@ -28,15 +28,16 @@
                             <div class="row">
                                 <div class="ml-3 mr-auto ">
                                     <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.user.username}"
-                                       th:text="*{blog.user.username}"></a>&nbsp;&nbsp;
-                                    <i class="fa fa-calendar"></i>&nbsp;[[${#dates.format(blog.createTime,'yyyy-MM-dd')}]] &nbsp;&nbsp;
-                                    <!--todo 跳到标签--> from :
+                                       th:text="*{blog.user.username}"></a>
+                                    <!--<i class="fa fa-calendar"></i>&nbsp; 日历小图标 用处不大-->
+                                    [[${#dates.format(blog.createTime,'yyyyMMdd')}]]
+                                    <!--todo 跳到标签-->
                                     <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.user.username}"
-                                       th:text="*{blog.catalog.name}"></a>&nbsp;&nbsp;
+                                       th:text="*{blog.catalog.name}"></a>
                                 </div>
                                 <div class="mr-3 ">
-                                    <i class="fa fa-eye">[[${blog.readSize}]]</i>&nbsp;&nbsp;
-                                    <i class="fa fa-thumbs-o-up">[[${blog.voteSize}]]</i>&nbsp;&nbsp;
+                                    <i class="fa fa-eye">[[${blog.readSize}]]</i>&nbsp;
+                                    <i class="fa fa-thumbs-o-up">[[${blog.voteSize}]]</i>
                                 </div>
                             </div>
                         </div>

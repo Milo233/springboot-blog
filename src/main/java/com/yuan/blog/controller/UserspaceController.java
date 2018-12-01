@@ -172,7 +172,7 @@ public class UserspaceController {
 								   @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,
 								   @RequestParam(value="async",required=false) boolean async,
 								   @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
-								   @RequestParam(value="pageSize",required=false,defaultValue="5") int pageSize,
+								   @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
 								   Model model) {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
