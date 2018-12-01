@@ -4,10 +4,8 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
-	<!-- 用户个人主页 -->
-	<!-- Page Content -->
+	<!-- 用户个人主页 Page Content-->
 	<div class="container blog-content-container">
-
 		<div class="row" >
 
 			<!-- 左侧栏目 -->
@@ -30,7 +28,6 @@
 						<h4 class="card-text" th:text="${user.username}">zhangyuan</h4>
 					</div>
 				</div>
-
 
 				<div class="row ">
 					<div class="col-md-12">
@@ -65,7 +62,8 @@
 									th:if="${isCatalogsOwner}" class="blog-edit-catalog"
 									data-toggle="modal" data-target="#flipFlop" role="button"
 									th:attr="catalogId=*{id}"><i class="fa fa-pencil-square-o"
-										aria-hidden="true"></i></a> <a href="javascript:void(0)"
+										aria-hidden="true"></i></a>
+								<a href="javascript:void(0)"
 									th:if="${isCatalogsOwner}" class="blog-delete-catalog"
 									th:attr="catalogId=*{id}"><i class="fa fa-times"
 										aria-hidden="true"></i></a>
@@ -81,7 +79,6 @@
 
 			<div class="col-md-8 col-xl-9">
 				<!-- 工具栏 -->
-
 				<ul class="nav nav-tabs mr-auto">
 
 					<li class="nav-item"><a class="nav-link "
@@ -115,18 +112,16 @@
 									<a href="/u/waylau/blogs/1" class="card-link" title="waylau"
 										th:href="'/u/' + ${blog.user.username} + '/blogs/'+ ${blog.id}"
 										th:title="${blog.user.username}" th:text="${blog.title}">
-										OAuth 2.0 认证的原理与实践 </a>
+										blog.title </a>
 								</h2>
-								<p class="card-text" th:text="${blog.summary}">使用 OAuth 2.0
-									认证的的好处是显然易见的。你只需要用同一个账号密码，就能在各个网站进行访问，
-									而免去了在每个网站都进行注册的繁琐过程。
-									本文将介绍 OAuth 2.0 的原理，并基于 Spring Security 和 GitHub 账号，来
-									演示 OAuth2.0 的认证的过程。</p>
+								<p class="card-text" th:text="${blog.summary}">blog.summary</p>
 								<div class="card-text">
-									发表于 [[${#dates.format(blog.createTime, 'yyyy-MM-dd HH:mm:ss')}]] <i
+									[[${#dates.format(blog.createTime, 'yyyy/MM/dd HH:mm:ss')}]] <i
 										class="fa fa-eye" aria-hidden="true">[[${blog.readSize}]]</i>
 									<i class="fa fa-heart-o" aria-hidden="true">[[${blog.voteSize}]]</i>
 									<i class="fa fa-comment-o" aria-hidden="true">[[${blog.commentSize}]]</i>
+									<a href="javascript:void(0)" th:attr="catalogId=*{blog.catalog.id}"
+									   class="blog-query-by-catalog">[[${blog.catalog.name}]]</a>
 								</div>
 							</div>
 						</div>
