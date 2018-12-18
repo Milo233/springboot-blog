@@ -24,8 +24,7 @@ public class Blog implements Serializable {
 	@Column(nullable = false, length = 50) // 映射为字段，值不能为空
 	private String title;
 
-	@NotEmpty(message = "摘要不能为空")
-	@Size(min=2, max=300)
+	@Size(max=300)
 	@Column(nullable = false) // 映射为字段，值不能为空
 	private String summary;
 
