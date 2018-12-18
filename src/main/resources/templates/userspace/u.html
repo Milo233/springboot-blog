@@ -24,8 +24,8 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<h2 class="card-text" th:text="${user.name}">milo</h2>
-						<h4 class="card-text" th:text="${user.username}">zhangyuan</h4>
+						<strong style="font-size: large" th:text="${user.name}">milo</strong> /
+						<strong style="font-size: large" th:text="${user.username}">zhangyuan</strong>
 					</div>
 				</div>
 
@@ -108,13 +108,13 @@
 					<div id="mainContainerRepleace">
 						<div class="card mb-4" th:each="blog : ${blogList}">
 							<div class="card-block">
-								<h2 class="card-title">
+								<h4 class="card-title">
 									<a href="/u/waylau/blogs/1" class="card-link" title="waylau"
 										th:href="'/u/' + ${blog.user.username} + '/blogs/'+ ${blog.id}"
 										th:title="${blog.user.username}" th:text="${blog.title}">
 										blog.title </a>
-								</h2>
-								<p class="card-text" th:text="${blog.summary}">blog.summary</p>
+								</h4>
+								<!--<p class="card-text" th:text="${blog.summary}">blog.summary</p>-->
 								<div class="card-text">
 									[[${#dates.format(blog.createTime, 'yyyy/MM/dd HH:mm:ss')}]] <i
 										class="fa fa-eye" aria-hidden="true">[[${blog.readSize}]]</i>
