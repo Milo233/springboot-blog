@@ -1,11 +1,14 @@
 package com.yuan.blog.service;
 
+import com.yuan.blog.dao.BlogDao;
+import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +19,15 @@ import java.util.Optional;
 public class CatalogServiceImpl implements CatalogService {
 	@Autowired
 	private CatalogRepository catalogRepository;
+	@Resource
+	private BlogDao blogDao;
 	
 	@Override
 	public Catalog saveCatalog(Catalog catalog) {
-		 // 判断重复
+		// 用mybatis
+		Blog blog = blogDao.selectByPrimaryKey(1);
+
+		// 判断重复
         List<Catalog> list = catalogRepository.findByUserAndName(catalog.getUser(),
         		catalog.getName());
         if(list !=null && list.size() > 0) {

@@ -17,7 +17,7 @@ public class Blog implements Serializable {
 
 	@Id // 主键
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
-	private Long id; // 用户的唯一标识
+	private Long id;
 
 	@NotEmpty(message = "标题不能为空")
 	@Size(min=2, max=50)
