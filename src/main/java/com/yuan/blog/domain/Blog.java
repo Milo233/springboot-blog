@@ -63,6 +63,9 @@ public class Blog implements Serializable {
 	@Column(name="tags", length = 100)
 	private String tags;  // 标签 多个用英文 ， 分隔
 
+	@Column(name="open", length = 1, nullable = false)
+	private Integer open;  // 是否公开 0私密博客，1开放博客
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "blog_comment", joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
@@ -138,6 +141,14 @@ public class Blog implements Serializable {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public Integer getOpen() {
+		return open;
+	}
+
+	public void setOpen(Integer open) {
+		this.open = open;
 	}
 
 	public Timestamp getCreateTime() {
