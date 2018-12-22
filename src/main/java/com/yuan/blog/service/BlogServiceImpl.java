@@ -1,5 +1,8 @@
 package com.yuan.blog.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.yuan.blog.dao.BlogDao;
 import com.yuan.blog.domain.*;
 import com.yuan.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -79,16 +85,45 @@ public class BlogServiceImpl implements BlogService {
 		return blogs;
 	}
 
+	/**
+	 * v 1.0
+	 * 查最新的的blog
+	 */
 	@Override
 	public Page<Blog> listBlogsByKeywordByTime(String title, Pageable pageable) {
 		// 模糊查询
 		title = "%" + title + "%";
+		Page<Blog> ll = ll(title);
 		// 按时间先后查询
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title, title, pageable);
 		return blogs;
 	}
+
+	@Resource
+	private BlogDao blogDao;
+
+	/**
+	 * v 2.0
+	 * 查最新的的blog
+	 * 1.按时间排序 2.权限 3.分页
+	 */
+	public Page<Blog> ll(String keyword){
+
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("loginId", 2);
+		map.put("keyword", keyword);
+		map.put("orderBy","hot");
+
+		// 分页是从1开始的
+		PageHelper.startPage(1, 10,true);
+//		Blog blog = new Blog(null,null,null);
+		List<Blog> blogs = blogDao.queryList(map);
+		PageInfo<Blog> pageInfo = new PageInfo<>(blogs);
+		return null;
+	}
+
 
 	@Override
 	public Page<Blog> listBlogsByKeywordByHot( String keyword, Pageable pageable) {

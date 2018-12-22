@@ -7,7 +7,14 @@ spring:
 mybatis:
   typeAliasesPackage: com.yuan.blog.domain
   mapperLocations: classpath:mapper/*.xml
+  # mybatis 配置
+  configLocation: classpath:mybatis-config.xml
 
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
 
 ---
 
@@ -16,8 +23,9 @@ spring:
   profiles: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=GMT%2B8
+    url: jdbc:mysql://47.90.97.197:3306/blog?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
     username: root
-    password: admin
+    password: Ali@2526176
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+
