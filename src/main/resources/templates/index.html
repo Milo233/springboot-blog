@@ -30,7 +30,7 @@
                                     <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.user.username}"
                                        th:text="*{blog.user.username}"></a>
                                     <!--<i class="fa fa-calendar"></i>&nbsp; 日历小图标 用处不大-->
-                                    [[${#dates.format(blog.createTime,'yyyyMMdd')}]]
+                                    [[${#dates.format(blog.createTime,'yyyyMMdd HH:mm:ss')}]]
                                     <!--todo 跳到标签-->
                                     <a href="javascript:void(0)" class="card-link" th:href="'/u/'+*{blog.user.username}"
                                        th:text="*{blog.catalog.name}"></a>
