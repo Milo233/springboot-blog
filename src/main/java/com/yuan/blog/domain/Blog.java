@@ -25,7 +25,7 @@ public class Blog implements Serializable {
 	private String title;
 
 	@Size(max=300)
-	@Column(nullable = false) // 映射为字段，值不能为空
+	@Column() // 映射为字段，值不能为空
 	private String summary;
 
 	@Lob  // 大对象，映射 MySQL 的 Long Text 类型
@@ -64,7 +64,7 @@ public class Blog implements Serializable {
 	private String tags;  // 标签 多个用英文 ， 分隔
 
 	@Column(name="open", length = 1, nullable = false)
-	private Integer open;  // 是否公开 0私密博客，1开放博客
+	private Integer open = 0;  // 是否公开 0私密博客，1开放博客
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "blog_comment", joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
