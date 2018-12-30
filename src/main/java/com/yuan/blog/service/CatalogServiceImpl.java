@@ -16,9 +16,7 @@ import java.util.Optional;
 public class CatalogServiceImpl implements CatalogService {
 	@Autowired
 	private CatalogRepository catalogRepository;
-//	@Resource
-//	private BlogDao blogDao;
-	
+
 	@Override
 	public Catalog saveCatalog(Catalog catalog) {
 		// 用mybatis

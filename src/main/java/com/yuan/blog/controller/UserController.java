@@ -91,7 +91,6 @@ public class UserController {
 		model.addAttribute("userList", userService.listUsers());
 		model.addAttribute("title", "删除用户");
 		// 删除完 跳转list页面
-//		return new ModelAndView("users/list", "userModel", model);
 		return ResponseEntity.ok().body(new Response(true, "处理成功"));
 	}
 

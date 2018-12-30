@@ -128,14 +128,7 @@ public class EsBlogServiceImpl implements EsBlogService {
 		});
 
 		StringTerms modelTerms = (StringTerms) aggregations.asMap().get("tags");
-		// 升级到 Spring Boot 2.0.1 之后，使用新的方法
-//		Iterator<Bucket> modelBucketIt = modelTerms.getBuckets().iterator();
-//		while (modelBucketIt.hasNext()) {
-//			Bucket actiontypeBucket = modelBucketIt.next();
-//
-//			list.add(new TagVO(actiontypeBucket.getKey().toString(), actiontypeBucket.getDocCount()));
-//		}
-		
+
 		List<StringTerms.Bucket> modelBucketIt =  modelTerms.getBuckets();
 		for (StringTerms.Bucket actiontypeBucket : modelBucketIt) {
 			list.add(new TagVO(actiontypeBucket.getKeyAsString(), actiontypeBucket.getDocCount()));
@@ -164,14 +157,6 @@ public class EsBlogServiceImpl implements EsBlogService {
 		});
 
 		StringTerms modelTerms = (StringTerms) aggregations.asMap().get("users");
-		
-		// 升级到 Spring Boot 2.0.1 之后，使用新的方法
-//		Iterator<Bucket> modelBucketIt = modelTerms.getBuckets().iterator();
-//		while (modelBucketIt.hasNext()) {
-//			Bucket actiontypeBucket = modelBucketIt.next();
-//			String username = actiontypeBucket.getKey().toString();
-//			usernamelist.add(username);
-//		}
 		
 		List<StringTerms.Bucket> modelBucketIt =  modelTerms.getBuckets();
 		for (StringTerms.Bucket actiontypeBucket : modelBucketIt) {
