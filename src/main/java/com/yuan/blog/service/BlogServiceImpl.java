@@ -80,9 +80,8 @@ public class BlogServiceImpl implements BlogService {
 		// 按时间先后查询
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title,user,
+		return blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title,user,
 				title,user, title, pageable);
-		return blogs;
 	}
 
 	/**
@@ -118,7 +117,6 @@ public class BlogServiceImpl implements BlogService {
 
 		// 分页是从1开始的
 		PageHelper.startPage(1, 10,true);
-//		Blog blog = new Blog(null,null,null);
 		List<Blog> blogs = blogDao.queryList(map);
 		PageInfo<Blog> pageInfo = new PageInfo<>(blogs);
 		return null;
@@ -126,24 +124,22 @@ public class BlogServiceImpl implements BlogService {
 
 
 	@Override
-	public Page<Blog> listBlogsByKeywordByHot( String keyword, Pageable pageable) {
+	public Page<Blog> listBlogsByKeywordByHot(String keyword, Pageable pageable) {
 		String title = "%" + keyword + "%";
-		String tag = title;
 		// 按根据点赞量 阅读量 创建时间作为热度查询
 		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, tag,title,pageable);
+		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title,title,pageable);
 		return blogs;
 	}
 
 	@Override
 	public Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable) {
 		String title = "%" + keyword + "%";
-		String tag = title;
 		// 按根据点赞量 阅读量 创建时间作为热度查询
 		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title, user, tag,
+		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title, user, title,
 				user, title, pageable);
 		return blogs;
 	}
@@ -153,7 +149,7 @@ public class BlogServiceImpl implements BlogService {
 	public void readingIncrease(Long id) {
 		try{
 			Optional<Blog> byId = blogRepository.findById(id);
-			if(byId != null && byId.isPresent()){
+			if(byId.isPresent()){
 				Blog blog =byId.get();
 				blog.setReadSize(blog.getReadSize()+1);
 				blogRepository.save(blog);
@@ -203,7 +199,6 @@ public class BlogServiceImpl implements BlogService {
 
 	@Override
 	public Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable) {
-		Page<Blog> blogs = blogRepository.findByCatalog(catalog, pageable);
-		return blogs;
+		return blogRepository.findByCatalog(catalog, pageable);
 	}
 }

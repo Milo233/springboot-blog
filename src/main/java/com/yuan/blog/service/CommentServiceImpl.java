@@ -1,11 +1,11 @@
 package com.yuan.blog.service;
 
-import javax.transaction.Transactional;
-
 import com.yuan.blog.domain.Comment;
 import com.yuan.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 /**
  * Comment 服务.

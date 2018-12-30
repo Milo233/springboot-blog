@@ -11,6 +11,9 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * http请求
+ */
 public class MultipartUtility {
     private final String boundary;
     private static final String LINE_FEED = "\r\n";
@@ -22,9 +25,6 @@ public class MultipartUtility {
     /**
      * This constructor initializes a new HTTP POST request with content type
      * is set to multipart/form-data
-     * @param requestURL
-     * @param charset
-     * @throws IOException
      */
     public MultipartUtility(String requestURL, String charset)
             throws IOException {
@@ -43,8 +43,7 @@ public class MultipartUtility {
         httpConn.setRequestProperty("User-Agent", "CodeJava Agent");
         httpConn.setRequestProperty("Test", "Bonjour");
         outputStream = httpConn.getOutputStream();
-        writer = new PrintWriter(new OutputStreamWriter(outputStream, charset),
-                true);
+        writer = new PrintWriter(new OutputStreamWriter(outputStream, charset), true);
     }
 
     /**
