@@ -11,6 +11,7 @@ import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.util.MultipartUtility;
+import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,7 +215,13 @@ public class UserspaceController {
 	 * @param id 博客id
 	 */
 	@GetMapping("/{username}/blogs/{id}")
-	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id, Model model) {
+	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id,
+							  Model model,HttpServletRequest request) {
+		// 判断ip 只允许指定ip访问博文内容 临时方案
+		if (!NetUtil.isAllowed(request)){
+			return "error";
+		}
+
 		// 每次读取，简单的可以认为阅读量增加1次
 		blogService.readingIncrease(id);
 		Blog blog = blogService.getBlogById(id);
