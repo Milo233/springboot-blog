@@ -116,9 +116,9 @@ public class BlogServiceImpl implements BlogService {
 		map.put("orderBy","hot");
 
 		// 分页是从1开始的
-		PageHelper.startPage(1, 10,true);
-		List<Blog> blogs = blogDao.queryList(map);
-		PageInfo<Blog> pageInfo = new PageInfo<>(blogs);
+//		PageHelper.startPage(1, 10,true);
+//		List<Blog> blogs = blogDao.queryList(map);
+//		PageInfo<Blog> pageInfo = new PageInfo<>(blogs);
 		return null;
 	}
 

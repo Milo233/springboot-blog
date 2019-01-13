@@ -104,6 +104,16 @@ public class User implements UserDetails {
 		return simpleAuthorities;
 	}
 
+	// 获取用户的 authority名称
+	public String getFirstAuthority(){
+		try {
+			return this.authorities.get(0).getAuthority();
+		} catch (Exception e){
+			// todo add log here
+		}
+		return "";
+	}
+
 	// 加密密码
 	public void setEncodePassword(String password){
 		PasswordEncoder encoder = new BCryptPasswordEncoder();

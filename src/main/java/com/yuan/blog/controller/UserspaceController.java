@@ -2,16 +2,12 @@ package com.yuan.blog.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yuan.blog.domain.Blog;
-import com.yuan.blog.domain.Catalog;
-import com.yuan.blog.domain.User;
-import com.yuan.blog.domain.Vote;
+import com.yuan.blog.domain.*;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.util.MultipartUtility;
-import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,8 +29,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +45,7 @@ public class UserspaceController {
 
 	@Autowired
 	private UserService userService;
-	@Autowired
+	@Resource
 	private UserDetailsService userDetailsService;
 
 	@Autowired
@@ -217,11 +216,6 @@ public class UserspaceController {
 	@GetMapping("/{username}/blogs/{id}")
 	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id,
 							  Model model,HttpServletRequest request) {
-		// 判断ip 只允许指定ip访问博文内容 临时方案
-		if (!NetUtil.isAllowed(request)){
-			return "error";
-		}
-
 		// 每次读取，简单的可以认为阅读量增加1次
 		blogService.readingIncrease(id);
 		Blog blog = blogService.getBlogById(id);
@@ -235,6 +229,15 @@ public class UserspaceController {
 			principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal !=null && username.equals(principal.getUsername())) {
 				isBlogOwner = true;
+			}
+		}
+		// 判断是否可以查看博客 0私密博客，1开放博客
+		// 公开博客，所有人可以看，加密的只有 自己or管理员 可以看
+		if (blog.getOpen() == 0 && !isBlogOwner){// 加密博客 且不是owner
+			if(principal == null) return "error"; // 未登陆 直接返回error
+			// 已登陆 但是不是加密博客
+			if(!Authority.NAME_ADMIN.equals(principal.getFirstAuthority())){
+				return "error";
 			}
 		}
 
