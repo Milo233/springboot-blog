@@ -30,16 +30,7 @@ public class UserController {
 	private AuthorityService authorityService;
 
 	/**
-	 * 从 用户存储库 获取用户列表
-	 * @return
-	 */
-	private List<User> getUserlist() {
- 		return userService.listUsers();
-	}
-
-	/**
 	 * 查询所用用户
-	 * @return
 	 */
 	@GetMapping
 	public ModelAndView list(@RequestParam(value="async",required=false) boolean async,
@@ -59,8 +50,6 @@ public class UserController {
 
 	/**
 	 * 根据id查询用户
-	 * @param id model
-	 * @return
 	 */
 	@GetMapping("{id}")
 	public ModelAndView view(@PathVariable("id") Long id, Model model) {
@@ -95,7 +84,7 @@ public class UserController {
 	}
 
 	/**
-	 * 新建用户
+	 * 新建用户 / 修改用户
 	 */
 	@PostMapping
 	public ResponseEntity<Response> create(User user, Long authorityId) {
@@ -104,27 +93,23 @@ public class UserController {
 		authorities.add(authorityService.getAuthorityById(authorityId).get());
 		user.setAuthorities(authorities);
 
-		if(user.getId() == null) {
-//			user.setEncodePassword(user.getPassword()); // 加密密码
-		}else {
-			// 判断密码是否做了变更
-			User originalUser = userService.getUserById(user.getId());
-			String rawPassword = originalUser.getPassword();
-//			PasswordEncoder encoder = new BCryptPasswordEncoder();
-//			String encodePasswd = encoder.encode(user.getPassword());
-//			boolean isMatch = encoder.matches(rawPassword, encodePasswd);
-//			if (!isMatch) {
-//				user.setEncodePassword(user.getPassword());
-//			}else {
-//				user.setPassword(user.getPassword());
-//			}
+		if (user.getId() == null) {
+			user.setEncodePassword(user.getPassword()); // 加密密码
+		} else {
+			// 判断是否传入了密码 传了密码就明文转密文。否则就取之前的密码
+			if (user.getPassword() != null && !"".equals(user.getPassword())) {
+				user.setEncodePassword(user.getPassword());
+			} else {
+				User userInDB = userService.getUserById(user.getId());
+				user.setPassword(userInDB.getPassword());
+			}
 		}
 		userService.saveOrUpdateUser(user);
 		return ResponseEntity.ok().body(new Response(true, "处理成功", user));
 	}
 
 	/**
-	 * 修改用户
+	 * to 修改用户 页面
 	 */
 	@GetMapping(value = "edit/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") Long id, Model model) {

@@ -11,6 +11,7 @@
 	<div class="form-group">
 		<label for="email" class="col-form-label">邮箱</label>
 		<input type="email" class="form-control" id="email" name="email" th:value="*{email}" maxlength="50" placeholder="请输入邮箱">
+		<input type="text" hidden id="avatar" name="avatar" th:value="*{avatar}">
 	</div>
 	<div class="form-group">
 		<label for="name" class="col-form-label">姓名</label>
@@ -18,8 +19,8 @@
 	</div>
 	<div class="form-group">
 		<label for="password" class="col-form-label">密码</label>
-		<input type="password" class="form-control" id="password" name="password"  value="******"
-			   maxlength="30" placeholder="请输入密码，字母或特殊符号和数字结合" onfocus="removePassword()">
+		<input type="password" class="form-control" id="password" name="password"  value=""
+			   maxlength="30" placeholder="请输入密码，字母或特殊符号和数字结合">
 	</div>
 	<div class="form-group">
 		<label for="authorities" class="col-form-label">角色</label>
@@ -33,18 +34,10 @@
 </div>
 <!-- /.container -->
 <script th:inline="javascript">
-    // 第一次点击密码框时移除密码
-    var isFirst = true
-    function removePassword() {
-        if(isFirst){
-            document.getElementById("password").value = ""
-            isFirst = false
-        }
-    }
     // form表单提交前校验
     function toVaild(){
-        var val = document.getElementById("password").value;
-        if(val.length >= 3){
+        var pwd = document.getElementById("password").value;
+        if(pwd.length >= 3){
             return true;
         } else{
             alert("请输入最少三位密码，不进行提交");

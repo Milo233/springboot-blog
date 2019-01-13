@@ -114,11 +114,10 @@ public class User implements UserDetails {
 		return "";
 	}
 
-	// 加密密码
+	// 加密密码 password:原始密码
 	public void setEncodePassword(String password){
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		String encodePwd = encoder.encode(password);
-		this.password = encodePwd;
+		this.password = encoder.encode(password);
 	}
 
 
