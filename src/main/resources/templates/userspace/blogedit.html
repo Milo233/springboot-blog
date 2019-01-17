@@ -19,8 +19,9 @@ function submitBlog(){
             "content": $('#md').val(),
             "catalog":{"id":$('#catalogSelect').val()},
             "tags":$('.form-control-tag').val(),
-			"htmlContent":marked($("#md").val())
-        }),
+            "htmlContent":marked($("#md").val()),
+            "open": $('#open').is(':checked') ? 0 : 1
+       }),
         beforeSend: function(request) {
             request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
         },
@@ -125,7 +126,8 @@ function submitBlog(){
 						</div>
 						<div class="row mt-1">
                             <div  class="col-lg-12">
-								<button class="btn btn-primary float-right" id="submitBlog"  
+								<label><input id="open" type="checkbox" value="1" th:checked="${blogModel.blog.open eq 0 }">加密</label>
+								<button class="btn btn-primary float-right" id="submitBlog"
 									th:attr="userName=${#authentication.principal.username}"
 										onclick="submitBlog()">发布</button>
                             </div>

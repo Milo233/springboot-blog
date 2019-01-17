@@ -8,6 +8,7 @@ import com.yuan.blog.service.AuthorityService;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
+import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +59,11 @@ public class MainController {
                         @RequestParam(value="async",required=false) boolean async,
                         @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
                         @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
-                        Model model) {
+                        Model model, HttpServletRequest request) {
+
+        String ipAddr = NetUtil.getIpAddr(request);
+        System.out.println("ip is " + ipAddr);
+
         User  user = (User)userDetailsService.loadUserByUsername("milo");
         Page<Blog> page = null;
         if (categoryId != null &&categoryId > 0) {
@@ -85,14 +91,12 @@ public class MainController {
             System.out.println("耗时：" + (System.currentTimeMillis() - start));
         }
 
-        List<Blog> list = page.getContent();	// 当前所在页面数据列表
-
         model.addAttribute("user", user);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("order", order);
         model.addAttribute("page", page);
         model.addAttribute("keyword",keyword);
-        model.addAttribute("blogList", list);
+        model.addAttribute("blogList", page == null ? null : page.getContent());// 当前所在页面数据列表
         return (async?"index :: #mainContainerRepleace":"index");
     }
 

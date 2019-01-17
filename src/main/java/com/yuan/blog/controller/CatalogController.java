@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class CatalogController {
 	@Autowired
 	private CatalogService catalogService;
 	
-	@Autowired
+	@Resource
 	private UserDetailsService userDetailsService;
 
 	/**

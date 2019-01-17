@@ -211,17 +211,12 @@ public class UserspaceController {
 
 	/**
 	 * 获取博客展示界面
-	 * @param id 博客id
 	 */
 	@GetMapping("/{username}/blogs/{id}")
 	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id,
 							  Model model,HttpServletRequest request) {
-		// 每次读取，简单的可以认为阅读量增加1次
-		blogService.readingIncrease(id);
 		Blog blog = blogService.getBlogById(id);
-
 		boolean isBlogOwner = false;
-
 		User principal = null;
 		// 判断操作用户是否是博客的所有者
 		if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
@@ -254,6 +249,9 @@ public class UserspaceController {
 				}
 			}
 		}
+
+		// 每次读取，简单的可以认为阅读量增加1次
+		blogService.readingIncrease(id);
 
 		model.addAttribute("isBlogOwner", isBlogOwner);
 		model.addAttribute("blogModel",blogService.getBlogById(id));
@@ -319,6 +317,7 @@ public class UserspaceController {
 					exitBlog.setSummary(blog.getSummary());
 					exitBlog.setCatalog(blog.getCatalog()); // 增加对分类的处理
 					exitBlog.setTags(blog.getTags());  // 增加对标签的处理
+					exitBlog.setOpen(blog.getOpen());
 					blogService.saveBlog(exitBlog);
 				}
 			} else {

@@ -7,6 +7,18 @@
 // DOM 加载完再执行
 $(function() {
 	$.catalog("#catalog", ".post-content");
+
+	// 回车事件
+    $("#commentContent").keypress(function (e) {
+        if(e.which == 13) {
+            //submit form via ajax, this is not JS but server side scripting so not showing here
+            e.preventDefault();
+            $("#submitComment").click();
+        }
+/*        if(e.keyCode == 13 && e.ctrlKey){
+            // 这里实现换行
+            document.getElementById("a").value += "\n";}*/
+    });
 	
 	// 处理删除博客事件
 	$(".blog-content-container").on("click",".blog-delete-blog", function () { 
@@ -44,7 +56,6 @@ $(function() {
 			 data:{"blogId":blogId},
 			 success: function(data){
 				$("#mainContainer").html(data);
-
 		     },
 		     error : function() {
 		    	 toastr.error("error!");
