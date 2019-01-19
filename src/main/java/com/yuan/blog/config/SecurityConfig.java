@@ -1,7 +1,9 @@
 package com.yuan.blog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Resource;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * Spring Security 配置类.
  */
@@ -22,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String KEY = "milo.com";
 
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -88,5 +96,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder); // 设置密码加密方式
         return authenticationProvider;
+    }
+
+    /**
+     * 项目启动成功以后打开登录页
+     */
+    @EventListener({ApplicationReadyEvent.class})
+    void applicationReadyEvent() {
+        String os = System.getProperty("os.name");
+        if(os.toLowerCase().startsWith("win")){
+            System.out.println("Application started ... launching browser now");
+            Browse("http://localhost:8080/index");
+        }
+    }
+
+    public static void Browse(String url) {
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.service.CatalogService;
+import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.CatalogVO;
 import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,28 +36,21 @@ public class CatalogController {
 
 	/**
 	 * 获取分类列表
-	 * @param username
-	 * @param model
-	 * @return
 	 */
 	@GetMapping
-	public String listComments(@RequestParam(value="username",required=true) String username, Model model) {
+	public String listComments(@RequestParam(value="username") String username, Model model) {
 		User user = (User)userDetailsService.loadUserByUsername(username);
 		List<Catalog> catalogs = catalogService.listCatalogs(user);
 
 		// 判断操作用户是否是分类的所有者
 		boolean isOwner = false;
-		
-		if (SecurityContextHolder.getContext().getAuthentication() !=null 
-				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-				 &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
-				 .equals("anonymousUser")) {
-			User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
-			if (principal !=null && user.getUsername().equals(principal.getUsername())) {
-				isOwner = true;
-			} 
-		} 
-		
+
+
+		User currentUser = NetUtil.getCurrentUser();
+		if (currentUser !=null && user.getUsername().equals(currentUser.getUsername())) {
+			isOwner = true;
+		}
+
 		model.addAttribute("isCatalogsOwner", isOwner);
 		model.addAttribute("catalogs", catalogs);
 		return "userspace/u :: #catalogRepleace";
@@ -65,7 +59,6 @@ public class CatalogController {
 	/**
 	 * 创建分类
 	 * @param catalogVO
-	 * @return
 	 */
 	@PostMapping
 	@PreAuthorize("authentication.name.equals(#catalogVO.username)")// 指定用户才能操作方法
@@ -84,9 +77,6 @@ public class CatalogController {
 	
 	/**
 	 * 删除分类
-	 * @param username
-	 * @param id
-	 * @return
 	 */
 	@DeleteMapping("/{id}")
 	@PreAuthorize("authentication.name.equals(#username)")  // 指定用户才能操作方法
