@@ -51,15 +51,11 @@
                 
 	               <div class="card-block">
 					   <h5><!--博客文章下面的分类和标签-->
-						   分类：<a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
-								 th:text="${blogModel.open == 0 ? '加密博客':'公开博客' }"> Spring Boot </a>
-					   </h5>
-						<h5><!--博客文章下面的分类和标签-->
-							分类：<a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
+						   <a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
+							  th:text="${blogModel.open == 0 ? '加密博客':'公开博客'}"> Spring Boot </a>
+						   / 分类:<a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
 							th:text="${blogModel.catalog.name}"> Spring Boot </a>
-						</h5>
-						<h5>标签：
-							   <a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
+						/ 标签:<a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
 								th:href="'/u/' + ${blogModel.user.username}  + '/blogs?keyword='+ ${tag}">
 								<span class="badge badge-default" th:text="${tag}">Web Design</span>
 							</a>

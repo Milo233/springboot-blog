@@ -9,4 +9,6 @@ public interface BlogDao {
     Blog selectByPrimaryKey(Integer id);
 
     List<Blog> queryList(HashMap map);
+
+    int insertSystemLog(HashMap map);
 }

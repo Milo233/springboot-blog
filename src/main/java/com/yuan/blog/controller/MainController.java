@@ -4,10 +4,7 @@ import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
-import com.yuan.blog.service.AuthorityService;
-import com.yuan.blog.service.BlogService;
-import com.yuan.blog.service.CatalogService;
-import com.yuan.blog.service.UserService;
+import com.yuan.blog.service.*;
 import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,8 @@ public class MainController {
     private CatalogService catalogService;
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private SystemLogService systemLogService;
     @Resource
     private UserDetailsService userDetailsService;
 
@@ -61,10 +60,10 @@ public class MainController {
                         @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
                         Model model, HttpServletRequest request) {
 
-        String ipAddr = NetUtil.getIpAddr(request);
-        System.out.println("ip is " + ipAddr);
+        User currentUser = NetUtil.getCurrentUser();
+        systemLogService.insertSystemLog(request,currentUser,"首页");
 
-        User  user = (User)userDetailsService.loadUserByUsername("milo");
+        User user = (User)userDetailsService.loadUserByUsername("milo");
         Page<Blog> page = null;
         if (categoryId != null &&categoryId > 0) {
             Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
@@ -78,17 +77,12 @@ public class MainController {
         }
         if (order.equals("new")) { // 最新查询
             Pageable pageable = PageRequest.of(pageIndex, pageSize);
-            long start = System.currentTimeMillis();
             page = blogService.listBlogsByKeywordByTime( keyword, pageable);
-            System.out.println("耗时：" + (System.currentTimeMillis() - start));
-
         }
         if (order.equals("hot")) { // 最热查询 阅读/评论/点赞量
             Sort sort = new Sort(Sort.Direction.DESC,"reading","comments","likes");
             Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-            long start = System.currentTimeMillis();
             page = blogService.listBlogsByKeywordByHot(keyword, pageable);
-            System.out.println("耗时：" + (System.currentTimeMillis() - start));
         }
 
         model.addAttribute("user", user);
@@ -96,7 +90,7 @@ public class MainController {
         model.addAttribute("order", order);
         model.addAttribute("page", page);
         model.addAttribute("keyword",keyword);
-        model.addAttribute("blogList", page == null ? null : page.getContent());// 当前所在页面数据列表
+        model.addAttribute("blogList", page.getContent());// 当前所在页面数据列表
         return (async?"index :: #mainContainerRepleace":"index");
     }
 

@@ -1,8 +1,5 @@
 package com.yuan.blog.service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.yuan.blog.dao.BlogDao;
 import com.yuan.blog.domain.*;
 import com.yuan.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,7 +26,7 @@ public class BlogServiceImpl implements BlogService {
 	@Transactional
 	@Override
 	public Blog saveBlog(Blog blog) {
-		boolean isNew = (blog.getId() == null);
+//		boolean isNew = (blog.getId() == null);
 		Blog returnBlog = blogRepository.save(blog);
 
 		// 存到数据库以后还要存到 ES里 用于全文检索
@@ -99,9 +94,6 @@ public class BlogServiceImpl implements BlogService {
 		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title, title, pageable);
 		return blogs;
 	}
-
-	@Resource
-	private BlogDao blogDao;
 
 	/**
 	 * v 2.0
@@ -201,4 +193,7 @@ public class BlogServiceImpl implements BlogService {
 	public Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable) {
 		return blogRepository.findByCatalog(catalog, pageable);
 	}
+
+
+
 }

@@ -50,4 +50,8 @@
       order by (read_size + comment_size + vote_size) desc
     </if>
   </select>
+  <insert id="insertSystemLog" parameterType="Map">
+    insert into system_log (title,account,loginIP,logintime,loginArea)
+    VALUES (#{title},#{account},#{loginIP},now(),#{loginArea})
+  </insert>
 </mapper>

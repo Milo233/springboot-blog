@@ -1,8 +1,10 @@
 package com.yuan.blog.util;
 
+import com.yuan.blog.domain.User;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 网络相关 工具类
@@ -28,7 +30,7 @@ public class NetUtil {
         return ipList.contains(ipAddr);
     }
 
-    // 获取ip
+    // 获取并记录ip
     public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -41,5 +43,16 @@ public class NetUtil {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    // 查询当前登录的用户
+    public static User getCurrentUser(){
+        if (SecurityContextHolder.getContext().getAuthentication() !=null
+                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
+                .equals("anonymousUser")) {
+            return (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        }
+        return null;
     }
 }
