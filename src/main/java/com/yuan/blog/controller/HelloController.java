@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 @RestController
@@ -23,7 +22,7 @@ public class HelloController {
             return "invalid action!";
         }
         String os = System.getProperty("os.name");
-        if (!os.toLowerCase().startsWith("Unix")) {
+        if (!os.equalsIgnoreCase("Linux")) {
             return "not linux！！！";
         }
 
