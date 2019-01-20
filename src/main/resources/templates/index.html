@@ -22,7 +22,7 @@
                                          th:src="${blog.user.avatar} == null ? '/images/avatar-default.jpg' : ${blog.user.avatar}">
                                 </a>
                                 <a href="javascript:void(0)" class="card-link" th:text="${blog.title}"
-                                   th:href="'/u/' + ${blog.user.username} + '/blogs/' + ${blog.id}"></a>
+                                   th:href="'/u/' + ${blog.user.username} + '/blogs/' + ${blog.id} + '?keyword=' + ${keyword}"></a>
                             </h4>
                             <!--<p class="card-text" th:text="${blog.summary}"></p>-->
                             <div class="row">

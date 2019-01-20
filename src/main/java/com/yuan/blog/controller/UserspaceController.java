@@ -8,6 +8,7 @@ import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.util.MultipartUtility;
+import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,7 +32,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +55,9 @@ public class UserspaceController {
 	private String fileServerUrl;
 	@Autowired
 	private BlogService blogService;
+
+//	private Logger logger = Logger.class(BrowseController.class);
+//	private Logger logger = LoggerFactory.getLogger(UserspaceController.class);
 
 	/**
 	 *  获取用户配置
@@ -214,17 +216,14 @@ public class UserspaceController {
 	 */
 	@GetMapping("/{username}/blogs/{id}")
 	public String getBlogById(@PathVariable("username") String username,@PathVariable("id") Long id,
-							  Model model,HttpServletRequest request) {
+							  Model model,@RequestParam(value="keyword",required=false) String keyword) {
 		Blog blog = blogService.getBlogById(id);
 		boolean isBlogOwner = false;
 		User principal = null;
 		// 判断操作用户是否是博客的所有者
-		if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-				&&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-			principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if (principal !=null && username.equals(principal.getUsername())) {
-				isBlogOwner = true;
-			}
+		principal = NetUtil.getCurrentUser();
+		if (principal !=null && username.equals(principal.getUsername())) {
+			isBlogOwner = true;
 		}
 		// 判断是否可以查看博客 0私密博客，1开放博客
 		// 公开博客，所有人可以看，加密的只有 自己or管理员 可以看
@@ -256,6 +255,7 @@ public class UserspaceController {
 		model.addAttribute("isBlogOwner", isBlogOwner);
 		model.addAttribute("blogModel",blogService.getBlogById(id));
 		model.addAttribute("currentVote",currentVote);
+		model.addAttribute("keyword", keyword);
 		return "userspace/blog";
 	}
 
