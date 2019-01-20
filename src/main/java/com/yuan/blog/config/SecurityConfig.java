@@ -53,22 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().ignoringAntMatchers("/h2-console/**"); // 禁用 H2 控制台的 CSRF 防护
         http.headers().frameOptions().sameOrigin(); // 允许来自同一来源的H2 控制台的请求
         //设置同时在线人数，必须重写User的equal方法和hashCode方法才能起作用
-//        http.sessionManagement().maximumSessions(1).expiredUrl("/timeout");
-
-       /* http.authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/index").permitAll() // 都可以访问
-                .antMatchers("/h2-console/**").permitAll() // 都可以访问
-                // /admin/** 的页面都要登录
-                .antMatchers("/admins/**").hasRole("ADMIN") // 需要相应的角色才能访问
-                .and()
-                .formLogin()   //基于 Form 表单登录验证
-                .loginPage("/login").failureUrl("/login-error")
-                .and().rememberMe().key(KEY) // 自定义登录界面
-                // 处理异常，拒绝访问就重定向到 403 页面
-                .and().exceptionHandling().accessDeniedPage("/403");
-        http.csrf().ignoringAntMatchers("/h2-console/**"); // 禁用 H2 控制台的 CSRF 防护
-        http.headers().frameOptions().sameOrigin();*/ // 允许来自同一来源的H2 控制台的请求*/
+        // http.sessionManagement().maximumSessions(1).expiredUrl("/timeout");
         // 关闭csrf 不然只能提交get请求。。可以传递csrf token来进行post请求，but 有点麻烦。请求都要改
-//        http.csrf().disable();
+        // http.csrf().disable();
     }
 
     // any method annotated with @Autowired is a config method. It is called on bean instantiation after field injection
@@ -77,12 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
         auth.authenticationProvider(authenticationProvider());
-
-//        auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("milo")
-//                .password(new BCryptPasswordEncoder().encode("111")).roles("ADMIN");
-
-//        auth.inMemoryAuthentication().withUser("milo") // 认证信息存储在内存中
-//                .password("123456").roles("ADMIN");
     }
 
     @Bean

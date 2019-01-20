@@ -1,29 +1,48 @@
 package com.yuan.blog.controller;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import com.yuan.blog.domain.User;
+import com.yuan.blog.util.NetUtil;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStreamReader;
 
 @RestController
-@RequestMapping("/yuan")
+@RequestMapping("/run")
 public class HelloController {
 
-    @GetMapping("/bhu/{no}")
-    public String hello(@PathVariable("no") String no){
-        String result = "";
-        try {
-            Document doc= Jsoup.parse(new URL("https://www.zhihu.com/question/"+ no),(3000));
-            result = doc.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
+    @GetMapping("/reboot")
+    public String hello() {
+        StringBuilder result = new StringBuilder();
+        User currentUser = NetUtil.getCurrentUser();
+        // 指定用户才能重启
+        if(currentUser == null || !"milo".equals(currentUser.getUsername())){
+            return "invalid action!";
         }
-        System.out.println(result);
-        return result;
+        String os = System.getProperty("os.name");
+        if (!os.toLowerCase().startsWith("Unix")) {
+            return "not linux！！！";
+        }
+
+        try {
+            String s;
+            Process p;
+            p = Runtime.getRuntime().exec("sh /root/rebootBlog.sh");
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null){
+                result.append(s);
+                System.out.println("line: " + s);
+            }
+            p.waitFor();
+            System.out.println("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {
+            result = new StringBuilder(e.getMessage());
+        }
+        return result.toString();
     }
 }

@@ -67,7 +67,7 @@ public class MainController {
         Page<Blog> page = null;
         if (categoryId != null &&categoryId > 0) {
             Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
-            Catalog catalog = null;
+            Catalog catalog;
             if (optionalCatalog.isPresent()) {
                 catalog = optionalCatalog.get();
                 Pageable pageable = PageRequest.of(pageIndex, pageSize);

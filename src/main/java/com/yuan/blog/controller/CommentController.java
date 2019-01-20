@@ -31,9 +31,6 @@ public class CommentController {
 	
 	/**
 	 * 获取评论列表
-	 * @param blogId
-	 * @param model
-	 * @return
 	 */
 	@GetMapping
 	public String listComments(@RequestParam(value="blogId") Long blogId, Model model) {
@@ -56,9 +53,6 @@ public class CommentController {
 	}
 	/**
 	 * 发表评论
-	 * @param blogId
-	 * @param commentContent
-	 * @return
 	 */
 	@PostMapping
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
@@ -70,7 +64,6 @@ public class CommentController {
 	
 	/**
 	 * 删除评论
-	 * @return
 	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> deleteBlog(@PathVariable("id") Long id, Long blogId) {
