@@ -10,15 +10,15 @@ import java.util.Map;
  */
 public enum TallyCategoryEnum {
 
-    SHANGHAI_BANK("0", "上海银行+"),
-    ALI_PAY("1", "支付宝+"),
-    WEXIN_PAY("2", "微信+"),
-    JIUJIANG_BANK("3", "九江银行+"),
-    XINGYE_BANK("4", "兴业银行+"),
-    CASH("4", "现金+"),
-    HUABEI("5", "花呗-"),
-    JIAOTONG_CREDIT_CARD("6", "交行信用卡-"),
-    ZHAOSHANG_CREDIT_CARD("7", "招商信用卡-");
+    CASH("0", "现金+"),
+    WEXIN_PAY("1", "微信+"),
+    HUABEI("2", "花呗-"),
+    ALI_PAY("3", "支付宝+"),
+    JIUJIANG_BANK("4", "九江银行+"),
+    XINGYE_BANK("5", "兴业银行+"),
+    SHANGHAI_BANK("6", "上海银行+"),
+    JIAOTONG_CREDIT_CARD("7", "交行信用卡-"),
+    ZHAOSHANG_CREDIT_CARD("8", "招商信用卡-");
 
     private final String code;
     private final String desc;
@@ -44,6 +44,16 @@ public enum TallyCategoryEnum {
             }
         }
         return null;
+    }
+
+    public static int explainType(String code) {
+        for (TallyCategoryEnum transStatusEnum : TallyCategoryEnum.values()) {
+            if (transStatusEnum.code.equals(code)) {
+                String desc = transStatusEnum.getDesc();
+                return desc.contains("+") ? 1 : -1;
+            }
+        }
+        return 1;
     }
 
     public static List<Map> toList() {

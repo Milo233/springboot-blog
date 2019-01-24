@@ -54,4 +54,8 @@
     insert into system_log (title,account,loginIP,logintime,loginArea)
     VALUES (#{title},#{account},#{loginIP},now(),#{loginArea})
   </insert>
+  <insert id="saveTally" parameterType="com.yuan.blog.domain.Tally">
+    insert into tally (amount,user_name,category_id,type,create_time,remark)
+    VALUES (#{amount},#{userName},#{categoryId},#{type},#{createTime},#{remark})
+  </insert>
 </mapper>

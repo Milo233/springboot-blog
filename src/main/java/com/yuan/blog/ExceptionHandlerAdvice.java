@@ -43,10 +43,6 @@ public class ExceptionHandlerAdvice {
                     return ResponseEntity.ok().body(
                             new Response(false, ConstraintViolationExceptionHandler.getMessage((ConstraintViolationException) t)));
                 }
-            }else if(e instanceof DataIntegrityViolationException){
-                return ResponseEntity.ok().body(
-                        // 不完全正确，可能是其他 表的数据重复了，所以还是要在代码里做控制 判断
-                        new Response(false, "账号或邮箱重复！"));
             }else if(e instanceof AccessDeniedException){
                 return ResponseEntity.ok().body(
                         new Response(false, "操作失败，请尝试先登录！"));

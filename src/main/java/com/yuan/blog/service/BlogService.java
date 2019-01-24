@@ -2,11 +2,14 @@ package com.yuan.blog.service;
 
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Catalog;
+import com.yuan.blog.domain.Tally;
 import com.yuan.blog.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 /**
  * Blog 服务接口.
@@ -72,4 +75,6 @@ public interface BlogService {
 	 * 根据分类进行查询
 	 */
 	Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
+
+	void saveTally(List<Tally> tallyList,User user);
 }

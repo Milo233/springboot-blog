@@ -62,7 +62,7 @@
             </div>
 
             <!--热门用户-->
-            <div class="card my-3">
+            <!--<div class="card my-3">
                 <h5 class="card-header"><i class="fa fa-user">热门用户</i></h5>
                 <div class="card-body">
                     <div class="row">
@@ -74,6 +74,53 @@
                                          class="blog-avatar-50">
                                 </a>
                             </span>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="card" sec:authorize="isAuthenticated()">
+                <h5 class="card-header"><i class="fa fa-user">个人记账</i></h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">现金</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">微信</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">花呗</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">支付宝</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">九江银行</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">兴业银行</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">上海银行</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">交行信用卡</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <div class="input-group" style="margin-top: 5px">
+                                <span class="input-group-addon">招商信用卡</span>
+                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                            </div>
+                            <button class="btn btn-outline-secondary" type="button" id="save" onclick="save()" >保存</button>
                         </div>
                     </div>
                 </div>
@@ -93,7 +140,60 @@
                 $("#indexsearch").click();
             }
         });
+        $('input').on("keypress", function(e) {
+            if (e.keyCode == 13) {
+                var inputs = $(".tally");
+                var idx = inputs.index(this);
+                if (idx == inputs.length - 1) {
+                    if(confirm("确认要提交？")){
+                        save();
+                    } else {
+                        inputs[0].select(); // 跳到第一个input
+                    }
+                } else {
+                    inputs[idx + 1].focus();
+                    inputs[idx + 1].select();
+                }
+                return false;
+            }
+        });
     })
+    function save(){
+        var index = 0;
+        var data = [];
+
+        $(".tally").each(function(){
+            var tally = {};
+            tally.categoryId = index;
+            tally.amount = $(this).val();
+            tally.remark = $(this).parent().find("span").text()
+            data.push(tally)
+            index ++;
+        });
+        // 获取 CSRF Token
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: '/u/'+ "milo" + '/tally/save',
+            type: 'POST',
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            beforeSend: function(request) {
+                request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            },
+            success: function(data){
+                if (data.success) {
+                    alert("success!" + data.message);
+                } else {
+                    alert("error!" + data.message);
+                }
+            },
+            error : function() {
+                alert("error!");
+            }
+        })
+    }
 </script>
 </body>
 </html>

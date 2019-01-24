@@ -1,7 +1,9 @@
 package com.yuan.blog.service;
 
+import com.yuan.blog.dao.BlogDao;
 import com.yuan.blog.domain.*;
 import com.yuan.blog.repository.BlogRepository;
+import com.yuan.blog.vo.TallyCategoryEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,8 +12,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,6 +27,8 @@ public class BlogServiceImpl implements BlogService {
 
 	@Autowired
 	private BlogRepository blogRepository;
+	@Resource
+	private BlogDao blogDao;
 
 	@Transactional
 	@Override
@@ -194,6 +201,19 @@ public class BlogServiceImpl implements BlogService {
 		return blogRepository.findByCatalog(catalog, pageable);
 	}
 
-
+	@Override
+	public void saveTally(List<Tally> tallyList,User user) {
+		if(user == null){
+			return;
+		}
+		String userName = user.getUsername();
+		Date now = new Date();
+		for(Tally tally : tallyList){
+			tally.setUserName(userName);
+			tally.setCreateTime(now);
+			tally.setType(TallyCategoryEnum.explainType(tally.getCategoryId()+""));
+			blogDao.saveTally(tally);
+		}
+	}
 
 }
