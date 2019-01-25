@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -211,7 +212,9 @@ public class BlogServiceImpl implements BlogService {
 		for(Tally tally : tallyList){
 			tally.setUserName(userName);
 			tally.setCreateTime(now);
-			tally.setType(TallyCategoryEnum.explainType(tally.getCategoryId()+""));
+			int type = TallyCategoryEnum.explainType(tally.getCategoryId() + "");
+			tally.setType(type);
+			tally.setAmount(tally.getAmount().multiply(new BigDecimal(type)));
 			blogDao.saveTally(tally);
 		}
 	}

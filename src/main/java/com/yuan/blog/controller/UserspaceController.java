@@ -354,6 +354,6 @@ public class UserspaceController {
 	public ResponseEntity<Response> saveTally(@PathVariable("username") String username,@RequestBody List<Tally> tallyList) {
 		User user = (User)userDetailsService.loadUserByUsername(username);
 		blogService.saveTally(tallyList,user);
-		return ResponseEntity.ok().body(new Response(true, "注册成功", user));
+		return ResponseEntity.ok().body(new Response(true, "保存记账记录成功", user));
 	}
 }
