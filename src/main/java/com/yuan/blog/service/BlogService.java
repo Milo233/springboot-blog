@@ -77,4 +77,8 @@ public interface BlogService {
 	Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
 
 	void saveTally(List<Tally> tallyList,User user);
+
+	int updateWord(String content,int id);
+
+	String getContentById(int id);
 }

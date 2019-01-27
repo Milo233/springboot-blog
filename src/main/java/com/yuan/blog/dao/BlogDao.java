@@ -14,4 +14,8 @@ public interface BlogDao {
     int insertSystemLog(HashMap map);
 
     int saveTally(Tally tally);
+
+    int updateWord(HashMap map);
+
+    String getContentById(int id);
 }
