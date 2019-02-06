@@ -3,6 +3,8 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.util.NetUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import java.io.InputStreamReader;
 @Controller
 @RequestMapping("/run")
 public class HelloController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HelloController.class);
 
     private static final String REBOOT_COMMAND = "sh /root/rebootBlog.sh";
 
@@ -53,6 +57,10 @@ public class HelloController {
 
     @GetMapping("/query/{id}")
     public ModelAndView query(@PathVariable("id") Integer id) {
+        LOG.debug("hello world 你好啊！！ debug 第二次");
+        LOG.error("hello world 你好啊！！ error 第二次");
+        LOG.info("hello world 你好啊！！ info 第二次");
+        LOG.warn("hello world 你好啊！！ warn 第二次");
         String content = blogService.getContentById(id);
         return new ModelAndView("copy", "userModel", content);
     }
