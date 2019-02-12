@@ -7,6 +7,8 @@ import com.yuan.blog.domain.User;
 import com.yuan.blog.service.*;
 import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +33,9 @@ import java.util.Optional;
  */
 @Controller
 public class MainController {
+
+    private static final Logger log = LoggerFactory.getLogger(MainController.class);
+
     private static final Long ROLE_USER_AUTHORITY_ID = 2L; // 用户权限（博主）
 
     @Autowired
@@ -59,6 +64,8 @@ public class MainController {
                         @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
                         @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
                         Model model, HttpServletRequest request) {
+
+        log.info("visit first page : index");
 
         User currentUser = NetUtil.getCurrentUser();
         systemLogService.insertSystemLog(request,currentUser,"首页");

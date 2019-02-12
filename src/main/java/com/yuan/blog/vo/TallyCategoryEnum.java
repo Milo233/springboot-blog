@@ -14,11 +14,10 @@ public enum TallyCategoryEnum {
     WEXIN_PAY("1", "微信+"),
     HUABEI("2", "花呗-"),
     ALI_PAY("3", "支付宝+"),
-    JIUJIANG_BANK("4", "九江银行+"),
-    XINGYE_BANK("5", "兴业银行+"),
-    SHANGHAI_BANK("6", "上海银行+"),
-    JIAOTONG_CREDIT_CARD("7", "交行信用卡-"),
-    ZHAOSHANG_CREDIT_CARD("8", "招商信用卡-");
+    XINGYE_BANK("4", "兴业银行+"),
+    SHANGHAI_BANK("5", "上海银行+"),
+    JIAOTONG_CREDIT_CARD("6", "交行信用卡-"),
+    ZHAOSHANG_CREDIT_CARD("7", "招商信用卡-");
 
     private final String code;
     private final String desc;

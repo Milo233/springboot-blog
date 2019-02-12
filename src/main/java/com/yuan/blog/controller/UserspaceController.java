@@ -56,9 +56,6 @@ public class UserspaceController {
 	@Autowired
 	private BlogService blogService;
 
-//	private Logger logger = Logger.class(BrowseController.class);
-//	private Logger logger = LoggerFactory.getLogger(UserspaceController.class);
-
 	/**
 	 *  获取用户配置
 	 */

@@ -4,7 +4,6 @@ import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.vo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
