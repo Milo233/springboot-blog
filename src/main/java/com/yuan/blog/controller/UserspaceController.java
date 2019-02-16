@@ -216,9 +216,8 @@ public class UserspaceController {
 							  Model model,@RequestParam(value="keyword",required=false) String keyword) {
 		Blog blog = blogService.getBlogById(id);
 		boolean isBlogOwner = false;
-		User principal = null;
 		// 判断操作用户是否是博客的所有者
-		principal = NetUtil.getCurrentUser();
+        User principal = NetUtil.getCurrentUser();
 		if (principal !=null && username.equals(principal.getUsername())) {
 			isBlogOwner = true;
 		}
