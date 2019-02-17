@@ -17,7 +17,7 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
         </File>
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，
-        则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        则这size大小的日志会自动存入按年份-月份建立的文件夹下面，作为存档（info-2019-02-16-2.log）-->
         <RollingFile name="RollingFileInfo" fileName="${sys:user.home}/logs/xxxxl/info.log"
                      filePattern="${sys:user.home}/logs/xxxxl/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
             <Filters>
@@ -28,6 +28,7 @@
             <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
+                <!--日志文件分割大小，之前的会被放入文件夹中-->
                 <SizeBasedTriggeringPolicy size="1 MB"/>
             </Policies>
         </RollingFile>
@@ -43,8 +44,17 @@
                 <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="1 MB"/>
             </Policies>
-            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
-            <DefaultRolloverStrategy max="20"/>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下同一天最多7个文件，这里设置了20
+                文件数超出以后，就删除第一个，后面的文件名依次减1，也就是保证最早的日志备份文件最先被移除-->
+            <DefaultRolloverStrategy max="20">
+                <!-- 删除指定路径下的日志文件，maxdepth：文件路径深度。 -->
+                <Delete basePath="${sys:user.home}/logs/xxxxl/" maxDepth="3">
+                    <!-- 如果上次修改是6天以前，就删除。另外还可以加很多参数，用于排除限定文件
+                    https://blog.csdn.net/u013066244/article/details/72461105 -->
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+
         </RollingFile>
 
         <RollingFile name="RollingFileError" fileName="${sys:user.home}/logs/xxxxl/error.log"

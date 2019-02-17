@@ -51,6 +51,9 @@ public class MainController {
     @Resource
     private UserDetailsService userDetailsService;
 
+//    private static final Logger logAnalytics = LoggerFactory.getLogger("analytics-log");
+
+
     @GetMapping("/")
     public String root() {
         return "redirect:/index";
@@ -64,6 +67,7 @@ public class MainController {
                         @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
                         @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
                         Model model, HttpServletRequest request) {
+//        logAnalytics.info("log to log analytics");
 
         log.info("visit first page : index");
 

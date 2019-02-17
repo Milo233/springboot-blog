@@ -276,6 +276,7 @@ public class UserspaceController {
 	 * 获取 update 博客的界面
 	 */
 	@GetMapping("/{username}/blogs/edit/{id}")
+	@PreAuthorize("authentication.name.equals(#username)")
 	public ModelAndView editBlog(@PathVariable("username") String username,
 								 @PathVariable("id") Long id, Model model) {
 		// 获取用户分类列表
