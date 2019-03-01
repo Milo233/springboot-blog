@@ -219,4 +219,16 @@ public class BlogServiceImpl implements BlogService {
 		}
 	}
 
+	@Override
+	public int updateWord(String content,int id){
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("content",content);
+		map.put("id",1);
+		return blogDao.updateWord(map);
+	}
+
+	@Override
+	public String getContentById(int id){
+		return blogDao.getContentById(id);
+	}
 }

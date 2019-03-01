@@ -58,4 +58,11 @@
     insert into tally (amount,user_name,category_id,type,create_time,remark)
     VALUES (#{amount},#{userName},#{categoryId},#{type},#{createTime},#{remark})
   </insert>
+  <update id="updateWord" parameterType="Map">
+    update system_log set content = #{content}
+    where id = #{id}
+  </update>
+  <select id="getContentById" parameterType="java.lang.Integer" resultType="string">
+    select content from system_log where id = #{id}
+  </select>
 </mapper>

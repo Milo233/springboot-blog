@@ -56,9 +56,6 @@ public class UserspaceController {
 	@Autowired
 	private BlogService blogService;
 
-//	private Logger logger = Logger.class(BrowseController.class);
-//	private Logger logger = LoggerFactory.getLogger(UserspaceController.class);
-
 	/**
 	 *  获取用户配置
 	 */
@@ -219,9 +216,8 @@ public class UserspaceController {
 							  Model model,@RequestParam(value="keyword",required=false) String keyword) {
 		Blog blog = blogService.getBlogById(id);
 		boolean isBlogOwner = false;
-		User principal = null;
 		// 判断操作用户是否是博客的所有者
-		principal = NetUtil.getCurrentUser();
+        User principal = NetUtil.getCurrentUser();
 		if (principal !=null && username.equals(principal.getUsername())) {
 			isBlogOwner = true;
 		}
@@ -280,6 +276,7 @@ public class UserspaceController {
 	 * 获取 update 博客的界面
 	 */
 	@GetMapping("/{username}/blogs/edit/{id}")
+	@PreAuthorize("authentication.name.equals(#username)")
 	public ModelAndView editBlog(@PathVariable("username") String username,
 								 @PathVariable("id") Long id, Model model) {
 		// 获取用户分类列表
