@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 
 @Service
@@ -21,12 +22,22 @@ public class SystemLogServiceImpl implements SystemLogService{
      */
     @Override
     public int insertSystemLog(HttpServletRequest request, User user,String title) {
+        String ip = NetUtil.getIpAddr(request);
+        // 排除开发模式
+        if ("0:0:0:0:0:0:0:1".equals(ip)) return 0;
+        // http://ip.taobao.com/service/getIpInfo.php?ip=61.144.248.17
+//        根据ip查询最近的登录记录。用于判断ip归属地/
         HashMap<String, String> map = new HashMap<>();
         map.put("title",title);
         map.put("account",user == null ? "" : user.getUsername());
-        map.put("loginIP", NetUtil.getIpAddr(request));
+        map.put("loginIP", ip);
         map.put("loginArea",null);
         return blogDao.insertSystemLog(map);
+    }
+
+    @Override
+    public int deleteLogsBefore(Date date){
+        return blogDao.deleteLogsBefore(date);
     }
 }
 
