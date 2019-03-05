@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 
+@EnableScheduling
 @Component
 public class ScheduledTask {
 
