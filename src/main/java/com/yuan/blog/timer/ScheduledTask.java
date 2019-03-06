@@ -21,7 +21,7 @@ public class ScheduledTask {
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
     //@Scheduled(fixedRate = 4 * 60 * 60 * 1000 ) // 24h 一次 项目第一次启动时就会执行 大部分时候启动时会执行两次。。还是用cron的好
-    @Scheduled(cron="0 59 23 * * ? ")
+    @Scheduled(cron="0 53 22 * * ?")
     public void deleteSystemLog() {
         log.info("cron 定时任务 删除3天以前的日志(留下id小于、等于50的)");
         Calendar cal = Calendar.getInstance();
