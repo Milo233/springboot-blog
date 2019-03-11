@@ -27,22 +27,24 @@ public class HelloController {
     private BlogService blogService;
 
     @GetMapping("/{command}")
-    public String hello(@PathVariable("command") String command) {
+    public void hello(@PathVariable("command") String command) {
         User currentUser = NetUtil.getCurrentUser();
         // 指定用户才能重启
         if(currentUser == null || !"milo".equals(currentUser.getUsername())){
-            return "invalid action!";
+            log.info("valid action");
+            return;
         }
         log.info(currentUser.getUsername() + " is trying to execute " + command);
         String os = System.getProperty("os.name");
         if (!os.equalsIgnoreCase("Linux")) {
-            return "not linux！！！";
+            log.info("not linux");
+            return;
         }
 
         if("reboot".equals(command)){
-            return exec(REBOOT_COMMAND);
+            exec(REBOOT_COMMAND);
         } else {
-            return exec(command);
+            exec(command);
         }
     }
 
