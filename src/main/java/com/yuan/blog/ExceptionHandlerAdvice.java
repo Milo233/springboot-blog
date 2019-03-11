@@ -20,7 +20,7 @@ import javax.validation.ConstraintViolationException;
 @ControllerAdvice(basePackages = "com.yuan.blog.controller")
 public class ExceptionHandlerAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
     /*此方法返回值，可以是Controller可以返回的任何值*/
     /**

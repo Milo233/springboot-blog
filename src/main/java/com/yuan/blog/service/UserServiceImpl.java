@@ -1,5 +1,7 @@
 package com.yuan.blog.service;
 
+import com.yuan.blog.config.IntegrationAuthentication;
+import com.yuan.blog.config.IntegrationAuthenticationContext;
 import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.repository.UserRepository;
@@ -8,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,11 +33,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User registerUser(User user) throws Exception {
         // 判断email重复
         User byEmail = userRepository.findByEmail(user.getEmail());
-        if(byEmail != null){
+        if (byEmail != null) {
             throw new Exception("邮箱重复!");
         }
         User byUsername = userRepository.findByUsername(user.getUsername());
-        if(byUsername != null){
+        if (byUsername != null) {
             throw new Exception("账号重复!");
         }
         return userRepository.save(user);
@@ -56,8 +57,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Page<User> listUsersByNameLike(String name, Pageable pageable) {
         name = "%" + name + "%";
-        Page<User> users = userRepository.findByNameLike(name, pageable);
-        return users;
+        return userRepository.findByNameLike(name, pageable);
     }
 
     @Override
@@ -73,7 +73,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     //  实现 UserDetailsService 的方法
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
+        try {
+            IntegrationAuthentication authentication = IntegrationAuthenticationContext.get();
+            String authType = authentication == null ? "" : authentication.getAuthType();
+            System.out.println("the autgType is " + authType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return userRepository.findByUsername(username);
     }
 
