@@ -15,12 +15,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +72,7 @@ public class MainController {
         User currentUser = NetUtil.getCurrentUser();
         systemLogService.insertSystemLog(request,currentUser,"首页");
 
-        User user = (User)userDetailsService.loadUserByUsername("milo");
+//        User user = (User)userDetailsService.loadUserByUsername("milo");
         Page<Blog> page = null;
         if (categoryId != null &&categoryId > 0) {
             Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
@@ -91,7 +94,7 @@ public class MainController {
             page = blogService.listBlogsByKeywordByHot(keyword, pageable);
         }
 
-        model.addAttribute("user", user);
+//        model.addAttribute("user", new User("","","",""));
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("order", order);
         model.addAttribute("page", page);
@@ -107,6 +110,7 @@ public class MainController {
     public String login() {
         return "login";
     }
+
 
 
     @GetMapping("/login-error")

@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 import java.awt.*;
@@ -41,7 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/index").permitAll() // 都可以访问
                 .antMatchers("/h2-console/**").permitAll() // 都可以访问
                 .antMatchers("/admins/**").hasRole("ADMIN") // 需要相应的角色才能访问
@@ -52,7 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling().accessDeniedPage("/403");  // 处理异常，拒绝访问就重定向到 403 页面
         http.csrf().ignoringAntMatchers("/h2-console/**"); // 禁用 H2 控制台的 CSRF 防护
         http.headers().frameOptions().sameOrigin(); // 允许来自同一来源的H2 控制台的请求
-        //设置同时在线人数，必须重写User的equal方法和hashCode方法才能起作用
+        // 添加过滤器
+        http.addFilterBefore(new SecurityFilterConfig(), UsernamePasswordAuthenticationFilter.class);
+        // 设置同时在线人数，必须重写User的equal方法和hashCode方法才能起作用
         // http.sessionManagement().maximumSessions(1).expiredUrl("/timeout");
         // 关闭csrf 不然只能提交get请求。。可以传递csrf token来进行post请求，but 有点麻烦。请求都要改
         // http.csrf().disable();

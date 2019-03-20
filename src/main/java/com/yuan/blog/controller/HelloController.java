@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 @RequestMapping("/run")
 public class HelloController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HelloController.class);
+    private static final Logger log = LoggerFactory.getLogger(HelloController.class);
 
     private static final String REBOOT_COMMAND = "sh /root/rebootBlog.sh";
 
@@ -27,27 +27,30 @@ public class HelloController {
     private BlogService blogService;
 
     @GetMapping("/{command}")
-    public String hello(@PathVariable("command") String command) {
+    public void hello(@PathVariable("command") String command) {
         User currentUser = NetUtil.getCurrentUser();
         // 指定用户才能重启
         if(currentUser == null || !"milo".equals(currentUser.getUsername())){
-            return "invalid action!";
+            log.info("valid action");
+            return;
         }
+        log.info(currentUser.getUsername() + " is trying to execute " + command);
         String os = System.getProperty("os.name");
-        // todo temp annotation
         if (!os.equalsIgnoreCase("Linux")) {
-            return "not linux！！！";
+            log.info("not linux");
+            return;
         }
 
         if("reboot".equals(command)){
-            return exec(REBOOT_COMMAND);
+            exec(REBOOT_COMMAND);
         } else {
-            return exec(command);
+            exec(command);
         }
     }
 
     @GetMapping("/update/{content}")
     public ModelAndView update(@PathVariable("content") String content) {
+        log.info("aws update content " + content);
         if(content == null || content.length() == 0 || content.length() > 200){
             return new ModelAndView("copy", "userModel", "failed!!");
         }

@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -261,7 +260,7 @@ public class UserspaceController {
 	@GetMapping("/{username}/blogs/edit")
 	public ModelAndView createBlog(@PathVariable("username") String username,Model model) {
 		// 获取用户分类列表
-		User user = (User)userDetailsService.loadUserByUsername(username);
+		User user = (User) userDetailsService.loadUserByUsername(username);
 		List<Catalog> catalogs = catalogService.listCatalogs(user);
 
 		model.addAttribute("catalogs", catalogs);
