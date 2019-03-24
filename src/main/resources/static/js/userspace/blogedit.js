@@ -33,9 +33,6 @@ $(function() {
 
     // 编辑界面插入图片
     $("#uploadImage").click(function () {
-
-        alert("start of uploadimage");
-
         //这里唯一需要注意的就是这个form-add的id
         // form必须有action
         var url = $("#uploadFormId").attr("action");

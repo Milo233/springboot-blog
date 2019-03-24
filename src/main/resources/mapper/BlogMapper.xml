@@ -69,4 +69,12 @@
   <select id="getContentById" parameterType="java.lang.Integer" resultType="string">
     select content from system_log where id = #{id}
   </select>
+  <select id="collectTalley" resultType="com.yuan.blog.domain.TalleyCollection" parameterType="string">
+    SELECT
+      sum(case when type = 1 then amount ELSE 0 end) moneyInHand,
+      sum(case when type = -1 then amount ELSE 0 end) debt,
+      sum(amount) actualMoney,create_time date
+    FROM tally where user_name = #{userName} GROUP BY create_time
+    ORDER BY create_time DESC
+  </select>
 </mapper>

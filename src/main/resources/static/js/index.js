@@ -39,9 +39,30 @@ $(function() {
 	// 关键字搜索
 	$("#indexsearch").click(function() {
 		getBlogsByName(0, _pageSize);
-        console.log("you are clicking indexsearch!!!");
-        console.log($("#indexkeyword").val());
 	});
+
+	// 插入缓存
+    $("#insertPWD").click(function() {
+    	console.log("i am clicking insertPWD")
+        // 获取 CSRF Token
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: "/insert",
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"password":$("#indexkeyword").val()}),
+            beforeSend: function(request) {
+                request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            },
+            success: function(data){
+                location.reload();
+            },
+            error : function() {
+                location.reload();
+            }
+        });
+    });
 	
 	// 最新\最热切换事件
 	$(".nav-item .nav-link").click(function() {

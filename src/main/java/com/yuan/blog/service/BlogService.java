@@ -1,9 +1,6 @@
 package com.yuan.blog.service;
 
-import com.yuan.blog.domain.Blog;
-import com.yuan.blog.domain.Catalog;
-import com.yuan.blog.domain.Tally;
-import com.yuan.blog.domain.User;
+import com.yuan.blog.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -81,4 +78,6 @@ public interface BlogService {
 	int updateWord(String content,int id);
 
 	String getContentById(int id);
+
+	List<TalleyCollection> collectTalley(String userName);
 }
