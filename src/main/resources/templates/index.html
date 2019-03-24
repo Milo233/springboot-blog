@@ -116,7 +116,8 @@
                                 <span class="input-group-addon">招商信用卡</span>
                                 <input type="text" class="form-control tally" onfocus="this.select();" value="0">
                             </div>
-                            <button class="btn btn-outline-secondary" type="button" id="save" onclick="save()" >保存</button>
+                            <button class="btn btn-info" type="button" id="save" onclick="save()" >保存</button>
+                            <button class="btn btn-warning" type="button" id="reset" onclick="reset('tally')" >重置</button>
                         </div>
                     </div>
                 </div>
@@ -181,6 +182,7 @@
             success: function(data){
                 if (data.success) {
                     alert("success!" + data.message);
+                    reset("tally");
                 } else {
                     alert("error!" + data.message);
                 }
@@ -189,6 +191,12 @@
                 alert("error!");
             }
         })
+    }
+
+    function reset(className) {
+        $("." + className).each(function(){
+            $(this).val("0");
+        });
     }
 </script>
 </body>

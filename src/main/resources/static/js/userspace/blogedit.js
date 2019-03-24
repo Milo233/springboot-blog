@@ -30,24 +30,45 @@ $(function() {
     });
         
     $('.form-control-chosen').chosen();
-    
-    
-    $("#uploadImage").click(function() {
+
+    // 编辑界面插入图片
+    $("#uploadImage").click(function () {
+
+        alert("start of uploadimage");
+
+        //这里唯一需要注意的就是这个form-add的id
+        // form必须有action
+        var url = $("#uploadFormId").attr("action");
+        var formData = new FormData($("#uploadFormId")[0]);
         $.ajax({
-            url: fileServerUrl,
+            //接口地址
+            url: url,
             type: 'POST',
+            data: formData,
+            async: false,
             cache: false,
-            data: new FormData($('#uploadformid')[0]),
-            processData: false,
             contentType: false,
-            success: function(data){
-                var mdcontent=$("#md").val();
-                 $("#md").val(mdcontent + "\n![]("+data +") \n");
-
-             }
-        }).done(function(res) {
-            $('#file').val('');
-        }).fail(function(res) {});
-    })
-
+            processData: false,
+            success: function (data) {
+                //成功的回调  ![](图片地址 ''图片title'')
+                if(data.success){
+                    var text = $("#md").val()
+                    var image = "![](" + data.body + " '图片title')"
+                    if (text){
+                        text = (text + "\r\n" + image)
+                    } else {
+                        text = image
+                    }
+                    $("#md").val(text);
+                } else {
+                    alert("图片上传失败，请稍后重试！");
+                }
+            },
+            error: function (returndata) {
+                //请求异常的回调
+                alert("图片上传失败，请稍后重试！");
+            }
+        });
+    });
+    
 });

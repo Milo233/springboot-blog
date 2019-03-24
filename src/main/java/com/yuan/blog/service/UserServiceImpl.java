@@ -5,6 +5,8 @@ import com.yuan.blog.config.IntegrationAuthenticationContext;
 import com.yuan.blog.domain.Authority;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     @Transactional
@@ -77,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         try {
             IntegrationAuthentication authentication = IntegrationAuthenticationContext.get();
             String authType = authentication == null ? "" : authentication.getAuthType();
-            System.out.println("the autgType is " + authType);
+            log.info("the autgType is " + authType);
         } catch (Exception e) {
             e.printStackTrace();
         }
