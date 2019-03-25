@@ -5,6 +5,7 @@ import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Catalog;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.service.*;
+import com.yuan.blog.util.Cache;
 import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.slf4j.Logger;
@@ -18,10 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -51,8 +55,6 @@ public class MainController {
     private BlogService blogService;
     @Autowired
     private SystemLogService systemLogService;
-    @Resource
-    private UserDetailsService userDetailsService;
 
     @GetMapping("/")
     public String root() {
@@ -71,8 +73,6 @@ public class MainController {
 
         User currentUser = NetUtil.getCurrentUser();
         systemLogService.insertSystemLog(request,currentUser,"首页");
-
-//        User user = (User)userDetailsService.loadUserByUsername("milo");
         Page<Blog> page = null;
         if (categoryId != null &&categoryId > 0) {
             Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
@@ -93,8 +93,15 @@ public class MainController {
             Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
             page = blogService.listBlogsByKeywordByHot(keyword, pageable);
         }
-
-//        model.addAttribute("user", new User("","","",""));
+        // 是否显示记账div
+        if (currentUser != null){
+            String username = currentUser.getUsername();
+            Object obj = Cache.get(username);
+            if (obj != null) {
+                model.addAttribute("showTalley",true);
+                model.addAttribute("talleyList", blogService.collectTalley(username));
+            }
+        }
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("order", order);
         model.addAttribute("page", page);
@@ -111,7 +118,18 @@ public class MainController {
         return "login";
     }
 
-
+    @PostMapping("/insert")
+    public String insert(@RequestBody User user) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        User currentUser = NetUtil.getCurrentUser();
+        if (currentUser != null){
+            // 不能直接对原始密码加密 再和数据库的密文对比，BCryptPasswordEncoder每次加密的结果是不一样的
+            if (encoder.matches(user.getPassword(),currentUser.getPassword())) {
+                Cache.put(currentUser.getUsername(),true,30 * 1000);
+            }
+        }
+        return "redirect:/index";
+    }
 
     @GetMapping("/login-error")
     public String loginError(Model model) {

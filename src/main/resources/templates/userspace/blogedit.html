@@ -67,45 +67,15 @@ function submitBlog(){
 						th:text="*{content}"></textarea>
 				<hr>
 			</div>
-
 		</div>
 
         <!-- 右侧栏目 -->
         <div class="col-md-4">
             <div>
-            	<!-- 图片上传 -->
-				<div class="card ">
-					<h5 class="card-header">
-						<i class="fa fa-file-image-o" aria-hidden="true"></i> 图片上传
-					</h5>
-					<div class="card-block">
-						<div class="row mt-1">
-							<div class="col-lg-12">
-
-								<form enctype="multipart/form-data" id="uploadformid">
-									<input type="file" name="file"
-										accept="image/png,image/gif,image/jpeg" id="file">
-									<button class="btn btn-primary float-right" type="button"
-										id="uploadImage">插入</button>
-								</form>
-
-							</div>
-						</div>
-					</div>
-
-				</div>
 				<!-- 文章设置 -->
                 <div class="card ">
                     <h5 class="card-header"><i class="fa fa-cog" aria-hidden="true"></i> 博客设置</h5>
                     <div class="card-block">
-                   		<!--标签-->
-						<div class="row mt-1">
-							<div class="col-lg-12">
-								标签：<input type="text" class="form-control form-control-tag"
-									th:value="${blogModel.blog.tags}">
-							</div>
-						</div>
-
 						<!--分类-->
 						<div class="row mt-1">
 							<div class="col-lg-12">
@@ -117,6 +87,13 @@ function submitBlog(){
 										th:object="${catalog}"
 										th:selected="${catalog  eq blogModel.blog.catalog }">Java</option>
 								</select>
+							</div>
+						</div>
+						<!--标签-->
+						<div class="row mt-1">
+							<div class="col-lg-12">
+								标签：<input type="text" class="form-control form-control-tag"
+										  th:value="${blogModel.blog.tags}">
 							</div>
 						</div>
 						<div class="row mt-1">
@@ -131,7 +108,26 @@ function submitBlog(){
                     </div>
 
                 </div>
+				<!-- 图片上传 -->
+				<div class="card ">
+					<h5 class="card-header">
+						<i class="fa fa-file-image-o" aria-hidden="true"></i>图片上传
+					</h5>
+					<div class="card-block">
+						<div class="row mt-1">
+							<div class="col-lg-12">
+								<form method="POST" enctype="multipart/form-data" id="uploadFormId"
+									  th:object="${user}" th:action="'/u/'+${user.username}+'/uploadImage'">
+									<input type="file" name="file"
+										   accept="image/png,image/gif,image/jpeg" id="file">
+									<button class="btn btn-warning float-right" type="button"
+											id="uploadImage">插入</button>
+								</form>
+							</div>
+						</div>
+					</div>
 
+				</div>
 
             </div>
         </div>
@@ -143,18 +139,13 @@ function submitBlog(){
 
 <div th:replace="~{fragments/footer :: footer}">...</div>
  
-<!-- JavaScript -->
-<script th:inline="javascript">
-   	var fileServerUrl = [[${blogModel.fileServerUrl}]];
-</script>
+
 <script src="../../js/userspace/blogedit.js" 
 	th:src="@{/js/userspace/blogedit.js}">
-
-    $(function() {
-        // 发布博客
-        // $("#submitBlog").click(function() {
-        // })
-	})
+</script>
+<!-- JavaScript -->
+<script th:inline="javascript">
+    var fileServerUrl = [[${blogModel.fileServerUrl}]];
 </script>
  
 </body>

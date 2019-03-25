@@ -1,16 +1,15 @@
 package com.yuan.blog.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.yuan.blog.domain.*;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CatalogService;
 import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
-import com.yuan.blog.util.MultipartUtility;
 import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -54,6 +53,8 @@ public class UserspaceController {
 	private String fileServerUrl;
 	@Autowired
 	private BlogService blogService;
+
+	private static final Logger log = LoggerFactory.getLogger(UserspaceController.class);
 
 	/**
 	 *  获取用户配置
@@ -105,47 +106,34 @@ public class UserspaceController {
 	/**
 	 * 保存头像
 	 */
-	@PostMapping("/milo/avatar")
-//	@PreAuthorize("authentication.name.equals(#username)")
+	@PostMapping("/{username}/avatar")
+	@PreAuthorize("authentication.name.equals(#username)")
 	public ResponseEntity<Response> saveAvatar(Long id,MultipartFile file,HttpServletRequest request) {
-		String charset = "UTF-8";
-		String requestURL = "https://upload.cc/image_upload";
-		String avatarUrl = "";
 		//  1.选择文件以后只展示到前端
 		//  2.点击 提交以后再把文件丢给后端，然后后端post提交到存图的网站
 		//  3.获取图片地址以后存到数据库
-		try {
-			MultipartUtility multipart = new MultipartUtility(requestURL, charset);
-			multipart.addHeaderField("User-Agent", "CodeJava");
-			multipart.addHeaderField("Test-Header", "Header-Value");
-			multipart.addFormField("description", "Cool Pictures");
-			multipart.addFormField("keywords", "Java,upload,Spring");
-			multipart.addFilePart("uploaded_file[]",  multipart.analyzeFile(file, request));
-			List<String> response = multipart.finish();
-			StringBuilder sb = new StringBuilder();
-
-			for (String line : response) {
-				sb.append(line);
-				System.out.println(line);
-			}
-			String perfix = "https://upload.cc/";
-			JSONObject jsonObject = JSONObject.parseObject(sb.toString());
-			Object total_success = jsonObject.get("total_success");
-			if("1".equals(total_success.toString())){
-				Object success_image = jsonObject.get("success_image");
-				JSONArray objects = JSONObject.parseArray(success_image.toString());
-				JSONObject jsonObject1 = JSONObject.parseObject(objects.get(0).toString());
-				avatarUrl = perfix + jsonObject1.get("url");
-				System.out.println(avatarUrl);// 图片路径
-			}
-		} catch (Exception ex) {
-			System.err.println(ex);
+		String avatarUrl = NetUtil.uploadImage(request, file);
+		if (avatarUrl == null || avatarUrl.length() == 0) {
+			return Response.getResponse(false, "提交失败", null);
 		}
-
 		User originalUser = userService.getUserById(id);
 		originalUser.setAvatar(avatarUrl);
 		userService.saveOrUpdateUser(originalUser);
-		return ResponseEntity.ok().body(new Response(true, "处理成功", avatarUrl));
+		return Response.getResponse(true, "提交成功", avatarUrl);
+	}
+
+	/**
+	 * 上传图片 返回图片地址
+	 */
+	@PostMapping("/{username}/uploadImage")
+	@PreAuthorize("authentication.name.equals(#username)")
+	public ResponseEntity<Response> uploadImage(@PathVariable("username") String username,
+												MultipartFile file,HttpServletRequest request) {
+		String imageUrl = NetUtil.uploadImage(request, file);
+		if (imageUrl == null || imageUrl.length() == 0){
+			return Response.getResponse(false, "提交失败", null);
+		}
+		return Response.getResponse(true, "提交成功", imageUrl);
 	}
 
 	// 根据用户名 获取用户信息
@@ -266,8 +254,7 @@ public class UserspaceController {
 		model.addAttribute("catalogs", catalogs);
 		model.addAttribute("blog", new Blog(null, null, null));
 		model.addAttribute("username", username);
-		// fileServerUrl 文件服务器的地址返回给客户端
-		model.addAttribute("fileServerUrl", fileServerUrl);
+		model.addAttribute("user", user);
 		return new ModelAndView("userspace/blogedit", "blogModel", model);
 	}
 
@@ -281,10 +268,10 @@ public class UserspaceController {
 		// 获取用户分类列表
 		User user = (User)userDetailsService.loadUserByUsername(username);
 		List<Catalog> catalogs = catalogService.listCatalogs(user);
-
+		model.addAttribute("user", user);
+		model.addAttribute("username", username);
 		model.addAttribute("catalogs", catalogs);
 		model.addAttribute("blog", blogService.getBlogById(id));
-		model.addAttribute("fileServerUrl", fileServerUrl);
 		return new ModelAndView("userspace/blogedit", "blogModel", model);
 	}
 
@@ -294,7 +281,6 @@ public class UserspaceController {
 	@PostMapping("/{username}/blogs/edit")
 	@PreAuthorize("authentication.name.equals(#username)")
 	public ResponseEntity<Response> saveBlog(@PathVariable("username") String username, @RequestBody Blog blog) {
-
 		// 对 Catalog 进行空处理
 		if (blog.getCatalog().getId() == null) {
 			return ResponseEntity.ok().body(new Response(false,"未选择分类"));
@@ -323,11 +309,11 @@ public class UserspaceController {
 		} catch (ConstraintViolationException e) {
 			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
 		} catch (Exception e) {
-			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
+			return Response.getResponse(false,e.getMessage(),null);
 		}
 
 		String redirectUrl = "/u/" + username + "/blogs/" + blog.getId();
-		return ResponseEntity.ok().body(new Response(true, "处理成功", redirectUrl));
+		return Response.getResponse(true,"处理成功",redirectUrl);
 	}
 
 	/**

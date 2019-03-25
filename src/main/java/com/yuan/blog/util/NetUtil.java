@@ -1,7 +1,11 @@
 package com.yuan.blog.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yuan.blog.domain.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -20,6 +24,10 @@ public class NetUtil {
         ipList.add("0:0:0:0:0:0:0:1");
         ipList.add("223.104.63.11");
     }
+
+    private static String imageServerUrl = "https://upload.cc/image_upload";
+
+    private static String perfix = "https://upload.cc/";
 
     /**
      * 因为移动设备的ip是变化的，所以固定ip时只能用路由器上网
@@ -54,5 +62,37 @@ public class NetUtil {
             return (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
         return null;
+    }
+
+    /** 图片上传
+     *  https://upload.cc/image_upload
+     */
+    public static String uploadImage(HttpServletRequest request,MultipartFile file){
+        String avatarUrl = "";
+        try {
+            MultipartUtility multipart = new MultipartUtility(imageServerUrl, "UTF-8");
+            multipart.addHeaderField("User-Agent", "CodeJava");
+            multipart.addHeaderField("Test-Header", "Header-Value");
+            multipart.addFormField("description", "Cool Pictures");
+            multipart.addFormField("keywords", "Java,upload,Spring");
+            multipart.addFilePart("uploaded_file[]",  multipart.analyzeFile(file, request));
+            List<String> response = multipart.finish();
+            StringBuilder sb = new StringBuilder();
+
+            for (String line : response) {
+                sb.append(line);
+            }
+            JSONObject jsonObject = JSONObject.parseObject(sb.toString());
+            Object total_success = jsonObject.get("total_success");
+            if("1".equals(total_success.toString())){
+                Object success_image = jsonObject.get("success_image");
+                JSONArray objects = JSONObject.parseArray(success_image.toString());
+                JSONObject jsonObject1 = JSONObject.parseObject(objects.get(0).toString());
+                avatarUrl = perfix + jsonObject1.get("url"); // 图片路径
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return avatarUrl;
     }
 }

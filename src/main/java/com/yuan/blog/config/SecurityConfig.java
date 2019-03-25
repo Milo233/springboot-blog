@@ -88,7 +88,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     void applicationReadyEvent() {
         String os = System.getProperty("os.name");
         if(os.toLowerCase().startsWith("win")){
-            System.out.println("Application started ... launching browser now");
             Browse("http://localhost:8080/index");
         }
     }

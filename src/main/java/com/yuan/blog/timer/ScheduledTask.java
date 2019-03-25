@@ -1,6 +1,7 @@
 package com.yuan.blog.timer;
 
 import com.yuan.blog.service.SystemLogService;
+import com.yuan.blog.util.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -26,5 +27,14 @@ public class ScheduledTask {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE,-3);
         systemLogService.deleteLogsBefore(cal.getTime());
+    }
+
+    // 每分钟移除一次过期的缓存
+    @Scheduled(fixedRate = 60 * 1000 )
+    public void removeExpireCache() {
+        int count = Cache.removeExpireCache();
+        if (count > 0) {
+            log.info("定时任务 移除 缓存数据数量：" + count);
+        }
     }
 }

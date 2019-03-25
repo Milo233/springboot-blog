@@ -2,6 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
 </head>
+<style>
+    .myHidestyle{
+        display: none;
+    }
+</style>
 <body>
 <!-- Page Content 静态页面 2018年9月24日18:16:31
     点击logo跳转的首页 -->
@@ -46,7 +51,7 @@
         </div>
         <!-- 右侧栏目 -->
         <div class="col-md-4">
-            <!--热门标签-->
+            <!--热门标签
             <div class="card">
                 <h5 class="card-header"><i class="fa fa-tags">热门标签</i></h5>
                 <div class="card-body">
@@ -60,9 +65,7 @@
                     </div>
                 </div>
             </div>
-
-            <!--热门用户-->
-            <!--<div class="card my-3">
+           <div class="card my-3">
                 <h5 class="card-header"><i class="fa fa-user">热门用户</i></h5>
                 <div class="card-body">
                     <div class="row">
@@ -78,50 +81,68 @@
                     </div>
                 </div>
             </div>-->
-
             <div class="card" sec:authorize="isAuthenticated()">
-                <h5 class="card-header"><i class="fa fa-user">个人记账</i></h5>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                <span class="input-group-addon">现金</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                <div th:class="${showTalley} ? '':'myHidestyle'">
+                    <h5 class="card-header"><i class="fa fa-user">个人记账</i></h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon">现金</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">微信</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">花呗</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">支付宝</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">兴业银行</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">上海银行</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">交行信用卡</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon">招商信用卡</span>
+                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                </div>
+                                <button class="btn btn-info" type="button" id="save" onclick="save()" >保存</button>
+                                <button class="btn btn-warning" type="button" id="reset" onclick="reset('tally')" >重置</button>
                             </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">微信</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">花呗</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">支付宝</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">兴业银行</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">上海银行</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">交行信用卡</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <div class="input-group" style="margin-top: 5px">
-                                <span class="input-group-addon">招商信用卡</span>
-                                <input type="text" class="form-control tally" onfocus="this.select();" value="0">
-                            </div>
-                            <button class="btn btn-outline-secondary" type="button" id="save" onclick="save()" >保存</button>
                         </div>
                     </div>
+                    <table border="1">
+                        <tr>
+                            <th>序号</th>
+                            <th>InHand</th>
+                            <th>debt</th>
+                            <th>actual</th>
+                            <th>date</th>
+                        </tr>
+                        <tr th:each="talley,status : ${talleyList}">
+                            <td>[[${status.index + 1}]]</td>
+                            <td>[[${talley.moneyInHand}]]</td>
+                            <td>[[${talley.debt}]]</td>
+                            <td>[[${talley.actualMoney}]]</td>
+                            <td>[[${#dates.format(talley.date,'yy-MM-dd')}]]</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-
+            <!--end of talley-->
         </div>
     </div>
 </div>
@@ -181,6 +202,7 @@
             success: function(data){
                 if (data.success) {
                     alert("success!" + data.message);
+                    reset("tally");
                 } else {
                     alert("error!" + data.message);
                 }
@@ -189,6 +211,12 @@
                 alert("error!");
             }
         })
+    }
+
+    function reset(className) {
+        $("." + className).each(function(){
+            $(this).val("0");
+        });
     }
 </script>
 </body>

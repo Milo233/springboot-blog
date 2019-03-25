@@ -231,4 +231,9 @@ public class BlogServiceImpl implements BlogService {
 	public String getContentById(int id){
 		return blogDao.getContentById(id);
 	}
+
+	@Override
+	public List<TalleyCollection> collectTalley(String userName){
+		return blogDao.collectTalley(userName);
+	}
 }

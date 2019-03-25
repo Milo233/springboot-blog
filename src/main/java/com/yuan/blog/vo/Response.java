@@ -1,5 +1,7 @@
 package com.yuan.blog.vo;
 
+import org.springframework.http.ResponseEntity;
+
 /**
  * 响应 值对象.
  */
@@ -41,5 +43,10 @@ public class Response {
 		this.success = success;
 		this.message = message;
 		this.body = body;
+	}
+
+	public static ResponseEntity<Response> getResponse(boolean success, String message, Object body){
+		Response response = new Response(success, message, body);
+		return ResponseEntity.ok().body(response);
 	}
 }
