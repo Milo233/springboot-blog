@@ -1,7 +1,7 @@
-#默认使用配置
-spring:
-  profiles:
-    active: dev
+##默认使用配置 https://blog.csdn.net/weixin_41461281/article/details/80453106
+#spring:
+#  profiles:
+#    active: dev
 
 #公共配置与profiles选择无关
 mybatis:
@@ -16,16 +16,80 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
 
----
+spring:
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:9300
+      properties:
+        transport:
+          tcp:
+            connect_timeout: 1s
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  datasource:
+    hikari:
+      connection-init-sql: SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+  resources:
+    chain:
+      cache: true
+      gzipped: false
+      html-application-cache: false
+      strategy:
+        fixed:
+          paths: /**
+          version: 1.0
+          enabled: false
+        content:
+          paths: /**
+          enabled: false
+      enabled: true
+    cache:
+      cachecontrol:
+        max-age: 1440s
+    add-mappings: true
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  devtools:
+    restart:
+      enabled: true
+server:
+  servlet:
+    session:
+      timeout: 2400H
+file:
+  server:
+    url: http://localhost:8081/upload
+logging:
+  level:
+    com:
+      dy:
+        springboot:
+          server:
+            mapper: debug
+  config: classpath:log4j2.xml
 
+---
 #开发配置
 spring:
   profiles: dev
-
   datasource:
-    url: jdbc:mysql://47.90.97.197:3306/blog?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/blog?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
     username: root
-    # password: Ali@2526176
+    password: admin
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
+---
+# 生产配置
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:mysql://47.90.97.197:3306/blog?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
+    username: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
