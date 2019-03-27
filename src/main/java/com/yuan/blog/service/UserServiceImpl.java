@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         try {
             IntegrationAuthentication authentication = IntegrationAuthenticationContext.get();
             String authType = authentication == null ? "" : authentication.getAuthType();
-            log.info("the autgType is " + authType);
+            log.info("the authType is " + authType + " and the user is " + username);
         } catch (Exception e) {
             e.printStackTrace();
         }

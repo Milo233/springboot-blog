@@ -13,6 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Controller统一异常处理
@@ -42,11 +45,11 @@ public class ExceptionHandlerAdvice {
                     return ResponseEntity.ok().body(
                             new Response(false, ConstraintViolationExceptionHandler.getMessage((ConstraintViolationException) t)));
                 }
-            }else if(e instanceof AccessDeniedException){
+            } else if (e instanceof AccessDeniedException) {
                 return ResponseEntity.ok().body(
                         new Response(false, "操作失败，请尝试先登录！"));
             }
-            logger.error("【系统异常】={}", e.getMessage());
+            logger.error("【系统异常】={}", e.getMessage() + getStackTrace(e));
             return ResponseEntity.ok().body(
                     new Response(false, parseException(e).getMessage()));
 
@@ -55,7 +58,7 @@ public class ExceptionHandlerAdvice {
             logger.error("【系统异常】={}", e.getMessage());
             e.printStackTrace();
             ModelAndView modelAndView = new ModelAndView("error");
-            modelAndView.addObject("errorMsg", e.getMessage());
+            modelAndView.addObject("errorMsg", e.getMessage()+ getStackTrace(e));
             return modelAndView;
         }
     }
@@ -75,5 +78,33 @@ public class ExceptionHandlerAdvice {
             }
         }
         return tmp;
+    }
+
+    /**
+     * 获取出错的栈信息
+     */
+    private String getStackTrace(Exception e) {
+        StringWriter sw = null;
+        PrintWriter pw = null;
+        try {
+            sw = new StringWriter();
+            pw = new PrintWriter(sw);
+            //将出错的栈信息输出到printWriter中
+            e.printStackTrace(pw);
+            pw.flush();
+            sw.flush();
+        } finally {
+            if (sw != null) {
+                try {
+                    sw.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (pw != null) {
+                pw.close();
+            }
+        }
+        return sw.toString();
     }
 }

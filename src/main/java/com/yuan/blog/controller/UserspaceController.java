@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,9 +47,6 @@ public class UserspaceController {
 	@Autowired
 	private CatalogService catalogService;
 
-	// 从配置文件获取参数 是大括号
-	@Value("${file.server.url}")
-	private String fileServerUrl;
 	@Autowired
 	private BlogService blogService;
 
@@ -64,7 +60,7 @@ public class UserspaceController {
 	public ModelAndView profile(@PathVariable("username") String username, Model model) {
 		User  user = (User)userDetailsService.loadUserByUsername(username);
 		model.addAttribute("user", user);
-		model.addAttribute("fileServerUrl", fileServerUrl);
+//		model.addAttribute("fileServerUrl", fileServerUrl);
 		return new ModelAndView("userspace/profile", "userModel", model);
 	}
 

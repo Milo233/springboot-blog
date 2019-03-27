@@ -61,9 +61,7 @@ server:
   servlet:
     session:
       timeout: 2400H
-file:
-  server:
-    url: http://localhost:8081/upload
+
 logging:
   level:
     com:

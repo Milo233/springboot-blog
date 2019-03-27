@@ -103,7 +103,7 @@ $(function() {
  	    formData.append("file",convertBase64UrlToBlob($("#testArea").val()));
         console.log("提交用户头像的图片数据")
  	    $.ajax({
-		    url: fileServerUrl,  // 文件服务器地址 fileServerUrl
+		    url: "http://localhost:8081/upload",  // 文件服务器地址 fileServerUrl
 		    type: 'POST',
 		    cache: false,
 		    data: formData,
