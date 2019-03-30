@@ -55,10 +55,9 @@ public class ExceptionHandlerAdvice {
 
         } else {//非Ajax请求
             //此时requestType为null
-            logger.error("【系统异常】={}", e.getMessage());
-            e.printStackTrace();
+            logger.error("【系统异常】={}", e.getMessage()+ getStackTrace(e));
             ModelAndView modelAndView = new ModelAndView("error");
-            modelAndView.addObject("errorMsg", e.getMessage()+ getStackTrace(e));
+            modelAndView.addObject("errorMsg", e.getMessage());
             return modelAndView;
         }
     }

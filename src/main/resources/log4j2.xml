@@ -5,6 +5,12 @@
     当设置成trace时，你会看到log4j2内部各种详细输出-->
 <!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数-->
 <configuration status="warn" monitorInterval="30">
+    <CustomLevels>
+        <!--自定义日志级别-->
+        <CustomLevel name="DIAG" intLevel="100" />
+        <CustomLevel name="NOTICE" intLevel="450" />
+        <CustomLevel name="VERBOSE" intLevel="550" />
+    </CustomLevels>
     <!--先定义所有的appender-->
     <appenders>
         <!--这个输出控制台的配置-->
@@ -13,8 +19,8 @@
             <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
         </console>
         <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
-        <File name="log" fileName="log/test.log" append="true">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+        <File name="MyFile" fileName="logs/app.log">
+            <PatternLayout pattern="%d %-7level %logger{36} - %msg%n"/>
         </File>
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，
         则这size大小的日志会自动存入按年份-月份建立的文件夹下面，作为存档（info-2019-02-16-2.log）-->
@@ -54,7 +60,6 @@
                     <IfLastModified age="7d"/>
                 </Delete>
             </DefaultRolloverStrategy>
-
         </RollingFile>
 
         <RollingFile name="RollingFileError" fileName="${sys:user.home}/logs/miloBlog/error.log"
@@ -66,7 +71,15 @@
                 <SizeBasedTriggeringPolicy size="1 MB"/>
             </Policies>
         </RollingFile>
-
+        <RollingFile name="DIAG" fileName="${sys:user.home}/logs/miloBlog/diag.log"
+                     filePattern="${sys:user.home}/logs/miloBlog/$${date:yyyy-MM}/diag-%d{yyyy-MM-dd}-%i.log">
+            <ThresholdFilter level="DIAG"/>
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+        </RollingFile>
     </appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
@@ -81,9 +94,12 @@
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
             <appender-ref ref="RollingFileError"/>
+            <AppenderRef ref="DIAG" level="DIAG" />
+            <AppenderRef ref="MyFile" level="trace" />
         </root>
     </loggers>
 <!--
 https://blog.csdn.net/wewewfs/article/details/54948427
+http://logging.apache.org/log4j/2.x/manual/customloglevels.html
 -->
 </configuration>

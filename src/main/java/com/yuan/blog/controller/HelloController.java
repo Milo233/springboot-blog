@@ -3,6 +3,8 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.util.NetUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/run")
@@ -21,10 +25,27 @@ public class HelloController {
 
     private static final Logger log = LoggerFactory.getLogger(HelloController.class);
 
+    final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
+
     private static final String REBOOT_COMMAND = "sh /root/rebootBlog.sh";
 
     @Autowired
     private BlogService blogService;
+
+    @GetMapping("/query/{id}")
+    public ModelAndView query(@PathVariable("id") Integer id) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        logger.error("error method" + sdf.format(date));
+        logger.info("info method" + sdf.format(date));
+        logger.warn("warn method " + sdf.format(date));
+        // 某一个日志级别会打印比它 intValue 低的级别的日志.所以自定义的日志级别的value要比 常见的error info低
+        // OFF < FATAL < ERROR < WARN < INFO < DEBUG < TRACE < ALL
+        // 自定义日志级别
+        logger.log(Level.forName("DIAG", 100), "another message");
+        String content = blogService.getContentById(id);
+        return new ModelAndView("copy", "userModel", content);
+    }
 
     @GetMapping("/{command}")
     public void hello(@PathVariable("command") String command) {
@@ -56,12 +77,6 @@ public class HelloController {
         }
         // 修改表数据
         blogService.updateWord(content,1);
-        return new ModelAndView("copy", "userModel", content);
-    }
-
-    @GetMapping("/query/{id}")
-    public ModelAndView query(@PathVariable("id") Integer id) {
-        String content = blogService.getContentById(id);
         return new ModelAndView("copy", "userModel", content);
     }
 

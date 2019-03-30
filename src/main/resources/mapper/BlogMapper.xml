@@ -77,4 +77,12 @@
     FROM tally where user_name = #{userName} GROUP BY create_time
     ORDER BY create_time DESC
   </select>
+  <insert id="createComment" parameterType="com.yuan.blog.domain.CommentV2" useGeneratedKeys="true" keyProperty="id">
+    insert into comment(content,create_time,user_id)
+    VALUES (#{content},now(),#{userId})
+  </insert>
+  <insert id="insertBlogComment" parameterType="Map">
+    insert into blog_comment(blog_id,comment_id)
+    VALUES (#{blogId},#{commentId})
+  </insert>
 </mapper>

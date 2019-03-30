@@ -1,12 +1,11 @@
 package com.yuan.blog.dao;
 
-import com.yuan.blog.domain.Blog;
-import com.yuan.blog.domain.TalleyCollection;
-import com.yuan.blog.domain.Tally;
+import com.yuan.blog.domain.*;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface BlogDao {
     Blog selectByPrimaryKey(Integer id);
@@ -24,4 +23,8 @@ public interface BlogDao {
     String getContentById(int id);
 
     List<TalleyCollection> collectTalley(String userName);
+
+    int createComment(CommentV2 comment);
+
+    int insertBlogComment(Map<String,Object> map);
 }

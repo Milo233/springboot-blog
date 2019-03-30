@@ -85,7 +85,6 @@ public class Cache {
         while (iterator.hasNext()){
             Map.Entry<String, Entity> next = iterator.next();
             Entity entity = next.getValue();
-            System.out.println(System.currentTimeMillis());
             if (System.currentTimeMillis() > entity.getexpireAt()){
                 iterator.remove();
                 count ++;

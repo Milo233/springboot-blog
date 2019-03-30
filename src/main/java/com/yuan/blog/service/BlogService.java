@@ -51,7 +51,7 @@ public interface BlogService {
 	/**
 	 * 发表评论
 	 */
-	Blog createComment(Long blogId, String commentContent);
+	int createComment(Long blogId, String commentContent);
 
 	/**
 	 * 删除评论

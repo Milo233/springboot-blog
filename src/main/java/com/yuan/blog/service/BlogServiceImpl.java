@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Blog 服务.
@@ -34,30 +31,13 @@ public class BlogServiceImpl implements BlogService {
 	@Transactional
 	@Override
 	public Blog saveBlog(Blog blog) {
-//		boolean isNew = (blog.getId() == null);
-		Blog returnBlog = blogRepository.save(blog);
-
-		// 存到数据库以后还要存到 ES里 用于全文检索
-/*		EsBlog esBlog = null;
-		if (isNew) {
-			// 从Blog对象 生成一个 EsBlog对象。id不一定一样
-			esBlog = new EsBlog(returnBlog);
-		} else {
-			esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
-			esBlog.update(returnBlog);
-		}
-
-		esBlogService.updateEsBlog(esBlog);*/
-		return returnBlog;
+		return blogRepository.save(blog);
 	}
 
 	@Transactional
 	@Override
 	public void removeBlog(Long id) {
 		blogRepository.deleteById(id);
-		// 删除es
-		//EsBlog esblog = esBlogService.getEsBlogByBlogId(id);
-		//esBlogService.removeEsBlog(esblog.getId());
 	}
 
 	@Transactional
@@ -99,8 +79,7 @@ public class BlogServiceImpl implements BlogService {
 		// 按时间先后查询
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title, title, pageable);
-		return blogs;
+		return blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title, title, pageable);
 	}
 
 	/**
@@ -129,8 +108,7 @@ public class BlogServiceImpl implements BlogService {
 		// 按根据点赞量 阅读量 创建时间作为热度查询
 		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title,title,pageable);
-		return blogs;
+		return blogRepository.findByTitleLikeOrTagsLikeOrContentLike(title, title,title,pageable);
 	}
 
 	@Override
@@ -139,34 +117,31 @@ public class BlogServiceImpl implements BlogService {
 		// 按根据点赞量 阅读量 创建时间作为热度查询
 		Sort sort = new Sort(Sort.Direction.DESC, "readSize", "voteSize", "createTime");
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		Page<Blog> blogs = blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title, user, title,
-				user, title, pageable);
-		return blogs;
+		return blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title, user, title, user, title, pageable);
 	}
 
 	/**阅读量递增 */
 	@Override
 	public void readingIncrease(Long id) {
-		try{
-			Optional<Blog> byId = blogRepository.findById(id);
-			if(byId.isPresent()){
-				Blog blog =byId.get();
-				blog.setReadSize(blog.getReadSize()+1);
-				blogRepository.save(blog);
-			}
-		}catch (Exception e){
-			System.out.println(e.getMessage());
+		Optional<Blog> byId = blogRepository.findById(id);
+		if(byId.isPresent()){
+			Blog blog =byId.get();
+			blog.setReadSize(blog.getReadSize()+1);
+			blogRepository.save(blog);
 		}
 	}
 
-
 	@Override
-	public Blog createComment(Long blogId, String commentContent) {
+	@Transactional // 只读的不加事务注解就好了
+	public int createComment(Long blogId, String commentContent) {
+		// 废除hibernate的写法。改成直接新增一条 一条comment 一条blog_comment中间表
 		Blog originalBlog = blogRepository.findById(blogId).get();
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Comment comment = new Comment(user, commentContent);
-		originalBlog.addComment(comment);
-		return blogRepository.save(originalBlog);
+		CommentV2 comment = new CommentV2(originalBlog.getUser().getId(),commentContent);
+		blogDao.createComment(comment);
+		Map<String, Object> blogCommentMap = new HashMap<>();
+		blogCommentMap.put("blogId",originalBlog.getId());
+		blogCommentMap.put("commentId",comment.getId());
+		return blogDao.insertBlogComment(blogCommentMap);
 	}
 
 	@Override
