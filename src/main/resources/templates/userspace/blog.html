@@ -3,7 +3,6 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
 
-
 </head>
 <body>
 <!-- Page Content -->
@@ -17,7 +16,7 @@
             <div class="card mb-4">
                 <div class="card-block">
 					<h2 class="card-title">
-						<span> <a href="/u/waylau" title="waylau"
+						<span> <a href="/u/milo" title="milo"
 							th:href="'/u/' + ${blogModel.user.username}"
 							th:title="${blogModel.user.username}"> <img
 								src="/images/avatar-default.jpg"
@@ -26,19 +25,19 @@
 									: ${blogModel.user.avatar}"
 								class="blog-avatar-50">
 						</a>
-						</span> <a href="/u/waylau/blogs/1" class="card-link" title="waylau"
+						</span> <a href="/u/milo/blogs/1" class="card-link" title="milo"
 							th:href="'/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"
 							th:title="${blogModel.user.username}"
 							th:text="${blogModel.title}">title</a>
 					</h2>
 					<div class="card-text">
-						<a href="/u/waylau" th:href="'/u/' + ${blogModel.user.username}"
-							class="card-link" th:text="${blogModel.user.username}">waylau</a>
+						<a href="/u/milo" th:href="'/u/' + ${blogModel.user.username}"
+							class="card-link" th:text="${blogModel.user.username}">milo</a>
 						发表于 [[${#dates.format(blogModel.createTime, 'yyyy-MM-dd
 						HH:mm:ss')}]] <i class="fa fa-eye" aria-hidden="true">[[${blogModel.readSize}]]</i>
 						<i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
 						<i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
-						<a href="/u/waylau" th:if="${isBlogOwner}"
+						<a href="/u/milo" th:if="${isBlogOwner}"
 							th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"
 							class="btn btn-primary float-right">编辑</a> <a
 							href="javascript:void(0)" th:if="${isBlogOwner}"
@@ -84,8 +83,8 @@
 							th:each="comment,commentStat : ${comments}"
 							th:object="${comment}">
 							<h2 class="card-title col-lg-1 col-md-2">
-								<span> <a href="/u/waylau"
-									th:href="'/u/'+ *{user.username}" title="waylau"
+								<span> <a href="/u/milo"
+									th:href="'/u/'+ *{user.username}" title="milo"
 									th:title="*{user.username}"> <img
 										src="/images/avatar-default.jpg"
 										th:src="*{user.avatar} == null ? '/images/avatar-default.jpg' : *{user.avatar}"
@@ -94,7 +93,7 @@
 								</span>
 							</h2>
 							<div class="card-text col-lg-11 col-md-10">
-								<a href="/u/waylau" th:href="'/u/'+ *{user.username}"
+								<a href="/u/milo" th:href="'/u/'+ *{user.username}"
 									class="card-link" th:text="*{user.username}"></a>
 								[[${commentStat.index} + 1]]楼
 								[[${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}]] <a

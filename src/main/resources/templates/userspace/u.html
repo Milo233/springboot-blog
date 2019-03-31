@@ -13,8 +13,8 @@
 
 				<div class="row">
 					<div class="col-md-12">
-						<span> <a href="/u/waylau"
-							th:href="'/u/' + ${user.username}" title="waylau"
+						<span> <a href="/u/milo"
+							th:href="'/u/' + ${user.username}" title="milo"
 							th:title="${user.username}"> <img
 								th:src="${user.avatar} == null ? '/images/avatar-default.jpg' : ${user.avatar} "
 								class="blog-avatar-230">
@@ -33,9 +33,9 @@
 					<div class="col-md-12">
 						<h5>
 							<i class="fa fa-envelope-o" aria-hidden="true"></i> <a
-								href="mailto:waylau521@gmail.com"
+								href="mailto:milo521@gmail.com"
 								th:href="'mailto:'+ ${user.email}" 
-								th:text="${user.email}">waylau521@gmail.com</a>
+								th:text="${user.email}">milo521@gmail.com</a>
 						</h5>
 					</div>
 				</div>
@@ -106,7 +106,7 @@
 						<div class="card mb-4" th:each="blog : ${blogList}">
 							<div class="card-block">
 								<h4 class="card-title">
-									<a href="/u/waylau/blogs/1" class="card-link" title="waylau"
+									<a href="/u/milo/blogs/1" class="card-link" title="milo"
 										th:href="'/u/' + ${blog.user.username} + '/blogs/'+ ${blog.id}"
 										th:title="${blog.user.username}" th:text="${blog.title}">
 										blog.title </a>
