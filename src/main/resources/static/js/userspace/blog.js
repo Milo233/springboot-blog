@@ -64,8 +64,13 @@ $(function() {
 	}
 
 	// 提交评论
-	$(".blog-content-container").on("click","#submitComment", function () { 
-		// 获取 CSRF Token 
+	$(".blog-content-container").on("click","#submitComment", function () {
+        var comment = $('#commentContent').val();
+        console.log(comment)
+        if (!comment || !comment.trim()){
+        	return;
+		}
+		// 获取 CSRF Token
 		var csrfToken = $("meta[name='_csrf']").attr("content");
 		var csrfHeader = $("meta[name='_csrf_header']").attr("content");
 		

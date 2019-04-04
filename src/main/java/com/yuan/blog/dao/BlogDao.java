@@ -27,4 +27,8 @@ public interface BlogDao {
     int createComment(CommentV2 comment);
 
     int insertBlogComment(Map<String,Object> map);
+
+    int deleteComment(Long id);
+
+    int deleteBlogComment(Long id);
 }

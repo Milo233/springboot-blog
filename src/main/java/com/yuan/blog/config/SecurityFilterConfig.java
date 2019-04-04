@@ -23,7 +23,7 @@ public class SecurityFilterConfig extends GenericFilterBean {
     private static final String OAUTH_TOKEN_URL = "/login";
     private RequestMatcher requestMatcher;
 
-    SecurityFilterConfig(){
+    SecurityFilterConfig() {
         this.requestMatcher = new OrRequestMatcher(
                 new AntPathRequestMatcher(OAUTH_TOKEN_URL, "POST")
 //                new AntPathRequestMatcher(OAUTH_TOKEN_URL, "GET"),
@@ -34,8 +34,8 @@ public class SecurityFilterConfig extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         try {// 只对是登录的请求做处理
-            if(servletRequest != null && requestMatcher.matches(request)) {
-                HttpServletRequest r = (HttpServletRequest)servletRequest;
+            if (servletRequest != null && requestMatcher.matches(request)) {
+                HttpServletRequest r = (HttpServletRequest) servletRequest;
                 String loginType = r.getParameter(AUTH_TYPE_PARAM_NAME);
                 IntegrationAuthentication integrationAuthentication = new IntegrationAuthentication();
                 integrationAuthentication.setAuthType(loginType);

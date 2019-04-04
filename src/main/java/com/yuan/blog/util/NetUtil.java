@@ -32,8 +32,8 @@ public class NetUtil {
     /**
      * 因为移动设备的ip是变化的，所以固定ip时只能用路由器上网
      */
-    public static boolean isAllowed(HttpServletRequest request){
-        if(request == null) return false;
+    public static boolean isAllowed(HttpServletRequest request) {
+        if (request == null) return false;
         String ipAddr = getIpAddr(request);
         return ipList.contains(ipAddr);
     }
@@ -54,20 +54,21 @@ public class NetUtil {
     }
 
     // 查询当前登录的用户
-    public static User getCurrentUser(){
-        if (SecurityContextHolder.getContext().getAuthentication() !=null
+    public static User getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() != null
                 && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
+                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
                 .equals("anonymousUser")) {
-            return (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
         return null;
     }
 
-    /** 图片上传
-     *  https://upload.cc/image_upload
+    /**
+     * 图片上传
+     * https://upload.cc/image_upload
      */
-    public static String uploadImage(HttpServletRequest request,MultipartFile file){
+    public static String uploadImage(HttpServletRequest request, MultipartFile file) {
         String avatarUrl = "";
         try {
             MultipartUtility multipart = new MultipartUtility(imageServerUrl, "UTF-8");
@@ -75,7 +76,7 @@ public class NetUtil {
             multipart.addHeaderField("Test-Header", "Header-Value");
             multipart.addFormField("description", "Cool Pictures");
             multipart.addFormField("keywords", "Java,upload,Spring");
-            multipart.addFilePart("uploaded_file[]",  multipart.analyzeFile(file, request));
+            multipart.addFilePart("uploaded_file[]", multipart.analyzeFile(file, request));
             List<String> response = multipart.finish();
             StringBuilder sb = new StringBuilder();
 
@@ -84,7 +85,7 @@ public class NetUtil {
             }
             JSONObject jsonObject = JSONObject.parseObject(sb.toString());
             Object total_success = jsonObject.get("total_success");
-            if("1".equals(total_success.toString())){
+            if ("1".equals(total_success.toString())) {
                 Object success_image = jsonObject.get("success_image");
                 JSONArray objects = JSONObject.parseArray(success_image.toString());
                 JSONObject jsonObject1 = JSONObject.parseObject(objects.get(0).toString());

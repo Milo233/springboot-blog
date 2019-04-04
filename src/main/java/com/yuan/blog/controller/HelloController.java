@@ -51,7 +51,7 @@ public class HelloController {
     public void hello(@PathVariable("command") String command) {
         User currentUser = NetUtil.getCurrentUser();
         // 指定用户才能重启
-        if(currentUser == null || !"milo".equals(currentUser.getUsername())){
+        if (currentUser == null || !"milo".equals(currentUser.getUsername())) {
             log.info("valid action");
             return;
         }
@@ -62,7 +62,7 @@ public class HelloController {
             return;
         }
 
-        if("reboot".equals(command)){
+        if ("reboot".equals(command)) {
             exec(REBOOT_COMMAND);
         } else {
             exec(command);
@@ -72,15 +72,15 @@ public class HelloController {
     @GetMapping("/update/{content}")
     public ModelAndView update(@PathVariable("content") String content) {
         log.info("aws update content " + content);
-        if(content == null || content.length() == 0 || content.length() > 200){
+        if (content == null || content.length() == 0 || content.length() > 200) {
             return new ModelAndView("copy", "userModel", "failed!!");
         }
         // 修改表数据
-        blogService.updateWord(content,1);
+        blogService.updateWord(content, 1);
         return new ModelAndView("copy", "userModel", content);
     }
 
-    public String exec(String command){
+    public String exec(String command) {
         StringBuilder result = new StringBuilder();
         try {
             String s;
@@ -88,7 +88,7 @@ public class HelloController {
             p = Runtime.getRuntime().exec(command);
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(p.getInputStream()));
-            while ((s = br.readLine()) != null){
+            while ((s = br.readLine()) != null) {
                 result.append(s);
             }
             p.waitFor();
@@ -96,6 +96,6 @@ public class HelloController {
         } catch (Exception e) {
             result = new StringBuilder(e.getMessage());
         }
-        return  result.toString();
+        return result.toString();
     }
 }

@@ -87,20 +87,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @EventListener({ApplicationReadyEvent.class})
     void applicationReadyEvent() {
         String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith("win")){
+        if (os.toLowerCase().startsWith("win")) {
             Browse("http://localhost:8080/index");
         }
     }
 
     public static void Browse(String url) {
-        if(Desktop.isDesktopSupported()){
+        if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             try {
                 desktop.browse(new URI(url));
             } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             Runtime runtime = Runtime.getRuntime();
             try {
                 runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);

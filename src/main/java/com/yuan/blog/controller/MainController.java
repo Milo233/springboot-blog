@@ -62,19 +62,19 @@ public class MainController {
     }
 
     @GetMapping("/index")
-    public String index(@RequestParam(value="order",required=false,defaultValue="new") String order,
-                        @RequestParam(value="categoryId",required=false ) Long categoryId,
-                        @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,
-                        @RequestParam(value="async",required=false) boolean async,
-                        @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
-                        @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
+    public String index(@RequestParam(value = "order", required = false, defaultValue = "new") String order,
+                        @RequestParam(value = "categoryId", required = false) Long categoryId,
+                        @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                        @RequestParam(value = "async", required = false) boolean async,
+                        @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                         Model model, HttpServletRequest request) {
         log.info("visit first page : index");
 
         User currentUser = NetUtil.getCurrentUser();
-        systemLogService.insertSystemLog(request,currentUser,"首页");
+        systemLogService.insertSystemLog(request, currentUser, "首页");
         Page<Blog> page = null;
-        if (categoryId != null &&categoryId > 0) {
+        if (categoryId != null && categoryId > 0) {
             Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
             Catalog catalog;
             if (optionalCatalog.isPresent()) {
@@ -87,28 +87,28 @@ public class MainController {
         // todo 重写最新查询方法  不返回blog本身的数据
         if (order.equals("new")) { // 最新查询
             Pageable pageable = PageRequest.of(pageIndex, pageSize);
-            page = blogService.listBlogsByKeywordByTime( keyword, pageable);
+            page = blogService.listBlogsByKeywordByTime(keyword, pageable);
         }
         if (order.equals("hot")) { // 最热查询 阅读/评论/点赞量
-            Sort sort = new Sort(Sort.Direction.DESC,"reading","comments","likes");
+            Sort sort = new Sort(Sort.Direction.DESC, "reading", "comments", "likes");
             Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
             page = blogService.listBlogsByKeywordByHot(keyword, pageable);
         }
         // 是否显示记账div
-        if (currentUser != null){
+        if (currentUser != null) {
             String username = currentUser.getUsername();
             Object obj = Cache.get(username);
             if (obj != null) {
-                model.addAttribute("showTalley",true);
+                model.addAttribute("showTalley", true);
                 model.addAttribute("talleyList", blogService.collectTalley(username));
             }
         }
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("order", order);
         model.addAttribute("page", page);
-        model.addAttribute("keyword",keyword);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("blogList", page.getContent());// 当前所在页面数据列表
-        return (async?"index :: #mainContainerRepleace":"index");
+        return (async ? "index :: #mainContainerRepleace" : "index");
     }
 
     /**
@@ -123,10 +123,10 @@ public class MainController {
     public String insert(@RequestBody User user) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         User currentUser = NetUtil.getCurrentUser();
-        if (currentUser != null){
+        if (currentUser != null) {
             // 不能直接对原始密码加密 再和数据库的密文对比，BCryptPasswordEncoder每次加密的结果是不一样的
-            if (encoder.matches(user.getPassword(),currentUser.getPassword())) {
-                Cache.put(currentUser.getUsername(),true,30 * 1000);
+            if (encoder.matches(user.getPassword(), currentUser.getPassword())) {
+                Cache.put(currentUser.getUsername(), true, 30 * 1000);
             }
         }
         return "redirect:/index";
@@ -143,6 +143,7 @@ public class MainController {
     public String register() {
         return "register";
     }
+
     /**
      * 注册用户
      */
