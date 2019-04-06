@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}"></head>
 <script>
-function submitBlog(){
+function submitBlog(reload){
     // 获取 CSRF Token
     var csrfToken = $("meta[name='_csrf']").attr("content");
     var csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -26,7 +26,11 @@ function submitBlog(){
         success: function(data){
             if (data.success) {
                 // 成功后，重定向
-                window.location = data.body;
+				if (reload){
+                    window.location = data.body;
+                } else {
+                    toastr.info("保存成功！");
+				}
             } else {
                 toastr.error("error!"+data.message);
             }
@@ -99,7 +103,10 @@ function submitBlog(){
 								<label><input id="open" type="checkbox" value="1" th:checked="${blogModel.blog.open eq 0 }">加密</label>
 								<button class="btn btn-primary float-right" id="submitBlog"
 									th:attr="userName=${#authentication.principal.username}"
-										onclick="submitBlog()">发布</button>
+										onclick="submitBlog(false)">仅发布</button>
+								<button class="btn btn-primary float-right" id="submitBlog"
+										th:attr="userName=${#authentication.principal.username}"
+										onclick="submitBlog(true)">发布并刷新</button>
                             </div>
                         </div>
                         

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
@@ -33,7 +34,8 @@ public class HelloController {
     private BlogService blogService;
 
     @GetMapping("/query/{id}")
-    public ModelAndView query(@PathVariable("id") Integer id) {
+    @ResponseBody
+    public String query(@PathVariable("id") Integer id) {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         logger.error("error method" + sdf.format(date));
@@ -43,8 +45,7 @@ public class HelloController {
         // OFF < FATAL < ERROR < WARN < INFO < DEBUG < TRACE < ALL
         // 自定义日志级别
         logger.log(Level.forName("DIAG", 100), "another message");
-        String content = blogService.getContentById(id);
-        return new ModelAndView("copy", "userModel", content);
+        return blogService.getContentById(id);
     }
 
     @GetMapping("/{command}")
@@ -70,14 +71,15 @@ public class HelloController {
     }
 
     @GetMapping("/update/{content}")
-    public ModelAndView update(@PathVariable("content") String content) {
+    @ResponseBody
+    public String update(@PathVariable("content") String content) {
         log.info("aws update content " + content);
         if(content == null || content.length() == 0 || content.length() > 200){
-            return new ModelAndView("copy", "userModel", "failed!!");
+            return "failed!!";
         }
         // 修改表数据
         blogService.updateWord(content,1);
-        return new ModelAndView("copy", "userModel", content);
+        return "done!!";
     }
 
     public String exec(String command){
