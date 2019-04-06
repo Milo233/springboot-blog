@@ -29,8 +29,8 @@ public class ScheduledTask {
         systemLogService.deleteLogsBefore(cal.getTime());
     }
 
-    // 每分钟移除一次过期的缓存
-    @Scheduled(fixedRate = 60 * 1000 )
+    // 每3分钟移除一次过期的缓存
+    @Scheduled(fixedRate = 3 * 60 * 1000 )
     public void removeExpireCache() {
         int count = Cache.removeExpireCache();
         if (count > 0) {

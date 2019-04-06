@@ -1,8 +1,8 @@
 package com.yuan.blog.config;
 
 /**
- *  集成登录用的参数容器
- *  参数放到ThreadLocal 线程安全
+ * 集成登录用的参数容器
+ * 参数放到ThreadLocal 线程安全
  */
 public class IntegrationAuthenticationContext {
 

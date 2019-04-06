@@ -12,72 +12,73 @@ import java.util.List;
  * Blog 服务接口.
  */
 public interface BlogService {
-	/**
-	 * 保存Blog
-	 */
-	Blog saveBlog(Blog blog);
-	
-	/**
-	 * 删除Blog
-	 */
-	void removeBlog(Long id);
-	
-	/**
-	 * 更新Blog
-	 */
-	Blog updateBlog(Blog blog);
-	
-	/**
-	 * 根据id获取Blog
-	 */
-	Blog getBlogById(Long id);
+    /**
+     * 保存Blog
+     */
+    Blog saveBlog(Blog blog);
 
-	Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable);
+    /**
+     * 删除Blog
+     */
+    void removeBlog(Long id);
 
-	Page<Blog> listBlogsByKeywordByHot(String keyword, Pageable pageable);
-	/**
-	 * 根据用户名进行分页模糊查询（最新）
-	 */
-	Page<Blog> listBlogsByUserAndKeywordByTime(User user, String title, Pageable pageable);
+    /**
+     * 更新Blog
+     */
+    Blog updateBlog(Blog blog);
 
-	// （最新）
-	Page<Blog> listBlogsByKeywordByTime(String title, Pageable pageable);
+    /**
+     * 根据id获取Blog
+     */
+    Blog getBlogById(Long id);
 
-	/**
-	 * 阅读量递增
-	 */
-	void readingIncrease(Long id);
+    Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable);
 
-	/**
-	 * 发表评论
-	 */
-	int createComment(Long blogId, String commentContent);
+    Page<Blog> listBlogsByKeywordByHot(String keyword, Pageable pageable);
 
-	/**
-	 * 删除评论
-	 */
-	void removeComment(Long blogId, Long commentId);
+    /**
+     * 根据用户名进行分页模糊查询（最新）
+     */
+    Page<Blog> listBlogsByUserAndKeywordByTime(User user, String title, Pageable pageable);
 
-	/**
-	 * 点赞
-	 */
-	Blog createVote(Long blogId);
+    // （最新）
+    Page<Blog> listBlogsByKeywordByTime(String title, Pageable pageable);
 
-	/**
-	 * 取消点赞
-	 */
-	void removeVote(Long blogId, Long voteId);
+    /**
+     * 阅读量递增
+     */
+    void readingIncrease(Long id);
 
-	/**
-	 * 根据分类进行查询
-	 */
-	Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
+    /**
+     * 发表评论
+     */
+    int createComment(Long blogId, String commentContent, Long userId);
 
-	void saveTally(List<Tally> tallyList,User user);
+    /**
+     * 删除评论
+     */
+    void removeComment(Long commentId);
 
-	int updateWord(String content,int id);
+    /**
+     * 点赞
+     */
+    Blog createVote(Long blogId);
 
-	String getContentById(int id);
+    /**
+     * 取消点赞
+     */
+    void removeVote(Long blogId, Long voteId);
 
-	List<TalleyCollection> collectTalley(String userName);
+    /**
+     * 根据分类进行查询
+     */
+    Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
+
+    void saveTally(List<Tally> tallyList, User user);
+
+    int updateWord(String content, int id);
+
+    String getContentById(int id);
+
+    List<TalleyCollection> collectTalley(String userName);
 }

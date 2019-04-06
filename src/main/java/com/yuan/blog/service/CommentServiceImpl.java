@@ -13,18 +13,18 @@ import javax.transaction.Transactional;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-	@Autowired
-	private CommentRepository commentRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
-	@Override
-	@Transactional
-	public void removeComment(Long id) {
-		commentRepository.deleteById(id);
-	}
+    @Override
+    @Transactional
+    public void removeComment(Long id) {
+        commentRepository.deleteById(id);
+    }
 
-	@Override
-	public Comment getCommentById(Long id) {
-		return commentRepository.findById(id).get();
-	}
+    @Override
+    public Comment getCommentById(Long id) {
+        return commentRepository.findById(id).get();
+    }
 
 }

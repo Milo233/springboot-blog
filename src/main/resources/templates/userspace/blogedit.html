@@ -100,10 +100,15 @@ function submitBlog(reload){
 						</div>
 						<div class="row mt-1">
                             <div  class="col-lg-12">
-								<label><input id="open" type="checkbox" value="1" th:checked="${blogModel.blog.open eq 0 }">加密</label>
-								<button class="btn btn-primary float-right" id="submitBlog"
-									th:attr="userName=${#authentication.principal.username}"
-										onclick="submitBlog(false)">仅发布</button>
+								<label>
+									<input id="open" type="checkbox" value="1" th:checked="${blogModel.blog.open eq 0 }">加密
+								</label>
+								<div th:class="${isNew} ? 'myHidestyle':''">
+									<!--新增博客必须刷新-->
+									<button class="btn btn-primary float-right" id="submitBlog"
+											th:attr="userName=${#authentication.principal.username}"
+											onclick="submitBlog(false)">仅发布</button>
+								</div>
 								<button class="btn btn-primary float-right" id="submitBlog"
 										th:attr="userName=${#authentication.principal.username}"
 										onclick="submitBlog(true)">发布并刷新</button>

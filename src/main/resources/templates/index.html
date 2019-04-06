@@ -2,11 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
 </head>
-<style>
-    .myHidestyle{
-        display: none;
-    }
-</style>
 <body>
 <!-- Page Content 静态页面 2018年9月24日18:16:31
     点击logo跳转的首页 -->
@@ -140,7 +135,7 @@
                             <td>[[${talley.moneyInHand}]]</td>
                             <td>[[${talley.debt}]]</td>
                             <td>[[${talley.actualMoney}]]</td>
-                            <td>[[${#dates.format(talley.date,'yy-MM-dd')}]]</td>
+                            <td>[[${#dates.format(talley.date,'yy/MM/dd')}]]</td>
                         </tr>
                     </table>
                 </div>

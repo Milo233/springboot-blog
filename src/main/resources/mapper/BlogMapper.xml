@@ -85,4 +85,12 @@
     insert into blog_comment(blog_id,comment_id)
     VALUES (#{blogId},#{commentId})
   </insert>
+  <delete id="deleteComment" parameterType="java.lang.Long">
+    delete from comment
+    where id = #{id}
+  </delete>
+  <delete id="deleteBlogComment" parameterType="java.lang.Long">
+    delete from blog_comment
+    where comment_id = #{id}
+  </delete>
 </mapper>
