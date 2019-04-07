@@ -134,10 +134,6 @@ public class UserspaceController {
     // 根据用户名 获取用户信息
     @GetMapping("/{username}")
     public String userSpace(@PathVariable("username") String username, Model model) {
-        //fixme 哪里掉这里了？？？ 点击个人主页后会调两次这里 第二次时 username 是 icon.ico
-        if (StringUtils.isEmpty(username) || "icon.ico".equals(username)) {
-            username = "milo";
-        }
         User user = (User) userDetailsService.loadUserByUsername(username);
         model.addAttribute("user", user);
         return "redirect:/u/" + username + "/blogs";
@@ -214,7 +210,7 @@ public class UserspaceController {
         }
 
         // 判断操作用户的点赞情况 有的话前端展示取消，没有的话可以点赞
-        List<Vote> votes = blog.getVotes(); // todo ava.lang.NullPointerException: null 某些情况下会npe
+        List<Vote> votes = blog.getVotes();
         Vote currentVote = null; // 当前用户的点赞情况
 
         if (principal != null) {

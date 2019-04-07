@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html  lang="en" data-th-fragment="header"
-       xmlns:th="http://www.thymeleaf.org"
-       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="en" data-th-fragment="header"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -15,8 +15,9 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}" rel="stylesheet">
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"-->
-          <!--integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
-    <link href="../../css/bootstrap.min_4.0.0-alpha.6.css" th:href="@{/css/bootstrap.min_4.0.0-alpha.6.css}" rel="stylesheet">
+    <!--integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
+    <link href="../../css/bootstrap.min_4.0.0-alpha.6.css" th:href="@{/css/bootstrap.min_4.0.0-alpha.6.css}"
+          rel="stylesheet">
     <link href="../../css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
     <!--<link href="../../css/toastr.min.css" th:href="@{/css/toastr.min.css}" rel="stylesheet">-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet">
@@ -25,7 +26,8 @@
     <link href="../../css/component-tageditor.min.css" th:href="@{/css/component-tageditor.min.css}" rel="stylesheet">
     <link href="../../css/component-chosen.min.css" th:href="@{/css/component-chosen.min.css}" rel="stylesheet">
     <link href="../../css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
-    <link href="../../css/thymeleaf-bootstrap-paginator.css" th:href="@{/css/thymeleaf-bootstrap-paginator.css}" rel="stylesheet">
+    <link href="../../css/thymeleaf-bootstrap-paginator.css" th:href="@{/css/thymeleaf-bootstrap-paginator.css}"
+          rel="stylesheet">
     <link href="../../css/blog.css" th:href="@{/css/blog.css}" rel="stylesheet">
     <style type="text/css">
         .highlight {
@@ -39,12 +41,13 @@
         }
 
         .highlight {
-            padding:1px 4px;
-            margin:0 -4px;
+            padding: 1px 4px;
+            margin: 0 -4px;
         }
-         .myHidestyle{
-             display: none;
-         }
+
+        .myHidestyle {
+            display: none;
+        }
     </style>
 </head>
 <div>
@@ -84,16 +87,19 @@
                 </div>
             </ul>
 
-            <div sec:authorize="isAuthenticated()"  class="row mr-5" >
+            <div sec:authorize="isAuthenticated()" class="row mr-5">
                 <div class="dropdown">
-                    <a class="dropdown-toggle nav-link" href="/u/milo" th:href="@{'/u/' + ${#authentication.name}}" data-toggle="dropdown"><span sec:authentication="name"></span></a>
-                    <div class="dropdown-menu" >
+                    <a class="dropdown-toggle nav-link" href="/u/milo" th:href="@{'/u/' + ${#authentication.name}}"
+                       data-toggle="dropdown"><span sec:authentication="name"></span></a>
+                    <div class="dropdown-menu">
                         <a class=" dropdown-item" href="/u/milo" th:href="@{'/u/' + ${#authentication.name}}">个人主页</a>
-                        <a class="dropdown-item" href="/u/milo/profile" th:href="@{'/u/' + ${#authentication.name} + '/profile'}" >个人设置</a>
+                        <a class="dropdown-item" href="/u/milo/profile"
+                           th:href="@{'/u/' + ${#authentication.name} + '/profile'}">个人设置</a>
                     </div>
                 </div>
                 <div>
-                    <a href="/u/milo/blogs/edit" th:href="'/u/' + ${#authentication.name} + '/blogs/edit'" class="btn btn-outline-success my-2 my-sm-0">写博客</a>
+                    <a href="/u/milo/blogs/edit" th:href="'/u/' + ${#authentication.name} + '/blogs/edit'"
+                       class="btn btn-outline-success my-2 my-sm-0">写博客</a>
                 </div>
 
                 <form action="/logout" th:action="@{/logout}" method="post">

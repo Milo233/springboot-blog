@@ -37,7 +37,7 @@ public class InitBlogServiceImpl implements InitBlogService {
 		if(userList.isEmpty()){
 			PasswordEncoder encoder = new BCryptPasswordEncoder();
 			User admin1 = new User("milo", "milo", "milo@gmail.com",encoder.encode("111111"));
-			User admin2 = new User("venna", "venna", "venna@gmail.com",encoder.encode("111111"));
+			User admin2 = new User("duoduo", "duoduo", "duoduo@gmail.com",encoder.encode("111111"));
 			List<Authority> authorities = new ArrayList<>();
 			authorities.add(adminAuthority.get());
 			admin1.setAuthorities(authorities);

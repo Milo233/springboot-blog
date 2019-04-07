@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -49,24 +48,25 @@ public class HelloController {
     }
 
     @GetMapping("/{command}")
-    public void hello(@PathVariable("command") String command) {
+    @ResponseBody
+    public String hello(@PathVariable("command") String command) {
         User currentUser = NetUtil.getCurrentUser();
         // 指定用户才能重启
         if (currentUser == null || !"milo".equals(currentUser.getUsername())) {
-            log.info("valid action");
-            return;
+            log.error("invalid action");
+            return "invalid action";
         }
         log.info(currentUser.getUsername() + " is trying to execute " + command);
         String os = System.getProperty("os.name");
         if (!os.equalsIgnoreCase("Linux")) {
-            log.info("not linux");
-            return;
+            log.error("not linux");
+            return "not linux";
         }
 
         if ("reboot".equals(command)) {
-            exec(REBOOT_COMMAND);
+            return exec(REBOOT_COMMAND);
         } else {
-            exec(command);
+            return exec(command);
         }
     }
 

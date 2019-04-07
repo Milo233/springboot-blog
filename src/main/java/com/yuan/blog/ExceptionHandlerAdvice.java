@@ -26,6 +26,7 @@ public class ExceptionHandlerAdvice {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
     /*此方法返回值，可以是Controller可以返回的任何值*/
+
     /**
      * 全局异常处理 访问没有权限也可以捕获处理
      */
@@ -55,7 +56,7 @@ public class ExceptionHandlerAdvice {
 
         } else {//非Ajax请求
             //此时requestType为null
-            logger.error("【系统异常】={}", e.getMessage()+ getStackTrace(e));
+            logger.error("【系统异常】={}", e.getMessage() + getStackTrace(e));
             ModelAndView modelAndView = new ModelAndView("error");
             modelAndView.addObject("errorMsg", e.getMessage());
             return modelAndView;

@@ -1,93 +1,95 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
 </head>
-    <body>
+<body>
 
-    <div class="container blog-content-container">
- 
-		<form id="registerForm">
-			<h3 class="form-signin-heading">注册成为博主</h3>
-			
-			<div class="form-group col-md-5">
-				<label for="username" class="col-form-label">账号</label>
-				<input type="text" class="form-control" id="username" name="username" maxlength="50"
-					   placeholder="请输入账号，至少3个字符，至多20个">
-	 
-			</div>
-			<div class="form-group col-md-5">
-				<label for="email" class="col-form-label">邮箱</label>
-				<input type="email" class="form-control" id="email" name="email" maxlength="50" placeholder="请输入邮箱">
-			</div>
-			<div class="form-group col-md-5">
-				<label for="name" class="col-form-label">姓名</label>
-				<input type="text" class="form-control" id="name" name="name" maxlength="20" placeholder="请输入姓名，至少2个字符，至多20个" >
-			</div>
-			<div class="form-group col-md-5">
-				<label for="password" class="col-form-label">密码</label>
-				<input type="password" class="form-control" id="password" name="password" maxlength="30" placeholder="请输入密码，字母或特殊符号和数字结合" >
-			</div>
-<!--			<div class=" col-md-5" th:if="${registerError}">
-				<p class="blog-label-error" th:text="${errorMsg}"></p>
-			</div>-->
-			<div class="form-group col-md-5">
-				<button type="submit" class="btn btn-primary">提交</button>
-			</div>
- 
-		</form>
- 
-    </div> <!-- /container -->
+<div class="container blog-content-container">
 
-	<div class="modal fade" id="registerResultModel">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">提示</h5>
-					<button type="button" class="close" data-dismiss="modal"></button>
-				</div>
-				<div class="modal-body">
-					<p id="registerResult"></p>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-primary" data-dismiss="modal" id="loginBtn">立即登录</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <form id="registerForm">
+        <h3 class="form-signin-heading">注册成为博主</h3>
 
-	<div th:replace="~{fragments/footer :: footer}">...</div>
-	<script src="../static/js/jquery.form.min.js" th:src="@{/js/jquery.form.min.js}"></script>
-	<script>
-        $(function () {
-            $("#registerForm").ajaxForm({
-                url:"/register",
-                type:"POST",
-                beforeSend: function(request) {
-                    // 获取 CSRF Token
-                    var csrfToken = $("meta[name='_csrf']").attr("content");
-                    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-                    request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
-                },
-                success: function (data) {
-                    if (data.success) {
-                        var user = data.body;
-                        var result = data.message + "<br>您的账号为：" + "<span class='text-dark h5'>" + user.username;
-                        $("#registerResult").html(result);
-                        $("#registerResultModel").modal('show');
-                    } else {
-                        toastr.warning(data.message);
-                    }
-                },
-                error: function () {
-                    toastr.error("error!");
+        <div class="form-group col-md-5">
+            <label for="username" class="col-form-label">账号</label>
+            <input type="text" class="form-control" id="username" name="username" maxlength="50"
+                   placeholder="请输入账号，至少3个字符，至多20个">
+
+        </div>
+        <div class="form-group col-md-5">
+            <label for="email" class="col-form-label">邮箱</label>
+            <input type="email" class="form-control" id="email" name="email" maxlength="50" placeholder="请输入邮箱">
+        </div>
+        <div class="form-group col-md-5">
+            <label for="name" class="col-form-label">姓名</label>
+            <input type="text" class="form-control" id="name" name="name" maxlength="20"
+                   placeholder="请输入姓名，至少2个字符，至多20个">
+        </div>
+        <div class="form-group col-md-5">
+            <label for="password" class="col-form-label">密码</label>
+            <input type="password" class="form-control" id="password" name="password" maxlength="30"
+                   placeholder="请输入密码，字母或特殊符号和数字结合">
+        </div>
+        <!--			<div class=" col-md-5" th:if="${registerError}">
+                        <p class="blog-label-error" th:text="${errorMsg}"></p>
+                    </div>-->
+        <div class="form-group col-md-5">
+            <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+
+    </form>
+
+</div> <!-- /container -->
+
+<div class="modal fade" id="registerResultModel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">提示</h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="registerResult"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal" id="loginBtn">立即登录</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+<script src="../static/js/jquery.form.min.js" th:src="@{/js/jquery.form.min.js}"></script>
+<script>
+    $(function () {
+        $("#registerForm").ajaxForm({
+            url: "/register",
+            type: "POST",
+            beforeSend: function (request) {
+                // 获取 CSRF Token
+                var csrfToken = $("meta[name='_csrf']").attr("content");
+                var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            },
+            success: function (data) {
+                if (data.success) {
+                    var user = data.body;
+                    var result = data.message + "<br>您的账号为：" + "<span class='text-dark h5'>" + user.username;
+                    $("#registerResult").html(result);
+                    $("#registerResultModel").modal('show');
+                } else {
+                    toastr.warning(data.message);
                 }
-            });
-
-            $("#loginBtn").click(function () {
-                window.location.href = "/login";
-            })
+            },
+            error: function () {
+                toastr.error("error!");
+            }
         });
-	</script>
-    </body>
+
+        $("#loginBtn").click(function () {
+            window.location.href = "/login";
+        })
+    });
+</script>
+</body>
 </html>

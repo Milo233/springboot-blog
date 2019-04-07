@@ -4,16 +4,16 @@
 "use strict";
 //# sourceURL=blogedit.js
 // DOM 加载完再执行
-$(function() {
+$(function () {
 
-	// 初始化 md 编辑器
+    // 初始化 md 编辑器
     $("#md").markdown({
         language: 'zh',
         fullscreen: {
             enable: true
         },
-        resize:'vertical',
-        localStorage:'md',
+        resize: 'vertical',
+        localStorage: 'md',
         imgurl: 'http://localhost:8081',
         base64url: 'http://localhost:8081'
         // todo 干嘛的？？
@@ -28,7 +28,7 @@ $(function() {
         animateDelete: 0,
         placeholder: '请输入标签'
     });
-        
+
     $('.form-control-chosen').chosen();
 
     // 编辑界面插入图片
@@ -48,10 +48,10 @@ $(function() {
             processData: false,
             success: function (data) {
                 //成功的回调  ![](图片地址 ''图片title'')
-                if(data.success){
+                if (data.success) {
                     var text = $("#md").val()
                     var image = "![](" + data.body + " '图片title')"
-                    if (text){
+                    if (text) {
                         text = (text + "\r\n" + image)
                     } else {
                         text = image
@@ -67,5 +67,5 @@ $(function() {
             }
         });
     });
-    
+
 });

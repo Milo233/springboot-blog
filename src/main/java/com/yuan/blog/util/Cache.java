@@ -75,7 +75,6 @@ public class Cache {
         return map.size();
     }
 
-    // todo 测试是否是线程安全额
     // 这种遍历效率很低的
     public synchronized static int removeExpireCache() {
         if (map.isEmpty()) return 0;

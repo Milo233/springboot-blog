@@ -3,43 +3,44 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}"></head>
 <script>
-function submitBlog(reload){
-    // 获取 CSRF Token
-    var csrfToken = $("meta[name='_csrf']").attr("content");
-    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-    $.ajax({
-        url: '/u/'+ $("#submitBlog").attr("username") + '/blogs/edit',
-        type: 'POST',
-        contentType: "application/json; charset=utf-8",
-        data:JSON.stringify({"id":$('#blogId').val(),
-            "title": $('#title').val(),
-            "summary": $('#summary').val() ,
-            "content": $('#md').val(),
-            "catalog":{"id":$('#catalogSelect').val()},
-            "tags":$('.form-control-tag').val(),
-            "htmlContent":marked($("#md").val()),
-            "open": $('#open').is(':checked') ? 0 : 1
-       }),
-        beforeSend: function(request) {
-            request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
-        },
-        success: function(data){
-            if (data.success) {
-                // 成功后，重定向
-				if (reload){
-                    window.location = data.body;
+    function submitBlog(reload) {
+        // 获取 CSRF Token
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: '/u/' + $("#submitBlog").attr("username") + '/blogs/edit',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                "id": $('#blogId').val(),
+                "title": $('#title').val(),
+                "summary": $('#summary').val(),
+                "content": $('#md').val(),
+                "catalog": {"id": $('#catalogSelect').val()},
+                "tags": $('.form-control-tag').val(),
+                "htmlContent": marked($("#md").val()),
+                "open": $('#open').is(':checked') ? 0 : 1
+            }),
+            beforeSend: function (request) {
+                request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            },
+            success: function (data) {
+                if (data.success) {
+                    // 成功后，重定向
+                    if (reload) {
+                        window.location = data.body;
+                    } else {
+                        toastr.info("保存成功！");
+                    }
                 } else {
-                    toastr.info("保存成功！");
-				}
-            } else {
-                toastr.error("error!"+data.message);
+                    toastr.error("error!" + data.message);
+                }
+            },
+            error: function () {
+                toastr.error("error!");
             }
-        },
-        error : function() {
-            toastr.error("error!");
-        }
-    })
-}
+        })
+    }
 </script>
 <body>
 <style type="text/css">
@@ -57,87 +58,92 @@ function submitBlog(reload){
         <!-- Blog Entries Column -->
         <div class="col-md-8">
             <!-- Blog Post -->
-			<div class="card-block" th:object="${blogModel.blog}">
-				<input type="hidden" name="id" th:value="*{id}" id="blogId">
-				<input type="text" class="form-control" placeholder="请填写博客标题"
-					id="title" name="title" th:value="*{title}" maxlength="50">
-<!--				<textarea class="blog-textarea" placeholder="请填写博客摘要" id="summary"
-					name="summary" th:text="*{summary}" maxlength="300"></textarea>-->
-				<hr>
-				<textarea id="md" data-provide="markdown"
-					data-hidden-buttons="cmdImage" name="content" 
-						th:text="*{content}"></textarea>
-				<hr>
-			</div>
-		</div>
+            <div class="card-block" th:object="${blogModel.blog}">
+                <input type="hidden" name="id" th:value="*{id}" id="blogId">
+                <input type="text" class="form-control" placeholder="请填写博客标题"
+                       id="title" name="title" th:value="*{title}" maxlength="50">
+                <!--				<textarea class="blog-textarea" placeholder="请填写博客摘要" id="summary"
+                                    name="summary" th:text="*{summary}" maxlength="300"></textarea>-->
+                <hr>
+                <textarea id="md" data-provide="markdown"
+                          data-hidden-buttons="cmdImage" name="content"
+                          th:text="*{content}"></textarea>
+                <hr>
+            </div>
+        </div>
 
         <!-- 右侧栏目 -->
         <div class="col-md-4">
             <div>
-				<!-- 文章设置 -->
+                <!-- 文章设置 -->
                 <div class="card ">
                     <h5 class="card-header"><i class="fa fa-cog" aria-hidden="true"></i> 博客设置</h5>
                     <div class="card-block">
-						<!--分类-->
-						<div class="row mt-1">
-							<div class="col-lg-12">
-								分类：<select id="catalogSelect"
-									class="form-control form-control-chosen"
-									data-placeholder="请选择">
-									<option th:value="*{id}" th:text="*{name}"
-										th:each="catalog : ${blogModel.catalogs}"
-										th:object="${catalog}"
-										th:selected="${catalog  eq blogModel.blog.catalog }">Java</option>
-								</select>
-							</div>
-						</div>
-						<!--标签-->
-						<div class="row mt-1">
-							<div class="col-lg-12">
-								标签：<input type="text" class="form-control form-control-tag"
-										  th:value="${blogModel.blog.tags}">
-							</div>
-						</div>
-						<div class="row mt-1">
-                            <div  class="col-lg-12">
-								<label>
-									<input id="open" type="checkbox" value="1" th:checked="${blogModel.blog.open eq 0 }">加密
-								</label>
-								<div th:class="${isNew} ? 'myHidestyle':''">
-									<!--新增博客必须刷新-->
-									<button class="btn btn-primary float-right" id="submitBlog"
-											th:attr="userName=${#authentication.principal.username}"
-											onclick="submitBlog(false)">仅发布</button>
-								</div>
-								<button class="btn btn-primary float-right" id="submitBlog"
-										th:attr="userName=${#authentication.principal.username}"
-										onclick="submitBlog(true)">发布并刷新</button>
+                        <!--分类-->
+                        <div class="row mt-1">
+                            <div class="col-lg-12">
+                                分类：<select id="catalogSelect"
+                                           class="form-control form-control-chosen"
+                                           data-placeholder="请选择">
+                                <option th:value="*{id}" th:text="*{name}"
+                                        th:each="catalog : ${blogModel.catalogs}"
+                                        th:object="${catalog}"
+                                        th:selected="${catalog  eq blogModel.blog.catalog }">Java
+                                </option>
+                            </select>
                             </div>
                         </div>
-                        
+                        <!--标签-->
+                        <div class="row mt-1">
+                            <div class="col-lg-12">
+                                标签：<input type="text" class="form-control form-control-tag"
+                                          th:value="${blogModel.blog.tags}">
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-lg-12">
+                                <label>
+                                    <input id="open" type="checkbox" value="1"
+                                           th:checked="${blogModel.blog.open eq 0 }">加密
+                                </label>
+                                <div th:class="${isNew} ? 'myHidestyle':''">
+                                    <!--新增博客必须刷新-->
+                                    <button class="btn btn-primary float-right" id="submitBlog"
+                                            th:attr="userName=${#authentication.principal.username}"
+                                            onclick="submitBlog(false)">仅发布
+                                    </button>
+                                </div>
+                                <button class="btn btn-primary float-right" id="submitBlog"
+                                        th:attr="userName=${#authentication.principal.username}"
+                                        onclick="submitBlog(true)">发布并刷新
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
-				<!-- 图片上传 -->
-				<div class="card ">
-					<h5 class="card-header">
-						<i class="fa fa-file-image-o" aria-hidden="true"></i>图片上传
-					</h5>
-					<div class="card-block">
-						<div class="row mt-1">
-							<div class="col-lg-12">
-								<form method="POST" enctype="multipart/form-data" id="uploadFormId"
-									  th:object="${user}" th:action="'/u/'+${user.username}+'/uploadImage'">
-									<input type="file" name="file"
-										   accept="image/png,image/gif,image/jpeg" id="file">
-									<button class="btn btn-warning float-right" type="button"
-											id="uploadImage">插入</button>
-								</form>
-							</div>
-						</div>
-					</div>
+                <!-- 图片上传 -->
+                <div class="card ">
+                    <h5 class="card-header">
+                        <i class="fa fa-file-image-o" aria-hidden="true"></i>图片上传
+                    </h5>
+                    <div class="card-block">
+                        <div class="row mt-1">
+                            <div class="col-lg-12">
+                                <form method="POST" enctype="multipart/form-data" id="uploadFormId"
+                                      th:object="${user}" th:action="'/u/'+${user.username}+'/uploadImage'">
+                                    <input type="file" name="file"
+                                           accept="image/png,image/gif,image/jpeg" id="file">
+                                    <button class="btn btn-warning float-right" type="button"
+                                            id="uploadImage">插入
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
-				</div>
+                </div>
 
             </div>
         </div>
@@ -148,10 +154,10 @@ function submitBlog(reload){
 
 
 <div th:replace="~{fragments/footer :: footer}">...</div>
- 
 
-<script src="../../js/userspace/blogedit.js" 
-	th:src="@{/js/userspace/blogedit.js}">
+
+<script src="../../js/userspace/blogedit.js"
+        th:src="@{/js/userspace/blogedit.js}">
 </script>
 
 </body>

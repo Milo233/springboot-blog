@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html  lang="en" data-th-fragment="header"
-	   xmlns:th="http://www.thymeleaf.org">
+<html lang="en" data-th-fragment="header"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Milo's Blog</title>
-	<script src="../../js/clipboard.min.js" th:src="@{/js/clipboard.min.js}"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Milo's Blog</title>
+    <script src="../../js/clipboard.min.js" th:src="@{/js/clipboard.min.js}"></script>
 </head>
 
 <body>
-	<div id="notfound">
-		<div class="notfound">
-			<button class="btn" style="width: 400px;height: 600px" id="btn" onclick="getValue()">Copy</button>
-			<br/>
-			<input id="source" type="text" th:value="${userModel}"/>
-		</div>
-	</div>
+<div id="notfound">
+    <div class="notfound">
+        <button class="btn" style="width: 400px;height: 600px" id="btn" onclick="getValue()">Copy</button>
+        <br/>
+        <input id="source" type="text" th:value="${userModel}"/>
+    </div>
+</div>
 </body>
 <script>
-    function getValue(){
+    function getValue() {
         var s = document.getElementById("source").value;
         var clipboard = new Clipboard('.btn', {
-            text: function() {
+            text: function () {
                 return s;
             }
         });

@@ -15,99 +15,102 @@
             <!-- Blog Post -->
             <div class="card mb-4">
                 <div class="card-block">
-					<h2 class="card-title">
+                    <h2 class="card-title">
 						<span> <a href="/u/milo" title="milo"
-							th:href="'/u/' + ${blogModel.user.username}"
-							th:title="${blogModel.user.username}"> <img
-								src="/images/avatar-default.jpg"
-								th:src="${blogModel.user.avatar} == null 
+                                  th:href="'/u/' + ${blogModel.user.username}"
+                                  th:title="${blogModel.user.username}"> <img
+                                src="/images/avatar-default.jpg"
+                                th:src="${blogModel.user.avatar} == null
 									? '/images/avatar-default.jpg'
 									: ${blogModel.user.avatar}"
-								class="blog-avatar-50">
+                                class="blog-avatar-50">
 						</a>
 						</span> <a href="/u/milo/blogs/1" class="card-link" title="milo"
-							th:href="'/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"
-							th:title="${blogModel.user.username}"
-							th:text="${blogModel.title}">title</a>
-					</h2>
-					<div class="card-text">
-						<a href="/u/milo" th:href="'/u/' + ${blogModel.user.username}"
-							class="card-link" th:text="${blogModel.user.username}">milo</a>
-						发表于 [[${#dates.format(blogModel.createTime, 'yyyy-MM-dd
-						HH:mm:ss')}]] <i class="fa fa-eye" aria-hidden="true">[[${blogModel.readSize}]]</i>
-						<i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
-						<i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
-						<a href="/u/milo" th:if="${isBlogOwner}"
-							th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"
-							class="btn btn-primary float-right">编辑</a> <a
-							href="javascript:void(0)" th:if="${isBlogOwner}"
-							class="btn btn-primary float-right blog-delete-blog">删除</a>
-					</div>
-					<hr>
-					<article class="post-content" th:utext="${blogModel.htmlContent}">
+                                   th:href="'/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"
+                                   th:title="${blogModel.user.username}"
+                                   th:text="${blogModel.title}">title</a>
+                    </h2>
+                    <div class="card-text">
+                        <a href="/u/milo" th:href="'/u/' + ${blogModel.user.username}"
+                           class="card-link" th:text="${blogModel.user.username}">milo</a>
+                        发表于 [[${#dates.format(blogModel.createTime, 'yyyy-MM-dd
+                        HH:mm:ss')}]] <i class="fa fa-eye" aria-hidden="true">[[${blogModel.readSize}]]</i>
+                        <i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
+                        <i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
+                        <a href="/u/milo" th:if="${isBlogOwner}"
+                           th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"
+                           class="btn btn-primary float-right">编辑</a> <a
+                            href="javascript:void(0)" th:if="${isBlogOwner}"
+                            class="btn btn-primary float-right blog-delete-blog">删除</a>
+                    </div>
+                    <hr>
+                    <article class="post-content" th:utext="${blogModel.htmlContent}">
 
-					</article>
-					<hr>
-				</div>
-                
-	               <div class="card-block">
-					   <h5><!--博客文章下面的分类和标签-->
-						   <a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
-							  th:text="${blogModel.open == 0 ? '加密博客':'公开博客'}"> Spring Boot </a>
-						   / 分类:<a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
-							th:text="${blogModel.catalog.name}"> Spring Boot </a>
-						/ 标签:<a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
-								th:href="'/u/' + ${blogModel.user.username}  + '/blogs?keyword='+ ${tag}">
-								<span class="badge badge-default" th:text="${tag}">Web Design</span>
-							</a>
-						</h5>
-					</div>
+                    </article>
+                    <hr>
+                </div>
 
-					<div class="card-block" id="comment-vote">
-						<h5>评论：</h5>
-						<div class="row">
-							<div class="col-lg-12">
-								<textarea class="blog-textarea" placeholder="看帖需留言~" id="commentContent"></textarea>
-							</div>
-						</div>
-						<button class="btn btn-primary float-right" id="submitComment">发表评论</button>
-						<button class="btn btn-primary float-right"
-							th:if="${currentVote} == null" id="submitVote">点赞</button>
-						<button class="btn btn-primary float-right" th:if="${currentVote}"
-							th:attr="voteId=${currentVote.id}" id="cancelVote">取消点赞</button>
-					</div>
+                <div class="card-block">
+                    <h5><!--博客文章下面的分类和标签-->
+                        <a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
+                           th:text="${blogModel.open == 0 ? '加密博客':'公开博客'}"> Spring Boot </a>
+                        /
+                        分类:<a th:href="'/u/'+${blogModel.user.username} + '/blogs?categoryId='+${blogModel.catalog.id}"
+                              th:text="${blogModel.catalog.name}"> Spring Boot </a>
+                        / 标签:<a th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
+                                th:href="'/u/' + ${blogModel.user.username}  + '/blogs?keyword='+ ${tag}">
+                            <span class="badge badge-default" th:text="${tag}">Web Design</span>
+                        </a>
+                    </h5>
+                </div>
 
-					<div class="card-block" id="mainContainer">
+                <div class="card-block" id="comment-vote">
+                    <h5>评论：</h5>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <textarea class="blog-textarea" placeholder="看帖需留言~" id="commentContent"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary float-right" id="submitComment">发表评论</button>
+                    <button class="btn btn-primary float-right"
+                            th:if="${currentVote} == null" id="submitVote">点赞
+                    </button>
+                    <button class="btn btn-primary float-right" th:if="${currentVote}"
+                            th:attr="voteId=${currentVote.id}" id="cancelVote">取消点赞
+                    </button>
+                </div>
 
-						<div class="row" id="mainContainerRepleace"
-							th:each="comment,commentStat : ${comments}"
-							th:object="${comment}">
-							<h2 class="card-title col-lg-1 col-md-2">
+                <div class="card-block" id="mainContainer">
+
+                    <div class="row" id="mainContainerRepleace"
+                         th:each="comment,commentStat : ${comments}"
+                         th:object="${comment}">
+                        <h2 class="card-title col-lg-1 col-md-2">
 								<span> <a href="/u/milo"
-									th:href="'/u/'+ *{user.username}" title="milo"
-									th:title="*{user.username}"> <img
-										src="/images/avatar-default.jpg"
-										th:src="*{user.avatar} == null ? '/images/avatar-default.jpg' : *{user.avatar}"
-										class="blog-avatar-50">
+                                          th:href="'/u/'+ *{user.username}" title="milo"
+                                          th:title="*{user.username}"> <img
+                                        src="/images/avatar-default.jpg"
+                                        th:src="*{user.avatar} == null ? '/images/avatar-default.jpg' : *{user.avatar}"
+                                        class="blog-avatar-50">
 								</a>
 								</span>
-							</h2>
-							<div class="card-text col-lg-11 col-md-10">
-								<a href="/u/milo" th:href="'/u/'+ *{user.username}"
-									class="card-link" th:text="*{user.username}"></a>
-								[[${commentStat.index} + 1]]楼
-								[[${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}]] <a
-									href="javascript:void(0)" class="blog-delete-comment"
-									th:if="${commentOwner} eq *{user.username}"
-									th:attr="commentId=*{id}"><i class="fa fa-trash-o"
-									aria-hidden="true"></i></a>
-								<p th:text="*{content}"></p>
-							</div>
-						</div>
+                        </h2>
+                        <div class="card-text col-lg-11 col-md-10">
+                            <a href="/u/milo" th:href="'/u/'+ *{user.username}"
+                               class="card-link" th:text="*{user.username}"></a>
+                            [[${commentStat.index} + 1]]楼
+                            [[${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}]] <a
+                                href="javascript:void(0)" class="blog-delete-comment"
+                                th:if="${commentOwner} eq *{user.username}"
+                                th:attr="commentId=*{id}"><i class="fa fa-trash-o"
+                                                             aria-hidden="true"></i></a>
+                            <p th:text="*{content}"></p>
+                        </div>
+                    </div>
 
-					</div>
+                </div>
 
-				</div>
+            </div>
 
         </div>
 
@@ -140,12 +143,12 @@
 
 <!-- JavaScript -->
 <script th:inline="javascript">
-	var blogId = [[${blogModel.id}]];
-	var blogUrl = '/u/' + [[${blogModel.user.username}]] + '/blogs/'+ [[${blogModel.id}]];
+    var blogId = [[${blogModel.id}]];
+    var blogUrl = '/u/' + [[${blogModel.user.username}]] + '/blogs/' + [[${blogModel.id}]];
 
-    $(function() {
+    $(function () {
         //keyword high light
-        $('#indexkeyword').bind('keyup change', function(ev) {
+        $('#indexkeyword').bind('keyup change', function (ev) {
             var keyword = $(this).val();
             // remove any old highlighted terms
             $('body').removeHighlight();
@@ -158,11 +161,11 @@
 
         // thymeleaf中javascript使用model中的数据
         var keyword = [[${keyword}]];
-        if(keyword && keyword.length >0){
-			$("#indexkeyword").val(keyword);
-			$('.post-content').highlight(keyword);
+        if (keyword && keyword.length > 0) {
+            $("#indexkeyword").val(keyword);
+            $('.post-content').highlight(keyword);
         }
-	});
+    });
 </script>
 </body>
 </html>

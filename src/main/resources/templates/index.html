@@ -12,7 +12,8 @@
             <div id="mainContainer">
                 <div id="mainContainerRepleace">
                     <div class="card">
-                        <div class="card-body" th:each="blog : ${blogList}" style="padding: 20px;border: #EEEEEE solid 1px">
+                        <div class="card-body" th:each="blog : ${blogList}"
+                             style="padding: 20px;border: #EEEEEE solid 1px">
                             <h4 class="card-title" style="">
                                 <a href="javascript:void(0)" th:href="'/u/' + ${blog.user.username}"
                                    th:title="${blog.user.username}">
@@ -117,8 +118,9 @@
                                     <span class="input-group-addon">招商信用卡</span>
                                     <input type="text" class="form-control tally" onfocus="this.select();" value="0">
                                 </div>
-                                <button class="btn btn-info" type="button" id="save" onclick="save()" >保存</button>
-                                <button class="btn btn-warning" type="button" id="reset" onclick="reset('tally')" >重置</button>
+                                <button class="btn btn-info" type="button" id="save" onclick="save()">保存</button>
+                                <button class="btn btn-warning" type="button" id="reset" onclick="reset('tally')">重置
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -144,23 +146,23 @@
         </div>
     </div>
 </div>
-    <div th:replace="fragments/footer :: footer">...</div>
-    <script src="../../js/index.js" th:src="@{/js/index.js}"></script>
+<div th:replace="fragments/footer :: footer">...</div>
+<script src="../../js/index.js" th:src="@{/js/index.js}"></script>
 
 <script>
     // 给元素绑定事件 js要写到html下面
     $(function () {
-        $('#indexkeyword').bind('keypress',function(event){
-            if(event.keyCode == "13"){
+        $('#indexkeyword').bind('keypress', function (event) {
+            if (event.keyCode == "13") {
                 $("#indexsearch").click();
             }
         });
-        $('input').on("keypress", function(e) {
+        $('input').on("keypress", function (e) {
             if (e.keyCode == 13) {
                 var inputs = $(".tally");
                 var idx = inputs.index(this);
                 if (idx == inputs.length - 1) {
-                    if(confirm("确认要提交？")){
+                    if (confirm("确认要提交？")) {
                         save();
                     } else {
                         inputs[0].select(); // 跳到第一个input
@@ -173,31 +175,32 @@
             }
         });
     })
-    function save(){
+
+    function save() {
         var index = 0;
         var data = [];
 
-        $(".tally").each(function(){
+        $(".tally").each(function () {
             var tally = {};
             tally.categoryId = index;
             tally.amount = $(this).val();
             tally.remark = $(this).parent().find("span").text()
             data.push(tally)
-            index ++;
+            index++;
         });
         // 获取 CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
         $.ajax({
-            url: '/u/'+ "milo" + '/tally/save',
+            url: '/u/' + "milo" + '/tally/save',
             type: 'POST',
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(data),
-            beforeSend: function(request) {
+            beforeSend: function (request) {
                 request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
             },
-            success: function(data){
+            success: function (data) {
                 if (data.success) {
                     alert("success!" + data.message);
                     reset("tally");
@@ -205,14 +208,14 @@
                     alert("error!" + data.message);
                 }
             },
-            error : function() {
+            error: function () {
                 alert("error!");
             }
         })
     }
 
     function reset(className) {
-        $("." + className).each(function(){
+        $("." + className).each(function () {
             $(this).val("0");
         });
     }

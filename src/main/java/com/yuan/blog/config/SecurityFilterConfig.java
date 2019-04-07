@@ -46,8 +46,6 @@ public class SecurityFilterConfig extends GenericFilterBean {
         } finally {
             IntegrationAuthenticationContext.clear();
         }
-
-
     }
 
 }
