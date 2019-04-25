@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.1.RELEASE'
+		springBootVersion = '2.0.3.RELEASE'
 	}
 
 	// 自定义  Hibernate 的版本
@@ -85,6 +85,11 @@ dependencies {
 
 	compile 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.3'
 
+	compile('org.springframework.boot:spring-boot-starter-mail')
+	// 这个好像是javamailsender必须的。todo 待验证
+	compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.6.RELEASE'
+	// 配置文件加密
+	compile 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.0'
 	// 该依赖用于测试阶段
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

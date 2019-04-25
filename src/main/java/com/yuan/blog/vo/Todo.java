@@ -36,8 +36,9 @@ public class Todo implements Serializable {
      */
     private Date finishTime;
 
+    // 0未完成 1已完成 2推迟 3 give up
     private Integer status;
-
+    // 1邮件通知 0不通知
     private Integer notify;
 
     /**

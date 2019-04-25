@@ -14,6 +14,20 @@
     <result column="notify" jdbcType="INTEGER" property="notify" />
     <result column="deleted" jdbcType="INTEGER" property="deleted" />
   </resultMap>
+  <resultMap id="BaseResultResponse" type="com.yuan.blog.response.TodoResponse">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="notify" jdbcType="INTEGER" property="notify" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, content, user_id, `type`, start_time, end_time, create_time, finish_time, `status`, 
     `notify`, deleted
@@ -155,4 +169,11 @@
       deleted = #{deleted,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="queryForNotify" resultMap="BaseResultResponse">
+    select
+    t.*,(select email from user where id = t.user_id limit 1) email
+    from todo t
+    where status in (0,2) and deleted  = 0
+    and notify = 1
+  </select>
 </mapper>

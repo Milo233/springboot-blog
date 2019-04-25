@@ -1,3 +1,6 @@
+jasypt:
+  encryptor:
+
 ##默认使用配置 https://blog.csdn.net/weixin_41461281/article/details/80453106
 #spring:
 #  profiles:
@@ -17,6 +20,17 @@ pagehelper:
     params: count=countSql
 
 spring:
+  mail:
+    password: ENC(7gYxkFcG5AqheTVolmSzdNbygakrfaGOAL9iQdMdYE4=)
+    host: smtp.qq.com
+    username: ENC(NOAY9J3Gwa2Re1/GVQ0/Ou6H/umzFEWbVQdnb3q9f50=)
+    properties:
+      mail:
+      smtp:
+      starttls:
+      enable: true
+      required: true
+      auth: true
   data:
     elasticsearch:
       cluster-nodes: localhost:9300
@@ -87,7 +101,8 @@ spring:
 spring:
   profiles: default
   datasource:
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8
+    url: ENC(2G4VbKAAVtTwPrSQER2WRJrjPh87TUUBlXOKGwiWiWCsD/6pap0Y9/3WS/7aZMaRRaZRIHZqUkOLdDdVgDQW7uBFHFSbKOK7dbfWjIm+sS3JHxDE+sFWv8Es4oQAkV7LaDY+tj035Sk=)
     username: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+    password: ENC(2ekiWt0lsaXt02jG4hxlsO7WlKO/b4d8)
