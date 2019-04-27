@@ -33,7 +33,6 @@ public class ScheduledTask {
     @Value("${spring.mail.username}")
     private String username;
 
-
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
     //@Scheduled(fixedRate = 4 * 60 * 60 * 1000 ) // 24h 一次 项目第一次启动时就会执行 大部分时候启动时会执行两次。。还是用cron的好
@@ -55,7 +54,7 @@ public class ScheduledTask {
     }
 
     //    @Scheduled(fixedRate = 1 * 60 * 1000)
-    @Scheduled(cron = "0 46 11 * * ?")
+    @Scheduled(cron = "0 42 15 * * ?")
     public void todoNotify() {
         // 查询需要通知的 todo 这里要聚合一下 同一个用户，发一条邮件
         try {

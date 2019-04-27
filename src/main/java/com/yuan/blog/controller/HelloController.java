@@ -37,25 +37,6 @@ public class HelloController {
     @Value("${spring.mail.username}")
     private String username;
 
-    @GetMapping("/mail")
-    @ResponseBody
-    public String mail(){
-        log.info("start to send mail");
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(username);
-            message.setTo("1611756376@qq.com");
-            message.setSubject("主题：简单邮件");
-            message.setText("测试邮件内容");
-            mailSender.send(message);
-        } catch (Exception e){
-            e.printStackTrace();
-            log.error("发送邮件失败 " + e);
-        }
-        log.info("发送邮件成功");
-        return "";
-    }
-
     @GetMapping("/query/{id}")
     @ResponseBody
     public String query(@PathVariable("id") Integer id) {
@@ -103,6 +84,21 @@ public class HelloController {
         }
         // 修改表数据
         blogService.updateWord(content, 1);
+
+        log.info("start to send mail");
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(username);
+            message.setTo("1611756376@qq.com");
+            message.setSubject("主题：简单邮件");
+            message.setText("测试邮件内容");
+            mailSender.send(message);
+        } catch (Exception e){
+            e.printStackTrace();
+            log.error("发送邮件失败 " + e);
+        }
+        log.info("发送邮件成功");
+
         return "done!!";
     }
 

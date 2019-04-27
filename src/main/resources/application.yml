@@ -1,6 +1,3 @@
-jasypt:
-  encryptor:
-    password: EbfYkitul173I1p0mX1501M1oaxZTKJ7
 
 ##默认使用配置 https://blog.csdn.net/weixin_41461281/article/details/80453106
 #spring:
@@ -22,9 +19,9 @@ pagehelper:
 
 spring:
   mail:
-    password: ENC(7gYxkFcG5AqheTVolmSzdNbygakrfaGOAL9iQdMdYE4=)
+    password: ENC(iEnn9jHhzGLeEbF7RY+tlo6en2jq9n6HCpcFuufB48w=)
     host: smtp.qq.com
-    username: ENC(NOAY9J3Gwa2Re1/GVQ0/Ou6H/umzFEWbVQdnb3q9f50=)
+    username: ENC(YzJoPAe4h7FjqSNAx9RViS4zUjFygi7Tp8LoEXgEdT0=)
     properties:
       mail:
         smtp:
@@ -106,8 +103,8 @@ spring:
 spring:
   profiles: default
   datasource:
-    url: ENC(2G4VbKAAVtTwPrSQER2WRJrjPh87TUUBlXOKGwiWiWCsD/6pap0Y9/3WS/7aZMaRRaZRIHZqUkOLdDdVgDQW7uBFHFSbKOK7dbfWjIm+sS3JHxDE+sFWv8Es4oQAkV7LaDY+tj035Sk=)
+    url: ENC(c2DGTWap8CA9JNP8Pev42SPZsy1w+8RbkBMYRI6oXX0UDt1BdizdIju2bNhzJDgR1cC8ftCobx/L6PorJqiiEJzwgPGpSVhVGb0Ff5pX+PTpmAHX+TiT78ORUwsn4/wCZcXfGApZZ/k=)
     username: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    password: ENC(2ekiWt0lsaXt02jG4hxlsO7WlKO/b4d8)
+    password: ENC(CAFJ8/JSj52x3Njn0/OXf10/WTVIVNcV)
