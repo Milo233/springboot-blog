@@ -55,10 +55,11 @@ public class ScheduledTask {
     }
 
     //    @Scheduled(fixedRate = 1 * 60 * 1000)
-    @Scheduled(cron = "0 1 11 * * ?")
+    @Scheduled(cron = "0 46 11 * * ?")
     public void todoNotify() {
         // 查询需要通知的 todo 这里要聚合一下 同一个用户，发一条邮件
         try {
+            log.info("定时任务 发送提醒邮件 start：" + "count");
             List<TodoResponse> todoList = todoService.queryForNotify();
             if (todoList != null && todoList.size() > 0) {
                 for (TodoResponse todo : todoList) {
@@ -66,7 +67,7 @@ public class ScheduledTask {
                 }
             }
             Integer count = 10;
-            log.info("定时任务 发送提醒邮件：" + "count");
+            log.info("定时任务 发送提醒邮件 end：" + "count");
         } catch (Exception e) {
             log.error("failed to todoNotify " + e);
         }
