@@ -8,6 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +33,30 @@ public class HelloController {
     private static final String REBOOT_COMMAND = "sh /root/rebootBlog.sh";
 
     @Autowired
+    public JavaMailSender mailSender;
+
+    @Autowired
     private BlogService blogService;
+    @Value("${spring.mail.username}")
+    private String username;
+
+    @GetMapping("/mail")
+    @ResponseBody
+    public String mail(){
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(username);
+            message.setTo("1611756376@qq.com");
+            message.setSubject("主题：简单邮件");
+            message.setText("测试邮件内容");
+            mailSender.send(message);
+        } catch (Exception e){
+            e.printStackTrace();
+            log.error("发送邮件失败 " + e);
+        }
+        log.info("发送邮件成功");
+        return "";
+    }
 
     @GetMapping("/query/{id}")
     @ResponseBody
