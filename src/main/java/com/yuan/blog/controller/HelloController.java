@@ -25,11 +25,8 @@ import java.util.Date;
 @Controller
 @RequestMapping("/run")
 public class HelloController {
-
     private static final Logger log = LoggerFactory.getLogger(HelloController.class);
-
     final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
-
     private static final String REBOOT_COMMAND = "sh /root/rebootBlog.sh";
 
     @Autowired
@@ -40,9 +37,10 @@ public class HelloController {
     @Value("${spring.mail.username}")
     private String username;
 
-    @GetMapping("/mail/test")
+    @GetMapping("/mail")
     @ResponseBody
     public String mail(){
+        log.info("start to send mail");
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(username);
@@ -73,7 +71,7 @@ public class HelloController {
         return blogService.getContentById(id);
     }
 
-    @GetMapping("/{command}")
+    @GetMapping("/command/{command}")
     @ResponseBody
     public String hello(@PathVariable("command") String command) {
         User currentUser = NetUtil.getCurrentUser();

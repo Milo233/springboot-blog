@@ -1,5 +1,6 @@
 jasypt:
   encryptor:
+    password: EbfYkitul173I1p0mX1501M1oaxZTKJ7
 
 ##默认使用配置 https://blog.csdn.net/weixin_41461281/article/details/80453106
 #spring:
