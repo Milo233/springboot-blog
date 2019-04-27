@@ -40,7 +40,7 @@ public class HelloController {
     @Value("${spring.mail.username}")
     private String username;
 
-    @GetMapping("/mail")
+    @GetMapping("/mail/test")
     @ResponseBody
     public String mail(){
         try {
