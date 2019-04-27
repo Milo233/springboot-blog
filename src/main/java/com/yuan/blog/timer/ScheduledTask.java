@@ -54,32 +54,36 @@ public class ScheduledTask {
         }
     }
 
-//    @Scheduled(fixedRate = 1 * 60 * 1000)
-    @Scheduled(cron = "0 0 20 * * ?")
+    //    @Scheduled(fixedRate = 1 * 60 * 1000)
+    @Scheduled(cron = "0 1 11 * * ?")
     public void todoNotify() {
         // 查询需要通知的 todo 这里要聚合一下 同一个用户，发一条邮件
-        List<TodoResponse> todoList = todoService.queryForNotify();
-        if (todoList != null && todoList.size() > 0){
-            for (TodoResponse todo : todoList){
-                sendMail(todo.getEmail(), todo.getContent() + new Date().toString(), "延期啦！！");
+        try {
+            List<TodoResponse> todoList = todoService.queryForNotify();
+            if (todoList != null && todoList.size() > 0) {
+                for (TodoResponse todo : todoList) {
+                    sendMail(todo.getEmail(), todo.getContent() + new Date().toString(), "延期啦！！");
+                }
             }
+            Integer count = 10;
+            log.info("定时任务 发送提醒邮件：" + "count");
+        } catch (Exception e) {
+            log.error("failed to todoNotify " + e);
         }
-        Integer count = 10;
-        log.info("定时任务 发送提醒邮件：" + "count");
     }
 
-    public void sendMail(String to,String text,String subject) {
+    private void sendMail(String to, String text, String subject) {
         long start = System.currentTimeMillis();
         // 纯文本邮件。支持html or 附件需要MimeMessage
         // todo https://blog.csdn.net/larger5/article/details/80534887
-        try{
+        try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(username);
             message.setTo(to); // 收件人
             message.setSubject(subject);//主题
             message.setText(text); // 正文
             mailSender.send(message);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             log.error("failed to sendmail " + e);
         }
