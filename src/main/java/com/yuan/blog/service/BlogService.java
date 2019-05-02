@@ -34,6 +34,8 @@ public interface BlogService {
 
     Page<Blog> listBlogsByUserAndKeywordByHot(User user, String keyword, Pageable pageable);
 
+    Page<Blog> ll(String keyword);
+
     Page<Blog> listBlogsByKeywordByHot(String keyword, Pageable pageable);
 
     /**

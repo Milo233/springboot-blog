@@ -1,22 +1,35 @@
 package com.yuan.blog.controller;
 
+import com.yuan.blog.domain.User;
+import com.yuan.blog.service.BlogService;
+import com.yuan.blog.util.NetUtil;
+import com.yuan.blog.util.TaskExecutor;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
-@RequestMapping("/run2")
-public class HelloController {
-    /*private static final Logger log = LoggerFactory.getLogger(HelloController.class);
+@RequestMapping("/run")
+public class HeyController {
+    private static final Logger log = LoggerFactory.getLogger(HeyController.class);
     final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
     private static final String REBOOT_COMMAND = "sh /root/rebootBlog.sh";
-
     @Autowired
     public JavaMailSender mailSender;
 
     @Autowired
     private BlogService blogService;
-    @Value("${spring.mail.username}")
-    private String username;
 
     @GetMapping("/query/{id}")
     @ResponseBody
@@ -50,9 +63,10 @@ public class HelloController {
         }
 
         if ("reboot".equals(command)) {
-            return exec(REBOOT_COMMAND);
+            return TaskExecutor.exec(REBOOT_COMMAND);
         } else {
-            return exec(command);
+            return "";
+//            return TaskExecutor.exec(command);
         }
     }
 
@@ -65,40 +79,8 @@ public class HelloController {
         }
         // 修改表数据
         blogService.updateWord(content, 1);
-
-        log.info("start to send mail");
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(username);
-            message.setTo("1611756376@qq.com");
-            message.setSubject("主题：简单邮件");
-            message.setText("测试邮件内容");
-            mailSender.send(message);
-        } catch (Exception e){
-            e.printStackTrace();
-            log.error("发送邮件失败 " + e);
-        }
-        log.info("发送邮件成功");
-
         return "done!!";
     }
 
-    public String exec(String command) {
-        StringBuilder result = new StringBuilder();
-        try {
-            String s;
-            Process p;
-            p = Runtime.getRuntime().exec(command);
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(p.getInputStream()));
-            while ((s = br.readLine()) != null) {
-                result.append(s);
-            }
-            p.waitFor();
-            p.destroy();
-        } catch (Exception e) {
-            result = new StringBuilder(e.getMessage());
-        }
-        return result.toString();
-    }*/
+
 }

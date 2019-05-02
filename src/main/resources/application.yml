@@ -18,6 +18,8 @@ pagehelper:
     params: count=countSql
 
 spring:
+  weibo:
+    token: ENC(bzDoPEhC6qIQbiIE0ViPYAAxhyM/juJsWCiCUznW43CqnLIwI/QdgJYt2PskIihX)
   mail:
     password: ENC(iEnn9jHhzGLeEbF7RY+tlo6en2jq9n6HCpcFuufB48w=)
     host: smtp.qq.com
