@@ -81,12 +81,12 @@ public class Cache {
         Set<Map.Entry<String, Entity>> entries = map.entrySet();
         Iterator<Map.Entry<String, Entity>> iterator = entries.iterator();
         int count = 0;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Map.Entry<String, Entity> next = iterator.next();
             Entity entity = next.getValue();
-            if (System.currentTimeMillis() > entity.getexpireAt()){
+            if (System.currentTimeMillis() > entity.getexpireAt()) {
                 iterator.remove();
-                count ++;
+                count++;
             }
         }
         return count;

@@ -16,7 +16,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public Vote getVoteById(Long id) {
         Optional<Vote> byId = voteRepository.findById(id);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             return byId.get();
         } else {
             return null;

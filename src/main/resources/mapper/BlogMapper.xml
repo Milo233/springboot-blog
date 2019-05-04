@@ -12,8 +12,6 @@
     <result column="tags" property="tags" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="vote_size" property="voteSize" jdbcType="INTEGER" />
-    <!--<result column="catalog_id" property="catalogId" jdbcType="BIGINT" />-->
-    <!--<result column="user_id" property="userId" jdbcType="BIGINT" />-->
   </resultMap>
   <sql id="Base_Column_List" >
     id, comment_size, content, create_time, html_content, read_size, summary,tags, title, vote_size, open

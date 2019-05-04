@@ -1,6 +1,6 @@
 "use strict";
 $(function() {
-    
+
 	var _pageSize; // 存储用于搜索
 	
 	// 根据用户名、页面索引、页面大小获取用户列表
@@ -35,15 +35,20 @@ $(function() {
 		getBlogsByName(pageIndex, pageSize);
 		_pageSize = pageSize;
 	});
-   
+
+   var last = 0;
 	// 关键字搜索
 	$("#indexsearch").click(function() {
+        if(last != 0 && new Date().getTime() - last < 1000){
+            insertCache();
+        }
+        last = new Date().getTime();
 		getBlogsByName(0, _pageSize);
 	});
 
 	// 插入缓存
-    $("#insertPWD").click(function() {
-    	console.log("i am clicking insertPWD")
+	function insertCache(){
+	    console.log("i am clicking insertCache")
         // 获取 CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -62,8 +67,9 @@ $(function() {
                 location.reload();
             }
         });
-    });
-	
+	}
+
+
 	// 最新\最热切换事件
 	$(".nav-item .nav-link").click(function() {
 		var url = $(this).attr("url");
