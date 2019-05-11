@@ -4,7 +4,6 @@ import com.yuan.blog.response.TodoResponse;
 import com.yuan.blog.service.SystemLogService;
 import com.yuan.blog.service.TodoService;
 import com.yuan.blog.util.Cache;
-import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.util.StringUtils;
 import com.yuan.blog.util.TaskExecutor;
 import org.json.JSONArray;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import javax.xml.ws.soap.Addressing;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,11 +51,13 @@ public class ScheduledTask {
     @Scheduled(cron = "0 43 6 * * ?")
     public void weatherRReport() {
         log.info("cron 定时任务 发微博");
-        String city = "深圳";
-        StringBuilder sb = new StringBuilder(city + "今天");
-        ResponseEntity<String> response = restTemplate.getForEntity("http://wthrcdn.etouch.cn/WeatherApi?city=" + city, String.class);
-        if (response.getStatusCodeValue() == 200) {
+        String citys = "信阳,深圳";
+        String[] cityArr = citys.split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String city : cityArr) {
+            sb.append("[").append(city).append("]").append("今天");
             try {
+                ResponseEntity<String> response = restTemplate.getForEntity("http://wthrcdn.etouch.cn/WeatherApi?city=" + city, String.class);
                 String strBody = response.getBody();
                 JSONObject xmlJSONObj = XML.toJSONObject(strBody);
                 JSONObject resp = xmlJSONObj.getJSONObject("resp");
@@ -79,24 +79,22 @@ public class ScheduledTask {
                 }
                 sb.append("明天");
                 sb.append(StringUtils.getNumber(day1.getString("low")));
-                sb.append("℃-");
+                sb.append("℃~");
                 sb.append(StringUtils.getNumber(day1.getString("high"))).append("℃,");
                 sb.append(day1.getJSONObject("day").getString("type")).append(",");
 
                 sb.append("后天");
                 sb.append(StringUtils.getNumber(day2.getString("low")));
-                sb.append("℃-");
+                sb.append("℃~");
                 sb.append(StringUtils.getNumber(day2.getString("high"))).append("℃,");
                 sb.append(day2.getJSONObject("day").getString("type")).append("。");
             } catch (Exception e) {
-                log.error("failed to parse response of weather!!!!", e);
-                return;
+                e.printStackTrace();
+                long failTime = System.currentTimeMillis();
+                log.error("failed to get weather for " + city + " " + failTime, e);
+                sb.append("没数据啊！！").append(e.getMessage()).append(failTime);
             }
-        } else {
-            log.error("failed to get weather data  ");
-            return;
         }
-
         String os = System.getProperty("os.name");
         if (os.equalsIgnoreCase("Linux")) {
             String command = "java -jar /root/tmp/weibo4j-oauth2.jar " + token + " " + sb.toString();

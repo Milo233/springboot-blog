@@ -33,13 +33,6 @@ spring:
             enable: true
             required: true
           auth: true
-  data:
-    elasticsearch:
-      cluster-nodes: localhost:9300
-      properties:
-        transport:
-          tcp:
-            connect_timeout: 1s
   servlet:
     multipart:
       max-request-size: 10MB
