@@ -59,7 +59,7 @@ public class CommentController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
     public ResponseEntity<Response> createComment(Long blogId, String commentContent) {
-        User currentUser = NetUtil.getCurrentUser();
+        User currentUser = NetUtil.getCurrentUser(false);
         Long userId = 0L;
         if (currentUser != null) {
             userId = currentUser.getId();

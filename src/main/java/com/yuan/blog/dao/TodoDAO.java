@@ -18,5 +18,5 @@ public interface TodoDAO {
 
     int updateByPrimaryKey(Todo record);
     // 查询todo list
-    List<TodoResponse> queryForNotify();
+    List<TodoResponse> queryForNotify(Todo record);
 }

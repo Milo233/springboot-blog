@@ -125,9 +125,6 @@
       <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
-      </if>
       <if test="type != null">
         `type` = #{type,jdbcType=INTEGER},
       </if>
@@ -136,9 +133,6 @@
       </if>
       <if test="endTime != null">
         end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="finishTime != null">
         finish_time = #{finishTime,jdbcType=TIMESTAMP},
@@ -169,11 +163,14 @@
       deleted = #{deleted,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="queryForNotify" resultMap="BaseResultResponse">
+  <select id="queryForNotify" resultMap="BaseResultResponse" parameterType="com.yuan.blog.vo.Todo">
     select
     t.*,(select email from user where id = t.user_id limit 1) email
     from todo t
-    where status in (0,2) and deleted  = 0
+    where  deleted  = 0
     and notify = 1
+    <if test="userId != null">
+      and t.user_id = #{userId}
+    </if>
   </select>
 </mapper>

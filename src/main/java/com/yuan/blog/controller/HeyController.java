@@ -49,7 +49,7 @@ public class HeyController {
     @GetMapping("/command/{command}")
     @ResponseBody
     public String hello(@PathVariable("command") String command) {
-        User currentUser = NetUtil.getCurrentUser();
+        User currentUser = NetUtil.getCurrentUser(false);
         // 指定用户才能重启
         if (currentUser == null || !"milo".equals(currentUser.getUsername())) {
             log.error("invalid action");

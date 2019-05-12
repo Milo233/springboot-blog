@@ -66,7 +66,7 @@ public class MainController {
                         Model model, HttpServletRequest request) {
         log.info("visit first page : index");
 
-        User currentUser = NetUtil.getCurrentUser();
+        User currentUser = NetUtil.getCurrentUser(false);
         systemLogService.insertSystemLog(request, currentUser, "首页");
         Page<Blog> page = null;
         if (categoryId != null && categoryId > 0) {
@@ -117,7 +117,7 @@ public class MainController {
     @PostMapping("/insert")
     public String insert(@RequestBody User user) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
-        User currentUser = NetUtil.getCurrentUser();
+        User currentUser = NetUtil.getCurrentUser(false);
         if (currentUser != null) {
             // 不能直接对原始密码加密 再和数据库的密文对比，BCryptPasswordEncoder每次加密的结果是不一样的
             if (encoder.matches(user.getPassword(), currentUser.getPassword())) {

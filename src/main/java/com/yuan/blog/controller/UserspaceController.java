@@ -195,7 +195,7 @@ public class UserspaceController {
         Blog blog = blogService.getBlogById(id);
         boolean isBlogOwner = false;
         // 判断操作用户是否是博客的所有者
-        User principal = NetUtil.getCurrentUser();
+        User principal = NetUtil.getCurrentUser(false);
         if (principal != null && username.equals(principal.getUsername())) {
             isBlogOwner = true;
         }

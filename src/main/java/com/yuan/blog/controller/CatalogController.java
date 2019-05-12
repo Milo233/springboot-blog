@@ -44,8 +44,7 @@ public class CatalogController {
         // 判断操作用户是否是分类的所有者
         boolean isOwner = false;
 
-
-        User currentUser = NetUtil.getCurrentUser();
+        User currentUser = NetUtil.getCurrentUser(false);
         if (currentUser != null && user.getUsername().equals(currentUser.getUsername())) {
             isOwner = true;
         }
@@ -57,7 +56,6 @@ public class CatalogController {
 
     /**
      * 创建分类
-     *
      * @param catalogVO
      */
     @PostMapping

@@ -54,14 +54,21 @@ public class NetUtil {
     }
 
     // 查询当前登录的用户
-    public static User getCurrentUser() {
+    public static User getCurrentUser(boolean checkLogin) {
+
+        User user = null;
         if (SecurityContextHolder.getContext().getAuthentication() != null
                 && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
                 && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
                 .equals("anonymousUser")) {
-            return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
-        return null;
+        // 需要校验登录 且当前未登录时抛出异常
+        if (checkLogin && user == null) {
+            throw new RuntimeException();
+        } else {
+            return user;
+        }
     }
 
     /**

@@ -86,14 +86,6 @@
             width: 24px;
             height: 24px;
         }
-        .todoList a {
-            float: right;
-            margin-top: 6px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
     </style>
 </head>
 <body>
@@ -103,8 +95,14 @@
             <div id="mainContainer">
                 <div class="header">
                     <div>
-                        <h2>ToDoList</h2>
-                        <input type="text" name="txt" id="txt" placeholder="添加TODo">
+                        <h2>待办事项</h2>
+                        <select id="type">
+                            <option value ="1">待办</option>
+                            <option value="2">生日</option>
+                            <option value="3">纪念日</option>
+                        </select>
+                        <input type="text" name="content" id="content" placeholder="添加todo">
+                        <label><input type="checkbox" id="notify" checked> 邮件通知</label>
                     </div>
                 </div>
                 <div class="todoList">

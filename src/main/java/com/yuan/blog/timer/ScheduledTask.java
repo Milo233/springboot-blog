@@ -6,6 +6,7 @@ import com.yuan.blog.service.TodoService;
 import com.yuan.blog.util.Cache;
 import com.yuan.blog.util.StringUtils;
 import com.yuan.blog.util.TaskExecutor;
+import com.yuan.blog.vo.Todo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -129,7 +130,7 @@ public class ScheduledTask {
         // 查询需要通知的 todo 这里要聚合一下 同一个用户，发一条邮件
         try {
             log.info("定时任务 发送提醒邮件 start：" + "count");
-            List<TodoResponse> todoList = todoService.queryForNotify();
+            List<TodoResponse> todoList = todoService.queryForNotify(new Todo());
             if (todoList != null && todoList.size() > 0) {
                 for (TodoResponse todo : todoList) {
                     sendMail(todo.getEmail(), todo.getContent() + new Date().toString(), "延期啦！！");
