@@ -23,9 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @EnableScheduling
 @Component
@@ -124,20 +122,39 @@ public class ScheduledTask {
         }
     }
 
-    //    @Scheduled(fixedRate = 1 * 60 * 1000)
-    @Scheduled(cron = "0 42 15 * * ?")
+    //        @Scheduled(fixedRate = 1 * 60 * 1000)
+    @Scheduled(cron = "0 13 19,8 * * ?")
     public void todoNotify() {
-        // 查询需要通知的 todo 这里要聚合一下 同一个用户，发一条邮件
+        // 查询需要通知的 待办事项
         try {
-            log.info("定时任务 发送提醒邮件 start：" + "count");
-            List<TodoResponse> todoList = todoService.queryForNotify(new Todo());
+            int count = 0;
+            log.info("scheduled task of sending notify email start：");
+            Todo queryParam = new Todo();
+            queryParam.setNotify(1);
+            queryParam.setStatus(0); //未完成
+            List<TodoResponse> todoList = todoService.queryForNotify(queryParam);
             if (todoList != null && todoList.size() > 0) {
+                Map<String, List<TodoResponse>> userMap = new HashMap<>();
                 for (TodoResponse todo : todoList) {
-                    sendMail(todo.getEmail(), todo.getContent() + new Date().toString(), "延期啦！！");
+                    if (userMap.containsKey(todo.getEmail())) {
+                        userMap.get(todo.getEmail()).add(todo);
+                    } else {
+                        List<TodoResponse> list = new ArrayList<>();
+                        list.add(todo);
+                        userMap.put(todo.getEmail(), list);
+                    }
+                }
+                for (String email : userMap.keySet()) {
+                    List<TodoResponse> todos = userMap.get(email);
+                    StringBuilder sb = new StringBuilder();
+                    for (int x = 0; x < todos.size(); x++) {
+                        sb.append(x).append(",").append(todos.get(x).getContent()).append(".");
+                    }
+                    sendMail(email, sb.toString(), todos.size() + " 项待办的任务还没处理！");
+                    count++;
                 }
             }
-            Integer count = 10;
-            log.info("定时任务 发送提醒邮件 end：" + "count");
+            log.info("scheduled task of sending notify email end,count " + count);
         } catch (Exception e) {
             log.error("failed to todoNotify " + e);
         }

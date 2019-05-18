@@ -42,7 +42,7 @@ public class TodoController {
     }
 
     @PostMapping("/query")
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Response> query(@RequestBody Todo todo) {
         List<TodoResponse> todoResponses;
         try {

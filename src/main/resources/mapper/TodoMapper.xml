@@ -167,10 +167,15 @@
     select
     t.*,(select email from user where id = t.user_id limit 1) email
     from todo t
-    where  deleted  = 0
-    and notify = 1
+    where t.deleted  = 0
     <if test="userId != null">
       and t.user_id = #{userId}
+    </if>
+    <if test="status != null">
+      and t.status = #{status}
+    </if>
+    <if test="notify != null">
+      and t.notify = #{notify}
     </if>
   </select>
 </mapper>

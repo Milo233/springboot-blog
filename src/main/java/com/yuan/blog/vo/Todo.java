@@ -5,7 +5,6 @@ import java.util.Date;
 
 /**
  * todo
- * @author 
  */
 public class Todo implements Serializable {
     private Long id;
@@ -36,7 +35,7 @@ public class Todo implements Serializable {
      */
     private Date finishTime;
 
-    // 0未完成 1已完成 2推迟 3 give up
+    // 0未完成 1已完成 （2推迟 3 give up 暂时没有）
     private Integer status;
     // 1邮件通知 0不通知
     private Integer notify;

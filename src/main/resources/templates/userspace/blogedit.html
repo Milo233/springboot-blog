@@ -7,6 +7,9 @@
         // 获取 CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        var input = getEnter($("#md").val());
+        $("#md").val(input)
+        var markedInput = marked(input)
         $.ajax({
             url: '/u/' + $("#submitBlog").attr("username") + '/blogs/edit',
             type: 'POST',
@@ -18,7 +21,7 @@
                 "content": $('#md').val(),
                 "catalog": {"id": $('#catalogSelect').val()},
                 "tags": $('.form-control-tag').val(),
-                "htmlContent": marked($("#md").val()),
+                "htmlContent": markedInput ,
                 "open": $('#open').is(':checked') ? 0 : 1
             }),
             beforeSend: function (request) {
@@ -41,6 +44,22 @@
             }
         })
     }
+
+    // 处理换行 thinker-md 每行结尾必须是俩空格才可以生成html时实现换行
+    function getEnter(input) {
+        var len = input.length;
+        var newInput = ""
+        for(var x = 0;x<len;x++){
+            if((input.charAt(x) == "\r" || input.charAt(x) == "\n") && x > 1
+                && input.charAt(x - 1) != " " && input.charAt(x -2) != " "){
+                newInput += "  " + "\r\n"
+            } else {
+                newInput += input.charAt(x)
+            }
+        }
+        return newInput;
+    }
+
 </script>
 <body>
 <style type="text/css">
