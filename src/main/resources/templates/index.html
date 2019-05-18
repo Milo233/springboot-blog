@@ -1,6 +1,94 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: rgba(0, 0, 0, .2);
+        }
+
+        .header {
+            width: 100%;
+            height: 50px;
+            background-color: rgba(47, 47, 47, .98);
+        }
+
+        .header div {
+            width: 500px;
+            height: 50px;
+            margin: 0 auto;
+            padding: 0 5px;
+        }
+
+        h2 {
+            float: left;
+            color: white;
+            line-height: 50px;
+        }
+
+        .header input {
+            margin-top: 13px;
+            border: 0;
+            border-radius: 8px;
+            width: 300px;
+            height: 24px;
+            padding: 0 10px;
+            outline: none;
+            float: right;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+        }
+
+        .todoList span {
+            float: right;
+            width: 20px;
+            height: 20px;
+            margin-top: 4px;
+            background-color: orange;
+            border-radius: 50%;
+            font-size: 14px;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        .todoList ul {
+            margin-bottom: 20px;
+        }
+
+        .todoList li {
+            list-style: none;
+            width: 500px;
+            height: 24px;
+            border-radius: 4px;
+            padding: 0 5px;
+            box-sizing: border-box;
+            margin: 10px 0;
+            /*li内元素不换行*/
+            display: inline;
+        }
+
+        .todoList ul li {
+            background-color: gray;
+        }
+
+        .todoList ol li {
+            background-color: pink;
+        }
+
+        .todoList li input {
+            float: left;
+            border: 0;
+            width: 24px;
+            height: 24px;
+        }
+    </style>
 </head>
 <body>
 <!-- Page Content 静态页面 2018年9月24日18:16:31
@@ -47,40 +135,28 @@
         </div>
         <!-- 右侧栏目 -->
         <div class="col-md-4">
-            <div class="card">
-                <img alt="今日诗词" src="https://v2.jinrishici.com/one.svg">
-            </div>
-            <!--热门标签
-            <div class="card">
-                <h5 class="card-header"><i class="fa fa-tags">热门标签</i></h5>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <a href="javascript:void(0)" th:each="tag, tagStat : ${tags}" th:object="${tag}" class="h5 blog-tag"
-                               th:attr="tag=*{name}">
-                                <span class="badge badge-secondary" th:text="*{name}"></span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           <div class="card my-3">
-                <h5 class="card-header"><i class="fa fa-user">热门用户</i></h5>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span th:each="user : ${users}" th:object="${user}">
-                                <a href="javascript:void(0)" th:href="'/u/' + *{username}"
-                                   th:title="*{username}">
-                                    <img src="" th:src="*{avatar} == null ? '/images/avatar-default.jpg' : *{avatar}"
-                                         class="blog-avatar-50">
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
             <div class="card" sec:authorize="isAuthenticated()">
+                <h5 class="card-header"><i class="fa fa-user">任务帖todo</i></h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select id="type">
+                                <option value="1">待办</option>
+                                <option value="2">生日</option>
+                                <option value="3">纪念日</option>
+                            </select>
+                            <input type="text" name="content" id="content" placeholder="添加todo">
+                            <label><input type="checkbox" id="notify" checked>通知</label>
+                        </div>
+                    </div>
+                    <div class="todoList card">
+                        <p>待完成<span class="todo">0</span></p>
+                        <ul></ul>
+                        <p>已完成<span class="done">0</span></p>
+                        <ol></ol>
+                    </div>
+                </div>
+
                 <div th:class="${showTalley} ? '':'myHidestyle'">
                     <h5 class="card-header"><i class="fa fa-user">个人记账</i></h5>
                     <div class="card-body">
@@ -88,35 +164,43 @@
                             <div class="col-md-12">
                                 <div class="input-group">
                                     <span class="input-group-addon">现金</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">微信</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">花呗</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">支付宝</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">兴业银行</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">上海银行</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">交行信用卡</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon">招商信用卡</span>
-                                    <input type="text" class="form-control tally" onfocus="this.select();" value="0">
+                                    <input type="text" class="form-control tally" onfocus="this.select();"
+                                           value="0">
                                 </div>
                                 <button class="btn btn-info" type="button" id="save" onclick="save()">保存</button>
                                 <button class="btn btn-warning" type="button" id="reset" onclick="reset('tally')">重置
@@ -143,11 +227,15 @@
                 </div>
             </div>
             <!--end of talley-->
+            <div class="card">
+                <img alt="今日诗词" src="https://v2.jinrishici.com/one.svg">
+            </div>
         </div>
     </div>
 </div>
 <div th:replace="fragments/footer :: footer">...</div>
 <script src="../../js/index.js" th:src="@{/js/index.js}"></script>
+<script src="../../js/todolist.js" th:src="@{/js/todolist.js}"></script>
 
 <script>
     // 给元素绑定事件 js要写到html下面
@@ -219,6 +307,10 @@
             $(this).val("0");
         });
     }
+
+
+
+
 </script>
 </body>
 </html>

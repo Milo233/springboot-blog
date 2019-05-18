@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
@@ -44,15 +45,21 @@ public class TodoController {
     @PostMapping("/query")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Response> query(@RequestBody Todo todo) {
-        List<TodoResponse> todoResponses;
+        List<TodoResponse> todoList;
         try {
             User currentUser = NetUtil.getCurrentUser(true);
             todo.setUserId(currentUser.getId());
-            todoResponses = todoService.queryForNotify(todo);
+            todoList = todoService.queryForNotify(todo);
+            if (todoList != null && todoList.size() > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                for (TodoResponse td : todoList) {
+                    td.setContent(td.getContent() + " " + sdf.format(td.getCreateTime()));
+                }
+            }
         } catch (Exception e) {
             return Response.getResponse(false, e.getMessage(), "fail");
         }
-        return Response.getResponse(true, "处理成功", todoResponses);
+        return Response.getResponse(true, "处理成功", todoList);
     }
 
     @GetMapping(value = "/delete/{id}")
@@ -63,7 +70,7 @@ public class TodoController {
             Todo todo = new Todo();
             todo.setDeleted(1);
             todo.setId(id);
-            todoService.updateTodo(todo,currentUser);
+            todoService.updateTodo(todo, currentUser);
         } catch (Exception e) {
             return Response.getResponse(false, e.getMessage(), "fail");
         }
@@ -79,7 +86,7 @@ public class TodoController {
             Todo todo = new Todo();
             todo.setStatus(status);
             todo.setId(id);
-            todoService.updateTodo(todo,currentUser);
+            todoService.updateTodo(todo, currentUser);
         } catch (Exception e) {
             return Response.getResponse(false, e.getMessage(), "fail");
         }
