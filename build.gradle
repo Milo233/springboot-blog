@@ -1,5 +1,5 @@
 buildscript {
-	ext {
+	ext { // boot 2.1.1.RELEASE cloud Finchley.SR2
 		springBootVersion = '2.0.3.RELEASE'
 	}
 

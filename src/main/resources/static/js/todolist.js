@@ -3,6 +3,11 @@ $(function () {
     getData()
 
     // 键盘回车事件
+    $('#type').on('change', function (event) {
+        getData()
+    });
+
+    // 键盘回车事件
     $('#content').on('keydown', function (event) {
         // 判断是否为回车
         if (event.keyCode === 13) {
@@ -85,8 +90,8 @@ $(function () {
             async: false,
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
-                "type": $("#type").val(),
-                "notify": $('#notify').is(':checked') ? 1 : 0
+                "type": $("#type").val() // ,
+//                "notify": $('#notify').is(':checked') ? 1 : 0
             }),
             beforeSend: function (request) {
                 request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
