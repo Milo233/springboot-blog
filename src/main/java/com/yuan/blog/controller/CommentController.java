@@ -3,6 +3,8 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Comment;
 import com.yuan.blog.domain.User;
+import com.yuan.blog.response.CodeMsg;
+import com.yuan.blog.response.Result;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CommentService;
 import com.yuan.blog.util.NetUtil;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +59,7 @@ public class CommentController {
     /**
      * 发表评论
      */
-    @PostMapping
+    /*@PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
     public ResponseEntity<Response> createComment(Long blogId, String commentContent) {
         User currentUser = NetUtil.getCurrentUser(false);
@@ -66,6 +69,26 @@ public class CommentController {
         }
         blogService.createComment(blogId, commentContent, userId);
         return ResponseEntity.ok().body(new Response(true, "处理成功", null));
+    }*/
+
+    /**
+     * 发表评论
+     *  fixme 结果封装修改的话 要同步修改 ExceptionHandlerAdvice的结果封装
+     */
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result<Boolean> createComment2(Long blogId, String commentContent) {
+        User currentUser = NetUtil.getCurrentUser(false);
+        Long userId = 0L;
+        if (currentUser != null) {
+            userId = currentUser.getId();
+        }
+        blogService.createComment(blogId, commentContent, userId);
+        // return Result.error(CodeMsg.SESSION_ERROR);{"code":500210,"msg":"Session不存在或者已经失效","data":null}
+        // Result.success(currentUser) {"code":0,"msg":null,"data":{"id":1,"name":"milo","email":"748561384@qq.com","username":"milo"} 查询单个对象. 查询结果都可以丢进去
+        // List 多个 {"code":0,"msg":null,"data":[{"id":1,"name":"milo","email":"748561384@qq.com","username":"milo"}]}
+        return Result.success(true);
     }
 
     /**

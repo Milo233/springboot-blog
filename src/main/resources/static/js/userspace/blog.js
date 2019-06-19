@@ -82,13 +82,13 @@ $(function () {
                 request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
             },
             success: function (data) {
-                if (data.success) {
+                if (data.code == 0) {
                     // 清空评论框
                     $('#commentContent').val('');
                     // 获取评论列表
                     getCommnet(blogId);
                 } else {
-                    toastr.error(data.message);
+                    toastr.error(data.msg);
                 }
             },
             error: function () {
