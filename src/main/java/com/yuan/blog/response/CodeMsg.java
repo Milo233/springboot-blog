@@ -7,7 +7,7 @@ public class CodeMsg {
 	
 	//通用的错误码
 	public static CodeMsg SUCCESS = new CodeMsg(0, "success");
-	public static CodeMsg REQUEST_ILLEGAL = new CodeMsg(500102, "请求非法");
+	public static CodeMsg FAIL = new CodeMsg(500102, "请求失败");
 	//登录模块 5002XX
 	public static CodeMsg SESSION_ERROR = new CodeMsg(500210, "Session不存在或者已经失效");
 	public static CodeMsg PASSWORD_EMPTY = new CodeMsg(500211, "登录密码不能为空");
