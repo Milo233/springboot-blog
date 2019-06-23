@@ -73,6 +73,7 @@ public class BlogController {
     }
 
     // 运行js里的脚本 得到计算结果
+    // fixme 太慢，可以改成java实现计算字符串
     private static int calc(String exp) {
         try {
             ScriptEngineManager manager = new ScriptEngineManager();

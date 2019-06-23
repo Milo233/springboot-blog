@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import sun.nio.ch.Net;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -102,8 +103,11 @@ public class UserspaceController {
      * 保存头像
      */
     @PostMapping("/{username}/avatar")
-    @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> saveAvatar(Long id, MultipartFile file, HttpServletRequest request) {
+        User currentUser = NetUtil.getCurrentUser(true);
+        if (id == null || id.compareTo(currentUser.getId()) != 0){
+            return Response.getResponse(false, "请求错误！", null);
+        }
         //  1.选择文件以后只展示到前端
         //  2.点击 提交以后再把文件丢给后端，然后后端post提交到存图的网站
         //  3.获取图片地址以后存到数据库

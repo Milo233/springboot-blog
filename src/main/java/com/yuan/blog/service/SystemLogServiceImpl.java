@@ -24,7 +24,7 @@ public class SystemLogServiceImpl implements SystemLogService{
     public int insertSystemLog(HttpServletRequest request, User user,String title) {
         String ip = NetUtil.getIpAddr(request);
         // 排除开发模式
-        if ("0:0:0:0:0:0:0:1".equals(ip)) return 0;
+        if ("127.0.0.1".equals(ip)) return 0;
         // http://ip.taobao.com/service/getIpInfo.php?ip=61.144.248.17
 //        根据ip查询最近的登录记录。用于判断ip归属地/
         HashMap<String, String> map = new HashMap<>();

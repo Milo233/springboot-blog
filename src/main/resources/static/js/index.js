@@ -16,7 +16,6 @@ $(function() {
 			 },
 			 success: function(data){
 				 $("#mainContainer").html(data);
-				 
 				 var keyword = $("#indexkeyword").val();
 				 
 				 // 如果是分类查询，则取消最新、最热选中样式
@@ -39,6 +38,11 @@ $(function() {
    var last = 0;
 	// 关键字搜索
 	$("#indexsearch").click(function() {
+	    // 不是index页面点击搜索时，跳到index页
+	    if(document.URL && !document.URL.endsWith("/index")) {
+            window.location.href = "/index" +
+            ($("#indexkeyword").val() ? "?keyword=" + $("#indexkeyword").val() : "");
+	    }
         if(last != 0 && new Date().getTime() - last < 1000){
             insertCache();
         }
