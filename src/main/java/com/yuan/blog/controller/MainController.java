@@ -92,7 +92,7 @@ public class MainController {
         // 是否显示记账div
         if (currentUser != null) {
             String username = currentUser.getUsername();
-            Object obj = Cache.get(username);
+            Object obj = Cache.get(Cache.USER_PERFIX + username);
             if (obj != null) {
                 model.addAttribute("showTalley", true);
                 model.addAttribute("talleyList", blogService.collectTalley(username));
@@ -121,7 +121,7 @@ public class MainController {
         if (currentUser != null) {
             // 不能直接对原始密码加密 再和数据库的密文对比，BCryptPasswordEncoder每次加密的结果是不一样的
             if (encoder.matches(user.getPassword(), currentUser.getPassword())) {
-                Cache.put(currentUser.getUsername(), true, 30 * 1000);
+                Cache.put(Cache.USER_PERFIX + currentUser.getUsername(), true, 30 * 1000);
             }
         }
         return "redirect:/index";

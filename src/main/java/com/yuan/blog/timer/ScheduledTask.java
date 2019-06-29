@@ -1,11 +1,15 @@
 package com.yuan.blog.timer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuan.blog.response.TodoResponse;
 import com.yuan.blog.service.SystemLogService;
 import com.yuan.blog.service.TodoService;
 import com.yuan.blog.util.Cache;
 import com.yuan.blog.util.StringUtils;
 import com.yuan.blog.util.TaskExecutor;
+import com.yuan.blog.vo.Poem.Data;
+import com.yuan.blog.vo.Poem.Origin;
+import com.yuan.blog.vo.Poem.PoemResponse;
 import com.yuan.blog.vo.Todo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 
 @EnableScheduling
@@ -46,9 +54,30 @@ public class ScheduledTask {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
-    //@Scheduled(fixedRate = 60 * 1000)
-    @Scheduled(cron = "0 43 6 * * ?")
-    public void weatherRReport() {
+    @Scheduled(cron = "0 22 7 * * ?")
+    public void weatherReport() {
+        if (Math.random() > 0.3) {
+            log.info("cron 定时任务 发古诗 start");
+            List<PoemResponse> poems = null;
+            Object obj = Cache.get(Cache.POEMS_PERFIX);
+            try {
+                poems = (List<PoemResponse>) obj;
+            } catch (Exception e) {
+                log.error("failed to cast catch poems " + obj + e.getMessage());
+            }
+            if (poems != null && !poems.isEmpty()) {
+                Data poem = poems.get(0).getData();
+                Origin origin = poem.getOrigin();
+                String poemStr = poem.getContent();
+                poemStr += "--" + origin.getAuthor();
+                poemStr += "(" + origin.getDynasty() + ")";
+                poemStr += "《" + origin.getTitle() + "》";
+                postWeibo(poemStr);
+                log.info("cron 定时任务 poem post over" + poemStr);
+            }
+            return;
+        }
+
         log.info("cron 定时任务 发微博");
         String citys = "信阳,深圳";
         String[] cityArr = citys.split(",");
@@ -94,12 +123,21 @@ public class ScheduledTask {
                 sb.append("没数据啊！！").append(e.getMessage()).append(failTime);
             }
         }
+        postWeibo(sb.toString());
+    }
+
+    /**
+     * 调发送微博的jar包
+     *
+     * @param content
+     */
+    private void postWeibo(String content) {
         String os = System.getProperty("os.name");
         if (os.equalsIgnoreCase("Linux")) {
-            String command = "java -jar /root/tmp/weibo4j-oauth2.jar " + token + " " + sb.toString();
+            String command = "java -jar /root/tmp/weibo4j-oauth2.jar " + token + " " + content;
             TaskExecutor.exec(command);
         } else {
-            String command = "java -jar D:\\code\\weibo4j-oauth2.jar " + token + " " + sb.toString();
+            String command = "java -jar D:\\code\\weibo4j-oauth2.jar " + token + " " + content;
             TaskExecutor.exec(command);
         }
     }
@@ -111,6 +149,34 @@ public class ScheduledTask {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -3);
         systemLogService.deleteLogsBefore(cal.getTime());
+    }
+
+    // 每天获取古诗信息
+    // json字符串转java实体 http://www.bejson.com/json2javapojo/new/
+    @Scheduled(cron = "0 10 7 * * ?")
+    public void weatherRReport2() {
+        log.info("cron 定时任务 start get poems!");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-User-Token", "ZkGPsSMgyyXjw+muOnIqbaNmQ4iSgqfT");
+        HttpEntity<String> requestEntity = new HttpEntity<String>(null, headers);
+        ObjectMapper mapper = new ObjectMapper();
+        List<PoemResponse> poems = new ArrayList<>();
+        for (int x = 0; x < 3; x++) {
+            ResponseEntity<String> response = restTemplate.exchange("https://v2.jinrishici.com/sentence", HttpMethod.GET, requestEntity, String.class);
+            PoemResponse resp = null;
+            try {// 字符串转成实体类 反序列化
+                resp = mapper.readValue(response.getBody(), PoemResponse.class);
+            } catch (IOException e) {
+                log.error("failed to readvalue ", e);
+            }
+            if (resp != null) {
+                poems.add(resp);
+            }
+        }
+        if (!poems.isEmpty()) {// 设置一天有效期
+            Cache.put(Cache.POEMS_PERFIX, poems, 1000 * 60 * 60 * 24);
+        }
+
     }
 
     // 每10分钟移除一次过期的缓存

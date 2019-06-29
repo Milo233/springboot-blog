@@ -9,12 +9,17 @@ import java.util.Set;
  * @Description: 简单的内存缓存工具类
  */
 public class Cache {
+
+    // 缓存内容key的前缀
+    public final static String USER_PERFIX = "user_";
+    // 古诗内容，定时任务每24h刷新一次
+    public final static String POEMS_PERFIX = "poems";
+
     //键值对集合
     private final static Map<String, Entity> map = new HashMap<>();
 
     /**
      * 添加缓存
-     *
      * @param key  键
      * @param data 值
      */
@@ -24,7 +29,6 @@ public class Cache {
 
     /**
      * 添加缓存
-     *
      * @param key    键
      * @param data   值
      * @param expire 过期时间，单位：毫秒， 0表示无限长
@@ -42,7 +46,6 @@ public class Cache {
 
     /**
      * 读取缓存
-     *
      * @param key 键
      */
     public synchronized static Object get(String key) {
@@ -52,7 +55,6 @@ public class Cache {
 
     /**
      * 读取缓存
-     *
      * @param key 键
      *            * @param clazz 值类型
      */

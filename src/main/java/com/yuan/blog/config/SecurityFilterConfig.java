@@ -1,10 +1,5 @@
 package com.yuan.blog.config;
 
-import com.google.common.util.concurrent.RateLimiter;
-import com.yuan.blog.controller.MainController;
-import com.yuan.blog.util.NetUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -17,8 +12,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 通过过滤器
@@ -33,12 +26,8 @@ public class SecurityFilterConfig extends GenericFilterBean {
     private static final String OAUTH_TOKEN_URL = "/login";
     private RequestMatcher requestMatcher;
 
-    /**
-     * The Limiter map.
-     */
-    static Map<String, RateLimiter> limiterMap = new ConcurrentHashMap<>();
-
-    private static final Logger log = LoggerFactory.getLogger(MainController.class);
+//    static Map<String, RateLimiter> limiterMap = new ConcurrentHashMap<>();
+//    private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     SecurityFilterConfig() {
         this.requestMatcher = new OrRequestMatcher(
@@ -50,7 +39,8 @@ public class SecurityFilterConfig extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        //ip限流 开始
+/*        //ip限流 开始
+        2019年6月29日12:05:06 改成nginx限流
         String ip = NetUtil.getIpAddr(request);
         RateLimiter limiterIp = limiterMap.get(ip);
         if (limiterIp == null) {
@@ -65,7 +55,7 @@ public class SecurityFilterConfig extends GenericFilterBean {
                 return;
             }
         }
-        // ip限流 结束
+        // ip限流 结束*/
 
         try {// 只对是登录的请求做处理
             if (servletRequest != null && requestMatcher.matches(request)) {

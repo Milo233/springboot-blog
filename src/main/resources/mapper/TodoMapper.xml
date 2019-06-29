@@ -177,5 +177,6 @@
     <if test="notify != null">
       and t.notify = #{notify}
     </if>
+    order by t.create_time desc
   </select>
 </mapper>
