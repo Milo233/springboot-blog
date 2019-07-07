@@ -79,7 +79,7 @@ $(function () {
         });
     });
 
-    // 读取本地存储的数据函数
+    // 查询todo列表
     function getData() {
         // 取得本地数据 字符串形式
         var csrfToken = $("meta[name='_csrf']").attr("content");
@@ -116,13 +116,15 @@ $(function () {
         $(".todoList").find('ul,ol').empty();
         // 遍历 数据
         $.each(data, function (i, n) {
+            // 直接append有xss的风险，需要转义
+            var content = n.content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             // 判断条件 数据中的done 属性的值 为true
             if (n.status == 1) {
                 // 将生成的li 添加到 ol中(已完成)
-                $(".todoList").find('ol').append("<li><input type='checkbox' checked ><span>" + n.content + "</span><a href='javascript:;'" + " index= " + n.id + " status= " + 1 + " style='float:right'>删除</a></li>")
+                $(".todoList").find('ol').append("<li><input type='checkbox' checked ><span>" + content + "</span><a href='javascript:;'" + " index= " + n.id + " status= " + 1 + " style='float:right'>删除</a></li>")
                 // 否则 添加到 ul 中(未完成)
             } else {
-                $(".todoList").find('ul').append("<li><input type='checkbox'><span>" + n.content + "</span><a href='javascript:;'" + " index= " + n.id + " style='float:right'>删除</a></li>")
+                $(".todoList").find('ul').append("<li><input type='checkbox'><span>" + content + "</span><a href='javascript:;'" + " index= " + n.id + " style='float:right'>删除</a></li>")
             }
         })
         nowNum();

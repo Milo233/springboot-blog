@@ -3,12 +3,17 @@ package com.yuan.blog.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuan.blog.domain.User;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 网络相关 工具类
@@ -84,5 +89,70 @@ public class NetUtil {
             ex.printStackTrace();
         }
         return avatarUrl;
+    }
+
+    /**
+     * 从指定url下载资源
+     *
+     * @param imgUrl   文件路径
+     * @param savePath 保存路径
+     */
+    public static String uploadFromUrl(String imgUrl, HttpServletRequest request, String savePath) throws IOException {
+        URL url = new URL(imgUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        //设置超时间为3秒
+        conn.setConnectTimeout(3 * 1000);
+        //防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        //得到输入流
+        InputStream inputStream = conn.getInputStream();
+        //获取自己数组
+        byte[] getData = readInputStream(inputStream);
+
+        //文件保存位置
+        File saveDir = new File(savePath);
+        if (!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+        File file = new File(genenrateImageFileName(imgUrl)); // saveDir + File.separator +
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/plain", getData);
+
+        String newUrl = uploadImage(request, multipartFile);
+        fos.close();
+        inputStream.close();
+        return newUrl;
+    }
+
+    // 分析文件类型 拼接文件名
+    private static String genenrateImageFileName(String imgUrl) {
+        if (imgUrl == null || imgUrl.isEmpty()) {
+            throw new IllegalArgumentException("empty imgUrl!!");
+        }
+        imgUrl = imgUrl.toLowerCase();
+        if (imgUrl.contains("png")) {
+            return UUID.randomUUID() + ".png";
+        } else if (imgUrl.contains("gif")) {
+            return UUID.randomUUID() + ".gif";
+        } else {
+            return UUID.randomUUID() + ".jpg";
+        }
+    }
+
+    /**
+     * 从输入流中获取字节数组
+     */
+    public static byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
     }
 }

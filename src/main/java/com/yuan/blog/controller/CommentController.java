@@ -3,7 +3,6 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.Blog;
 import com.yuan.blog.domain.Comment;
 import com.yuan.blog.domain.User;
-import com.yuan.blog.response.CodeMsg;
 import com.yuan.blog.response.Result;
 import com.yuan.blog.service.BlogService;
 import com.yuan.blog.service.CommentService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,21 +53,6 @@ public class CommentController {
         model.addAttribute("comments", comments);
         return "userspace/blog :: #mainContainerRepleace";
     }
-
-    /**
-     * 发表评论
-     */
-    /*@PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
-    public ResponseEntity<Response> createComment(Long blogId, String commentContent) {
-        User currentUser = NetUtil.getCurrentUser(false);
-        Long userId = 0L;
-        if (currentUser != null) {
-            userId = currentUser.getId();
-        }
-        blogService.createComment(blogId, commentContent, userId);
-        return ResponseEntity.ok().body(new Response(true, "处理成功", null));
-    }*/
 
     /**
      * 发表评论

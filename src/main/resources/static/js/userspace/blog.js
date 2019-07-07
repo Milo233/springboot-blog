@@ -65,11 +65,9 @@ $(function () {
     // 提交评论
     $(".blog-content-container").on("click", "#submitComment", function () {
         var comment = $('#commentContent').val();
-        console.log(comment)
         if (!comment || !comment.trim()) {
             return;
         }
-        $('#commentContent').val("");//清空输入框，避免重复提交。
         // 获取 CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");

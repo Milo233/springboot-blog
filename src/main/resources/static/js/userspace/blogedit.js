@@ -32,8 +32,10 @@ $(function () {
     $("#uploadImage").click(function () {
         //这里唯一需要注意的就是这个form-add的id
         // form必须有action
+        let imgUrl = $("#imgUrl").val()
         var url = $("#uploadFormId").attr("action");
         var formData = new FormData($("#uploadFormId")[0]);
+        formData.append("imgUrl",imgUrl)
         $.ajax({
             //接口地址
             url: url,

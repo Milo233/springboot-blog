@@ -132,11 +132,13 @@ public class MultipartUtility {
         return response;
     }
 
+/*  it seems not used
     public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException{
         File convFile = new File( multipart.getOriginalFilename());
         multipart.transferTo(convFile);
         return convFile;
     }
+*/
 
     public File analyzeFile(MultipartFile file, HttpServletRequest request) {
         File tempFile = null;

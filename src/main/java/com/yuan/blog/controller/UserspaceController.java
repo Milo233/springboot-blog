@@ -7,9 +7,6 @@ import com.yuan.blog.service.UserService;
 import com.yuan.blog.util.ConstraintViolationExceptionHandler;
 import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +22,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import sun.nio.ch.Net;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +47,6 @@ public class UserspaceController {
 
     @Autowired
     private BlogService blogService;
-
-    private static final Logger log = LoggerFactory.getLogger(UserspaceController.class);
 
     /**
      * 获取用户配置
@@ -105,7 +100,7 @@ public class UserspaceController {
     @PostMapping("/{username}/avatar")
     public ResponseEntity<Response> saveAvatar(Long id, MultipartFile file, HttpServletRequest request) {
         User currentUser = NetUtil.getCurrentUser(true);
-        if (id == null || id.compareTo(currentUser.getId()) != 0){
+        if (id == null || id.compareTo(currentUser.getId()) != 0) {
             return Response.getResponse(false, "请求错误！", null);
         }
         //  1.选择文件以后只展示到前端
@@ -127,12 +122,18 @@ public class UserspaceController {
     @PostMapping("/{username}/uploadImage")
     @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> uploadImage(@PathVariable("username") String username,
-                                                MultipartFile file, HttpServletRequest request) {
-        String imageUrl = NetUtil.uploadImage(request, file);
-        if (imageUrl == null || imageUrl.length() == 0) {
+                                                String imgUrl, MultipartFile file, HttpServletRequest request) throws IOException {
+        String newImgUrl;
+        if (imgUrl == null || imgUrl.trim().isEmpty()) {
+            newImgUrl = NetUtil.uploadImage(request, file);
+        } else {
+            newImgUrl = NetUtil.uploadFromUrl(imgUrl, request, "");
+        }
+        if (newImgUrl == null || newImgUrl.length() == 0) {
             return Response.getResponse(false, "提交失败", null);
         }
-        return Response.getResponse(true, "提交成功", imageUrl);
+        return Response.getResponse(true, "提交成功", newImgUrl);
+
     }
 
     // 根据用户名 获取用户信息

@@ -19285,7 +19285,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 name: 'cmdUrl',
                 title: 'URL/Link',
                 hotkey: 'Ctrl+L',
-                icon: { glyph: 'gly gly-link', fa: 'fa fa-link', 'fa-3': 'icon-link' },
+                icon: { glyph: 'gly gly-picture', fa: 'fa fa-link', 'fa-3': 'icon-link' },
                 callback: function callback(e) {
                     // Give [] surround the selection and prepend the link
                     var chunk,
@@ -19296,18 +19296,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     if (selected.length === 0) {
                         // Give extra word
-                        chunk = e.__localize('enter link description here');
+                        chunk = e.__localize('enter image url here');
                     } else {
                         chunk = selected.text;
                     }
 
-                    /* link = prompt(e.__localize('Insert Hyperlink'), 'http://');*/
                     link = 'http://';
-                    /*  if (link !== null && link !== '' && link !== 'http://' && link.substr(0, 4) === 'http') {*/
                     var sanitizedLink = $('<div>' + link + '</div>').text();
-
                     // transform selection and set the cursor into chunked text
-                    e.replaceSelection('[' + chunk + '](' + sanitizedLink + ')');
+                    e.replaceSelection('![](' + chunk + ' "图片title")');
                     cursor = selected.start + chunk.length + 10;
 
                     // Set the cursor
