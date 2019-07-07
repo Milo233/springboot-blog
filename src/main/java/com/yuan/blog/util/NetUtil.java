@@ -3,15 +3,18 @@ package com.yuan.blog.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuan.blog.domain.User;
-import org.springframework.mock.web.MockMultipartFile;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
 
@@ -118,8 +121,19 @@ public class NetUtil {
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(getData);
 
-        MultipartFile multipartFile = new MockMultipartFile("file",
-                file.getName(), "text/plain", getData);
+        FileItem fileItem = new DiskFileItem("mainFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
+
+        try {
+            InputStream input = new FileInputStream(file);
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+            // Or faster..
+            // IOUtils.copy(new FileInputStream(file), fileItem.getOutputStream());
+        } catch (IOException ex) {
+            // do something.
+        }
+
+        MultipartFile multipartFile  = new CommonsMultipartFile(fileItem);;
 
         String newUrl = uploadImage(request, multipartFile);
         fos.close();
