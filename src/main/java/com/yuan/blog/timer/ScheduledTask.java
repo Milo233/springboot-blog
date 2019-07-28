@@ -54,27 +54,22 @@ public class ScheduledTask {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
-    @Scheduled(cron = "0 22 7 * * ?")
-    public void weatherReport() {
+    @Scheduled(cron = "0 40 8 * * ?")
+//    @Scheduled(fixedRate = 1 * 60 * 1000 )
+    public void weatherReport() throws InterruptedException {
+        System.out.println(new Date());
+        Thread.sleep((long)(Math.random() * 1000 * 60 * 30));
+        System.out.println(new Date());
         if (Math.random() > 0.3) {
             log.info("cron 定时任务 发古诗 start");
-            List<PoemResponse> poems = null;
-            Object obj = Cache.get(Cache.POEMS_PERFIX);
-            try {
-                poems = (List<PoemResponse>) obj;
-            } catch (Exception e) {
-                log.error("failed to cast catch poems " + obj + e.getMessage());
-            }
-            if (poems != null && !poems.isEmpty()) {
-                Data poem = poems.get(0).getData();
-                Origin origin = poem.getOrigin();
-                String poemStr = poem.getContent();
-                poemStr += "--" + origin.getAuthor();
-                poemStr += "(" + origin.getDynasty() + ")";
-                poemStr += "《" + origin.getTitle() + "》";
-                postWeibo(poemStr);
-                log.info("cron 定时任务 poem post over" + poemStr);
-            }
+            Data poem = getPoemForPosting().getData();
+            Origin origin = poem.getOrigin();
+            String poemStr = poem.getContent();
+            poemStr += "--" + origin.getAuthor();
+            poemStr += "(" + origin.getDynasty() + ")";
+            poemStr += "《" + origin.getTitle() + "》";
+            postWeibo(poemStr);
+            log.info("cron 定时任务 poem post over" + poemStr);
             return;
         }
 
@@ -151,10 +146,25 @@ public class ScheduledTask {
         systemLogService.deleteLogsBefore(cal.getTime());
     }
 
-    // 每天获取古诗信息
+    private PoemResponse getPoemForPosting(){
+        Object obj = Cache.get(Cache.POEMS_PERFIX);
+        if (obj == null) {
+            refreshPoems();
+            obj = Cache.get(Cache.POEMS_PERFIX);
+        }
+        PoemResponse poem = null;
+        try {
+            poem = ((List<PoemResponse>) obj).get(0);
+        } catch (Exception e) {
+            log.error("failed to cast catch poems " + obj + e.getMessage());
+        }
+        return poem;
+    }
+
+    // 每天获取古诗信息 从外部接口获取
     // json字符串转java实体 http://www.bejson.com/json2javapojo/new/
     @Scheduled(cron = "0 10 7 * * ?")
-    public void weatherRReport2() {
+    public void refreshPoems() {
         log.info("cron 定时任务 start get poems!");
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-User-Token", "ZkGPsSMgyyXjw+muOnIqbaNmQ4iSgqfT");
@@ -167,7 +177,7 @@ public class ScheduledTask {
             try {// 字符串转成实体类 反序列化
                 resp = mapper.readValue(response.getBody(), PoemResponse.class);
             } catch (IOException e) {
-                log.error("failed to readvalue ", e);
+                log.error("failed to readvalue for getPoems()", e);
             }
             if (resp != null) {
                 poems.add(resp);
