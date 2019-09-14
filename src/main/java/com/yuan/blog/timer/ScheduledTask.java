@@ -54,7 +54,7 @@ public class ScheduledTask {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
-    @Scheduled(cron = "0 40 8 * * ?")
+//    @Scheduled(cron = "0 40 8 * * ?")
 //    @Scheduled(fixedRate = 1 * 60 * 1000 )
     public void weatherReport() throws InterruptedException {
         System.out.println(new Date());
@@ -123,8 +123,6 @@ public class ScheduledTask {
 
     /**
      * 调发送微博的jar包
-     *
-     * @param content
      */
     private void postWeibo(String content) {
         String os = System.getProperty("os.name");
@@ -163,7 +161,7 @@ public class ScheduledTask {
 
     // 每天获取古诗信息 从外部接口获取
     // json字符串转java实体 http://www.bejson.com/json2javapojo/new/
-    @Scheduled(cron = "0 10 7 * * ?")
+//    @Scheduled(cron = "0 10 7 * * ?")
     public void refreshPoems() {
         log.info("cron 定时任务 start get poems!");
         HttpHeaders headers = new HttpHeaders();
@@ -199,7 +197,7 @@ public class ScheduledTask {
     }
 
     //        @Scheduled(fixedRate = 1 * 60 * 1000)
-    @Scheduled(cron = "0 13 19,8 * * ?")
+//    @Scheduled(cron = "0 13 19,8 * * ?")
     public void todoNotify() {
         // 查询需要通知的 待办事项
         try {
