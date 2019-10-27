@@ -1,6 +1,7 @@
 package com.yuan.blog.timer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.management.OperatingSystemMXBean;
 import com.yuan.blog.response.TodoResponse;
 import com.yuan.blog.service.SystemLogService;
 import com.yuan.blog.service.TodoService;
@@ -31,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.*;
 
 @EnableScheduling
@@ -250,5 +252,41 @@ public class ScheduledTask {
             log.error("failed to sendmail " + e);
         }
         log.info("sendmail cost time " + (System.currentTimeMillis() - start) + " ms");
+    }
+
+    // 每分钟打印一次内存 信息到日志文件
+    @Scheduled(fixedRate = 60 * 1000)
+    public void printMemoryInfo() {
+        int byteToMb = 1024 * 1024;
+        Runtime rt = Runtime.getRuntime();
+        long vmTotal = rt.totalMemory() / byteToMb;
+        long vmFree = rt.freeMemory() / byteToMb;
+        long vmMax = rt.maxMemory() / byteToMb;
+        long vmUse = vmTotal - vmFree;
+        log.info("================ start  ===============");
+        log.info("JVM内存已用的空间为：" + vmUse + " MB");
+        log.info("JVM内存的空闲空间为：" + vmFree + " MB");
+        log.info("JVM总内存空间为(Xms)：" + vmTotal + " MB");
+        log.info("JVM 可用最大内存空间(Xmx)：" + vmMax + " MB");
+        // 操作系统级内存情况查询
+        OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        String os = System.getProperty("os.name");
+        long physicalFree = osmxb.getFreePhysicalMemorySize() / byteToMb;
+        long physicalTotal = osmxb.getTotalPhysicalMemorySize() / byteToMb;
+        long physicalUse = physicalTotal - physicalFree;
+        log.info("操作系统的版本：" + os);
+        log.info("操作系统物理内存已用的空间为：" + physicalFree + " MB");
+        log.info("操作系统物理内存的空闲空间为：" + physicalUse + " MB");
+        log.info("操作系统总物理内存：" + physicalTotal + " MB");
+
+        // 获得线程总数
+        ThreadGroup parentThread;
+        int totalThread = 0;
+        for (parentThread = Thread.currentThread().getThreadGroup(); parentThread
+                .getParent() != null; parentThread = parentThread.getParent()) {
+            totalThread = parentThread.activeCount();
+        }
+        log.info("获得线程总数:" + totalThread);
+        log.info("================ end  ===============");
     }
 }
