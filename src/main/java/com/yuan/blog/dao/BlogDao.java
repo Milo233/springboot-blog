@@ -18,7 +18,7 @@ public interface BlogDao {
 
     int saveTally(Tally tally);
 
-    int updateWord(HashMap map);
+    int updateSystemLog(HashMap map);
 
     String getContentById(int id);
 

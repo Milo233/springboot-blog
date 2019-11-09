@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,15 +67,16 @@ public class HeyController {
         }
     }
 
-    @GetMapping("/update/{content}")
+    @GetMapping("/updateLog")
     @ResponseBody
-    public String update(@PathVariable("content") String content) {
-        log.info("aws update content " + content);
+    public String updateSystemLog(@RequestParam("content") String content,
+                         @RequestParam(name = "id") Integer id) {
+        log.info("update log id:[" + id + "}, content:[" + content + "]");
         if (content == null || content.length() == 0 || content.length() > 200) {
             return "failed!!";
         }
         // 修改表数据
-        blogService.updateWord(content, 1);
+        blogService.updateSystemLog(content, id);
         return "done!!";
     }
 

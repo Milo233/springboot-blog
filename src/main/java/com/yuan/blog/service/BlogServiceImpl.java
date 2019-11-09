@@ -202,11 +202,11 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public int updateWord(String content, int id) {
+    public int updateSystemLog(String content, int id) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("content", content);
-        map.put("id", 1);
-        return blogDao.updateWord(map);
+        map.put("id", id);
+        return blogDao.updateSystemLog(map);
     }
 
     @Override

@@ -60,7 +60,7 @@
     delete from system_log
     where id > 50 and #{date} > logintime
   </delete>
-  <update id="updateWord" parameterType="Map">
+  <update id="updateSystemLog" parameterType="Map">
     update system_log set content = #{content}
     where id = #{id}
   </update>

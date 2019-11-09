@@ -18,7 +18,8 @@ public class SystemLogServiceImpl implements SystemLogService{
 
     /**
      * 插入操作日志
-     * todo // 可以考虑改成异步的方式插入日志 请求api确定ip属于哪里
+     * ip解析，要求精确的话可能要异步调外部api，
+     * 不很要求精度的可以把本地ip-地址映射的数据加载到内存里在内存里匹配，guava有个rangeMap很快
      */
     @Override
     public int insertSystemLog(HttpServletRequest request, User user,String title) {
