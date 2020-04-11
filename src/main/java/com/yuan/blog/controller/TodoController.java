@@ -51,9 +51,9 @@ public class TodoController {
             todo.setUserId(currentUser.getId());
             todoList = todoService.queryForNotify(todo);
             if (todoList != null && todoList.size() > 0) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 for (TodoResponse td : todoList) {
-                    td.setContent(td.getContent() + " " + sdf.format(td.getCreateTime()));
+                    td.setContent(td.getContent() + " -- " + sdf.format(td.getCreateTime()));
                 }
             }
         } catch (Exception e) {

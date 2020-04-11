@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuan.blog.dao.CatalogDao" >
+  <resultMap id="BaseResultMap" type="com.yuan.blog.domain.Catalog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, comment_size, content, create_time, html_content, read_size, summary,tags, title, vote_size, open
+  </sql>
+  <sql id="Select_List_Where">
+    <if test="id != null">
+      and id = #{id,jdbcType=INTEGER}
+    </if>
+</sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from blog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Map">
+    select
+    <include refid="Base_Column_List" />
+    from blog
+    where 1 = 1
+    <if test="loginId == null">
+      and open = 1
+    </if>
+    <if test="loginId != null">
+      and (open = 1 or (open = 0 and user_id = #{userId}))
+    </if>
+    <if test='keyword != null and keyword != "%%"'>
+      and (title like #{keyword} or content like #{keyword})
+    </if>
+    <if test='orderBy == "new"'>
+      order by create_time desc
+    </if>
+    <if test='orderBy == "hot"'>
+      order by (read_size + comment_size + vote_size) desc
+    </if>
+  </select>
+  <insert id="insertSystemLog" parameterType="Map">
+    insert into system_log (title,account,loginIP,logintime,loginArea)
+    VALUES (#{title},#{account},#{loginIP},now(),#{loginArea})
+  </insert>
+  <insert id="saveTally" parameterType="com.yuan.blog.domain.Tally">
+    insert into tally (amount,user_name,category_id,type,create_time,remark)
+    VALUES (#{amount},#{userName},#{categoryId},#{type},#{createTime},#{remark})
+  </insert>
+  <delete id="deleteLogsBefore" parameterType="date">
+    delete from system_log
+    where id > 50 and #{date} > logintime
+  </delete>
+  <update id="updateSystemLog" parameterType="Map">
+    update system_log set content = #{content}
+    where id = #{id}
+  </update>
+  <select id="getContentById" parameterType="java.lang.Integer" resultType="string">
+    select content from system_log where id = #{id}
+  </select>
+  <select id="collectTalley" resultType="com.yuan.blog.domain.TalleyCollection" parameterType="string">
+    SELECT
+      sum(case when type = 1 then amount ELSE 0 end) moneyInHand,
+      sum(case when type = -1 then amount ELSE 0 end) debt,
+      sum(amount) actualMoney,create_time date
+    FROM tally where user_name = #{userName} GROUP BY create_time
+    ORDER BY create_time DESC
+  </select>
+  <insert id="createComment" parameterType="com.yuan.blog.domain.CommentV2" useGeneratedKeys="true" keyProperty="id">
+    insert into comment(content,create_time,user_id)
+    VALUES (#{content},now(),#{userId})
+  </insert>
+  <insert id="insertBlogComment" parameterType="Map">
+    insert into blog_comment(blog_id,comment_id)
+    VALUES (#{blogId},#{commentId})
+  </insert>
+  <delete id="deleteComment" parameterType="java.lang.Long">
+    delete from comment
+    where id = #{id}
+  </delete>
+  <delete id="deleteBlogComment" parameterType="java.lang.Long">
+    delete from blog_comment
+    where comment_id = #{id}
+  </delete>
+</mapper>

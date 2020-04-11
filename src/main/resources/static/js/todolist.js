@@ -121,10 +121,10 @@ $(function () {
             // 判断条件 数据中的done 属性的值 为true
             if (n.status == 1) {
                 // 将生成的li 添加到 ol中(已完成)
-                $(".todoList").find('ol').append("<li><input type='checkbox' checked ><span>" + content + "</span><a href='javascript:;'" + " index= " + n.id + " status= " + 1 + " style='float:right'>删除</a></li>")
+                $(".todoList").find('ol').append("<li ><input type='checkbox' checked ><span style='max-width: 160px;word-wrap:break-word;word-break:break-all;white-space: normal'>" + content + "</span><a href='javascript:;'" + " index= " + n.id + " status= " + 1 + " style='float:right'>删除</a></li>")
                 // 否则 添加到 ul 中(未完成)
             } else {
-                $(".todoList").find('ul').append("<li><input type='checkbox'><span>" + content + "</span><a href='javascript:;'" + " index= " + n.id + " style='float:right'>删除</a></li>")
+                $(".todoList").find('ul').append("<li ><input type='checkbox'><span style='max-width: 180px;word-wrap:break-word;word-break:break-all;white-space: normal'>" + content + "</span><a href='javascript:;'" + " index= " + n.id + " style='float:right'>删除</a></li>")
             }
         })
         nowNum();

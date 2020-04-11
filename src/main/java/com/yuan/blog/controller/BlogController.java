@@ -36,10 +36,10 @@ public class BlogController {
         }
     }
 
-//     BufferedImage保存为文件
+    //     BufferedImage保存为文件
 //     File outputfile = new File("saved.png");
 //     ImageIO.write(bi, "png", outputfile);
-    public BufferedImage createVerifyCode() {
+    private BufferedImage createVerifyCode() {
         int width = 80;
         int height = 32;
         //create the image
