@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -72,18 +70,6 @@ public class BlogController {
         return image;
     }
 
-    // 运行js里的脚本 得到计算结果
-    // fixme 太慢，可以改成java实现计算字符串
-    private static int calc(String exp) {
-        try {
-            ScriptEngineManager manager = new ScriptEngineManager();
-            ScriptEngine engine = manager.getEngineByName("JavaScript");
-            return (Integer) engine.eval(exp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
 
     private static char[] ops = new char[]{'+', '-', '*'};
 

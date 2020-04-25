@@ -106,7 +106,12 @@ public class UserspaceController {
         //  1.选择文件以后只展示到前端
         //  2.点击 提交以后再把文件丢给后端，然后后端post提交到存图的网站
         //  3.获取图片地址以后存到数据库
-        String avatarUrl = NetUtil.uploadImage(request, file);
+        String avatarUrl= null;
+        try {
+            avatarUrl = NetUtil.uploadImage(request, file,file.getOriginalFilename());
+        } catch (Exception e) {
+
+        }
         if (avatarUrl == null || avatarUrl.length() == 0) {
             return Response.getResponse(false, "提交失败", null);
         }
@@ -125,7 +130,7 @@ public class UserspaceController {
                                                 String imgUrl, MultipartFile file, HttpServletRequest request) throws IOException {
         String newImgUrl;
         if (imgUrl == null || imgUrl.trim().isEmpty()) {
-            newImgUrl = NetUtil.uploadImage(request, file);
+            newImgUrl = NetUtil.uploadImage(request, file, file.getOriginalFilename());
         } else {
             newImgUrl = NetUtil.uploadFromUrl(imgUrl, request, "");
         }
@@ -227,9 +232,10 @@ public class UserspaceController {
                 }
             }
         }
-
-        // 每次读取，简单的可以认为阅读量增加1次
-        blogService.readingIncrease(id);
+        if(!isBlogOwner) {
+            // 每次读取，简单的可以认为阅读量增加1次
+            blogService.readingIncrease(id);
+        }
 
         model.addAttribute("isBlogOwner", isBlogOwner);
         model.addAttribute("blogModel", blogService.getBlogById(id));

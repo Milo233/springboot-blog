@@ -132,31 +132,4 @@ public class MultipartUtility {
         return response;
     }
 
-/*  it seems not used
-    public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException{
-        File convFile = new File( multipart.getOriginalFilename());
-        multipart.transferTo(convFile);
-        return convFile;
-    }
-*/
-
-    public File analyzeFile(MultipartFile file, HttpServletRequest request) {
-        File tempFile = null;
-        if(!file.isEmpty()) {
-            String filePath = request.getSession().getServletContext().getRealPath("/") + "upload/";
-            File dir = new File(filePath);
-            if(! dir.exists()) {
-                dir.mkdir();
-            }
-
-            String path = filePath + file.getOriginalFilename();
-            try {
-                tempFile =  new File(path);
-                FileUtils.copyInputStreamToFile(file.getInputStream(), tempFile);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return tempFile;
-    }
 }
