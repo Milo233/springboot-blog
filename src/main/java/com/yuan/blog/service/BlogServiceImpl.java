@@ -9,10 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -199,19 +197,6 @@ public class BlogServiceImpl implements BlogService {
             tally.setAmount(tally.getAmount().multiply(new BigDecimal(type)));
             blogDao.saveTally(tally);
         }
-    }
-
-    @Override
-    public int updateSystemLog(String content, int id) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("content", content);
-        map.put("id", id);
-        return blogDao.updateSystemLog(map);
-    }
-
-    @Override
-    public String getContentById(int id) {
-        return blogDao.getContentById(id);
     }
 
     @Override

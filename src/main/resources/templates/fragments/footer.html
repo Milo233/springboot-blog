@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-th-fragment="header"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8"/>
     <title>Milo's Blog</title>
@@ -14,6 +16,10 @@
             <a href="https://github.com/Milo233?tab=repositories" target="_blank">Github</a>
             <a href="https://blog.csdn.net/baidu_34036884" target="_blank">CSDN</a>
             <a href="https://www.v2ex.com/member/qcmzby" target="_blank">V2EX</a>
+            <a href="http://www.milo.co.ax:6010" target="_blank">云盘</a>
+            <a sec:authorize="isAuthenticated()" href="http://www.milo.co.ax/static/index.html" target="_blank">
+                index
+            </a>
         </p>
     </div>
 

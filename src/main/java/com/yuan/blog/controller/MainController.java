@@ -79,7 +79,6 @@ public class MainController {
                 order = "";
             }
         }
-        // todo 重写最新查询方法  不返回blog本身的数据
         if (order.equals("new")) { // 最新查询
             Pageable pageable = PageRequest.of(pageIndex, pageSize);
             page = blogService.listBlogsByKeywordByTime(keyword, pageable);

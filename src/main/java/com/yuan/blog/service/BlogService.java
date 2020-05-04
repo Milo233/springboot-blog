@@ -78,9 +78,5 @@ public interface BlogService {
 
     void saveTally(List<Tally> tallyList, User user);
 
-    int updateSystemLog(String content, int id);
-
-    String getContentById(int id);
-
     List<TalleyCollection> collectTalley(String userName);
 }

@@ -18,10 +18,6 @@ public interface BlogDao {
 
     int saveTally(Tally tally);
 
-    int updateSystemLog(HashMap map);
-
-    String getContentById(int id);
-
     List<TalleyCollection> collectTalley(String userName);
 
     int createComment(CommentV2 comment);
