@@ -232,11 +232,6 @@ public class UserspaceController {
                 }
             }
         }
-        if(!isBlogOwner) {
-            // 每次读取，简单的可以认为阅读量增加1次
-            blogService.readingIncrease(id);
-        }
-
         model.addAttribute("isBlogOwner", isBlogOwner);
         model.addAttribute("blogModel", blogService.getBlogById(id));
         model.addAttribute("currentVote", currentVote);
@@ -284,11 +279,6 @@ public class UserspaceController {
     @PostMapping("/{username}/blogs/edit")
     @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> saveBlog(@PathVariable("username") String username, @RequestBody Blog blog) {
-        // 对 Catalog 进行空处理
-        if (blog.getCatalog().getId() == null) {
-            return ResponseEntity.ok().body(new Response(false, "未选择分类"));
-        }
-
         User user = (User) userDetailsService.loadUserByUsername(username);
         blog.setUser(user);
         try {

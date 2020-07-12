@@ -122,18 +122,6 @@ public class BlogServiceImpl implements BlogService {
         return blogRepository.findByUserAndTitleLikeOrUserAndTagsLikeOrUserAndContentLike(user, title, user, title, user, title, pageable);
     }
 
-    /**
-     * 阅读量递增
-     */
-    @Override
-    public void readingIncrease(Long id) {
-        Optional<Blog> byId = blogRepository.findById(id);
-        if (byId.isPresent()) {
-            Blog blog = byId.get();
-            blog.setReadSize(blog.getReadSize() + 1);
-            blogRepository.save(blog);
-        }
-    }
 
     @Override
     @Transactional // 只读的不加事务注解就好了

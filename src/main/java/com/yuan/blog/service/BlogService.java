@@ -47,11 +47,6 @@ public interface BlogService {
     Page<Blog> listBlogsByKeywordByTime(String title, Pageable pageable);
 
     /**
-     * 阅读量递增
-     */
-    void readingIncrease(Long id);
-
-    /**
      * 发表评论
      */
     int createComment(Long blogId, String commentContent, Long userId);

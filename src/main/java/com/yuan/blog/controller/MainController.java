@@ -67,7 +67,7 @@ public class MainController {
         log.info("visit first page : index");
 
         User currentUser = NetUtil.getCurrentUser(false);
-        systemLogService.insertSystemLog(request, currentUser, "首页");
+//        systemLogService.insertSystemLog(request, currentUser, "首页");
         Page<Blog> page = null;
         if (categoryId != null && categoryId > 0) {
             Optional<Catalog> optionalCatalog = catalogService.getCatalogById(categoryId);
@@ -141,7 +141,7 @@ public class MainController {
     /**
      * 注册用户
      */
-    @PostMapping("/register")
+//    @PostMapping("/register")
     public ResponseEntity<Response> registerUser(User user) throws Exception {
         // 明文密码加密
         user.setEncodePassword(user.getPassword());
