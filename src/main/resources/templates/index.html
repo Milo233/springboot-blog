@@ -118,27 +118,6 @@
         <!-- 右侧栏目 -->
         <div class="col-md-4">
             <div class="card" sec:authorize="isAuthenticated()">
-                <h5 class="card-header"><i class="fa fa-user">任务帖todo</i></h5>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <select id="type">
-                                <option value="1">待办</option>
-                                <option value="2">生日</option>
-                                <option value="3">纪念日</option>
-                            </select>
-                            <input type="text" name="content" id="content" placeholder="添加todo">
-                            <label><input type="checkbox" id="notify" >通知</label>
-                        </div>
-                    </div>
-                    <div class="todoList card">
-                        <p>待完成<span class="todo">0</span></p>
-                        <ul></ul>
-                        <p>已完成<span class="done">0</span></p>
-                        <ol></ol>
-                    </div>
-                </div>
-
                 <div th:class="${showTalley} ? '':'myHidestyle'">
                     <h5 class="card-header"><i class="fa fa-user">个人记账</i></h5>
                     <div class="card-body">
@@ -210,13 +189,13 @@
             </div>
             <!--end of talley-->
             <div class="card">
-                <img alt="今日诗词" src="https://v2.jinrishici.com/one.svg">
+                <!-- fixme 改成后端每天查一次，返回给前端 -->
+<!--                <img alt="今日诗词" src="https://v2.jinrishici.com/one.svg">-->
             </div>
         </div>
     </div>
 </div>
 <div th:replace="fragments/footer :: footer">...</div>
-<script src="../../js/todolist.js" th:src="@{/js/todolist.js}"></script>
 
 <script>
     // 给元素绑定事件 js要写到html下面

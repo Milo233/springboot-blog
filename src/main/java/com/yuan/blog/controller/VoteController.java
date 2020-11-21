@@ -1,6 +1,11 @@
 package com.yuan.blog.controller;
 
+import com.yuan.blog.domain.Blog;
+import com.yuan.blog.domain.Vote;
+import com.yuan.blog.service.BlogService;
+import com.yuan.blog.service.VoteService;
 import com.yuan.blog.vo.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/votes")
 public class VoteController {
+    @Autowired
+    private BlogService blogService;
+    @Autowired
+    private VoteService voteService;
 
     /**
      * 发表点赞
@@ -24,6 +33,10 @@ public class VoteController {
     @PreAuthorize("isAuthenticated()")//验证已登录
 //	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
     public ResponseEntity<Response> createVote(Long blogId) {
+        Blog blog = blogService.createVote(blogId);
+        if (blog != null && blog.getVotes().size() > 0) {
+            blog.getVotes().get(blog.getVotes().size() - 1);
+        }
         return ResponseEntity.ok().body(new Response(true, "点赞成功", 1));
     }
 

@@ -48,12 +48,19 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Blog getBlogById(Long id) {
+        long start = System.currentTimeMillis();
         Optional<Blog> byId = blogRepository.findById(id);
         Blog blog = null;
         if (byId.isPresent()) {
             blog = byId.get();
         }
+        System.out.println(System.currentTimeMillis() - start + "ms cost!!!");
         return blog;
+    }
+
+    @Override
+    public Blog getBlogByCatalog(Long catalogId){
+        return blogDao.selectByCatalog(catalogId);
     }
 
     @Override

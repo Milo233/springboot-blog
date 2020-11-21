@@ -38,6 +38,8 @@ public interface BlogService {
 
     Page<Blog> listBlogsByKeywordByHot(String keyword, Pageable pageable);
 
+    Blog getBlogByCatalog(Long catalogId);
+
     /**
      * 根据用户名进行分页模糊查询（最新）
      */

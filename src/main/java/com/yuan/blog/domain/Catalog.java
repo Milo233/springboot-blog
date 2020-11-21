@@ -33,6 +33,11 @@ public class Catalog implements Serializable {
 		this.name = name;
 		this.user = user;
 	}
+	public Catalog(User user, String name,Long id) {
+		this.name = name;
+		this.user = user;
+		this.id = id;
+	}
 	
 	public Long getId() {
 		return id;

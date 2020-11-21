@@ -84,4 +84,15 @@
     delete from blog_comment
     where comment_id = #{id}
   </delete>
+  <select id="selectByCatalog" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from blog
+    where 1 = 1
+    <if test="_parameter != 0" >
+      and catalog_id = #{_parameter}
+    </if>
+    and vote_size = 0
+    order by rand() limit 1
+  </select>
 </mapper>

@@ -27,4 +27,6 @@ public interface BlogDao {
     int deleteComment(Long id);
 
     int deleteBlogComment(Long id);
+
+    Blog selectByCatalog(Long catalog);
 }

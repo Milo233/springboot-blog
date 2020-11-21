@@ -2,19 +2,9 @@ package com.yuan.blog.timer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.management.OperatingSystemMXBean;
-import com.yuan.blog.response.TodoResponse;
 import com.yuan.blog.service.SystemLogService;
-import com.yuan.blog.service.TodoService;
 import com.yuan.blog.util.Cache;
-import com.yuan.blog.util.StringUtils;
-import com.yuan.blog.util.TaskExecutor;
-import com.yuan.blog.vo.Poem.Data;
-import com.yuan.blog.vo.Poem.Origin;
 import com.yuan.blog.vo.Poem.PoemResponse;
-import com.yuan.blog.vo.Todo;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +23,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @EnableScheduling
 @Component
@@ -41,9 +33,7 @@ public class ScheduledTask {
 
     @Resource
     private SystemLogService systemLogService;
-    // å¿…é¡»æ”¾åœ¨springç®¡ç†çš„ç±»é‡Œæ‰èƒ½æ­£å¸¸æ³¨å…¥JavaMailSenderï¼Œå¦åˆ™å°±æ˜¯nullã€‚æ€€ç–‘æ˜¯ç±»å®ä¾‹åŒ–çš„æ—¶é—´å…ˆåæœ‰å…³
-    @Autowired
-    private TodoService todoService;
+    // ±ØĞë·ÅÔÚspring¹ÜÀíµÄÀàÀï²ÅÄÜÕı³£×¢ÈëJavaMailSender£¬·ñÔò¾ÍÊÇnull¡£»³ÒÉÊÇÀàÊµÀı»¯µÄÊ±¼äÏÈºóÓĞ¹Ø
     @Autowired
     public JavaMailSender mailSender;
     @Autowired
@@ -56,91 +46,10 @@ public class ScheduledTask {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
-//    @Scheduled(cron = "0 40 8 * * ?")
-//    @Scheduled(fixedRate = 1 * 60 * 1000 )
-    public void weatherReport() throws InterruptedException {
-        System.out.println(new Date());
-        Thread.sleep((long)(Math.random() * 1000 * 60 * 30));
-        System.out.println(new Date());
-        if (Math.random() > 0.3) {
-            log.info("cron å®šæ—¶ä»»åŠ¡ å‘å¤è¯— start");
-            Data poem = getPoemForPosting().getData();
-            Origin origin = poem.getOrigin();
-            String poemStr = poem.getContent();
-            poemStr += "--" + origin.getAuthor();
-            poemStr += "(" + origin.getDynasty() + ")";
-            poemStr += "ã€Š" + origin.getTitle() + "ã€‹";
-            postWeibo(poemStr);
-            log.info("cron å®šæ—¶ä»»åŠ¡ poem post over" + poemStr);
-            return;
-        }
-
-        log.info("cron å®šæ—¶ä»»åŠ¡ å‘å¾®åš");
-        String citys = "ä¿¡é˜³,æ·±åœ³";
-        String[] cityArr = citys.split(",");
-        StringBuilder sb = new StringBuilder();
-        for (String city : cityArr) {
-            sb.append("[").append(city).append("]").append("ä»Šå¤©");
-            try {
-                ResponseEntity<String> response = restTemplate.getForEntity("http://wthrcdn.etouch.cn/WeatherApi?city=" + city, String.class);
-                String strBody = response.getBody();
-                JSONObject xmlJSONObj = XML.toJSONObject(strBody);
-                JSONObject resp = xmlJSONObj.getJSONObject("resp");
-                JSONObject forecast = resp.getJSONObject("forecast");
-                JSONArray weather = forecast.getJSONArray("weather");
-                JSONObject today = weather.getJSONObject(0);
-                JSONObject day1 = weather.getJSONObject(1);
-                JSONObject day2 = weather.getJSONObject(2);
-
-                sb.append(StringUtils.getNumber(today.getString("low")));
-                sb.append("â„ƒ-");
-                sb.append(StringUtils.getNumber(today.getString("high"))).append("â„ƒ,");
-                String dayType = today.getJSONObject("day").getString("type");
-                String nightType = today.getJSONObject("night").getString("type");
-                if (dayType.equals(nightType)) {
-                    sb.append(dayType).append(",");
-                } else {
-                    sb.append("ç™½å¤©").append(dayType).append(",å¤œæ™š").append(nightType).append(",");
-                }
-                sb.append("æ˜å¤©");
-                sb.append(StringUtils.getNumber(day1.getString("low")));
-                sb.append("â„ƒ~");
-                sb.append(StringUtils.getNumber(day1.getString("high"))).append("â„ƒ,");
-                sb.append(day1.getJSONObject("day").getString("type")).append(",");
-
-                sb.append("åå¤©");
-                sb.append(StringUtils.getNumber(day2.getString("low")));
-                sb.append("â„ƒ~");
-                sb.append(StringUtils.getNumber(day2.getString("high"))).append("â„ƒ,");
-                sb.append(day2.getJSONObject("day").getString("type")).append("ã€‚");
-            } catch (Exception e) {
-                e.printStackTrace();
-                long failTime = System.currentTimeMillis();
-                log.error("failed to get weather for " + city + " " + failTime, e);
-                sb.append("æ²¡æ•°æ®å•Šï¼ï¼").append(e.getMessage()).append(failTime);
-            }
-        }
-        postWeibo(sb.toString());
-    }
-
-    /**
-     * è°ƒå‘é€å¾®åšçš„jaråŒ…
-     */
-    private void postWeibo(String content) {
-        String os = System.getProperty("os.name");
-        if (os.equalsIgnoreCase("Linux")) {
-            String command = "java -jar /root/tmp/weibo4j-oauth2.jar " + token + " " + content;
-            TaskExecutor.exec(command);
-        } else {
-            String command = "java -jar D:\\code\\weibo4j-oauth2.jar " + token + " " + content;
-            TaskExecutor.exec(command);
-        }
-    }
-
-    //@Scheduled(fixedRate = 4 * 60 * 60 * 1000 ) // 24h ä¸€æ¬¡ é¡¹ç›®ç¬¬ä¸€æ¬¡å¯åŠ¨æ—¶å°±ä¼šæ‰§è¡Œ å¤§éƒ¨åˆ†æ—¶å€™å¯åŠ¨æ—¶ä¼šæ‰§è¡Œä¸¤æ¬¡ã€‚ã€‚è¿˜æ˜¯ç”¨cronçš„å¥½
+    //@Scheduled(fixedRate = 4 * 60 * 60 * 1000 ) // 24h Ò»´Î ÏîÄ¿µÚÒ»´ÎÆô¶¯Ê±¾Í»áÖ´ĞĞ ´ó²¿·ÖÊ±ºòÆô¶¯Ê±»áÖ´ĞĞÁ½´Î¡£¡£»¹ÊÇÓÃcronµÄºÃ
     @Scheduled(cron = "0 53 22 * * ?")
     public void deleteSystemLog() {
-        log.info("cron å®šæ—¶ä»»åŠ¡ åˆ é™¤30å¤©ä»¥å‰çš„æ—¥å¿—(ç•™ä¸‹idå°äºã€ç­‰äº50çš„)");
+        log.info("cron ¶¨Ê±ÈÎÎñ É¾³ı30ÌìÒÔÇ°µÄÈÕÖ¾(ÁôÏÂidĞ¡ÓÚ¡¢µÈÓÚ50µÄ)");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -30);
         systemLogService.deleteLogsBefore(cal.getTime());
@@ -161,11 +70,11 @@ public class ScheduledTask {
         return poem;
     }
 
-    // æ¯å¤©è·å–å¤è¯—ä¿¡æ¯ ä»å¤–éƒ¨æ¥å£è·å–
-    // jsonå­—ç¬¦ä¸²è½¬javaå®ä½“ http://www.bejson.com/json2javapojo/new/
-//    @Scheduled(cron = "0 10 7 * * ?")
+    // Ã¿Ìì»ñÈ¡¹ÅÊ«ĞÅÏ¢ ´ÓÍâ²¿½Ó¿Ú»ñÈ¡
+    // json×Ö·û´®×ªjavaÊµÌå http://www.bejson.com/json2javapojo/new/
+    @Scheduled(cron = "0 10 7 * * ?")
     public void refreshPoems() {
-        log.info("cron å®šæ—¶ä»»åŠ¡ start get poems!");
+        log.info("cron ¶¨Ê±ÈÎÎñ start get poems!");
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-User-Token", "ZkGPsSMgyyXjw+muOnIqbaNmQ4iSgqfT");
         HttpEntity<String> requestEntity = new HttpEntity<String>(null, headers);
@@ -174,7 +83,7 @@ public class ScheduledTask {
         for (int x = 0; x < 3; x++) {
             ResponseEntity<String> response = restTemplate.exchange("https://v2.jinrishici.com/sentence", HttpMethod.GET, requestEntity, String.class);
             PoemResponse resp = null;
-            try {// å­—ç¬¦ä¸²è½¬æˆå®ä½“ç±» ååºåˆ—åŒ–
+            try {// ×Ö·û´®×ª³ÉÊµÌåÀà ·´ĞòÁĞ»¯
                 resp = mapper.readValue(response.getBody(), PoemResponse.class);
             } catch (IOException e) {
                 log.error("failed to readvalue for getPoems()", e);
@@ -183,69 +92,31 @@ public class ScheduledTask {
                 poems.add(resp);
             }
         }
-        if (!poems.isEmpty()) {// è®¾ç½®ä¸€å¤©æœ‰æ•ˆæœŸ
+        if (!poems.isEmpty()) {// ÉèÖÃÒ»ÌìÓĞĞ§ÆÚ
             Cache.put(Cache.POEMS_PERFIX, poems, 1000 * 60 * 60 * 24);
         }
 
     }
 
-    // æ¯10åˆ†é’Ÿç§»é™¤ä¸€æ¬¡è¿‡æœŸçš„ç¼“å­˜
+    // Ã¿10·ÖÖÓÒÆ³ıÒ»´Î¹ıÆÚµÄ»º´æ
     @Scheduled(fixedRate = 10 * 60 * 1000)
     public void removeExpireCache() {
         int count = Cache.removeExpireCache();
         if (count > 0) {
-            log.info("å®šæ—¶ä»»åŠ¡ ç§»é™¤ ç¼“å­˜æ•°æ®æ•°é‡ï¼š" + count);
-        }
-    }
-
-    //        @Scheduled(fixedRate = 1 * 60 * 1000)
-//    @Scheduled(cron = "0 13 19,8 * * ?")
-    public void todoNotify() {
-        // æŸ¥è¯¢éœ€è¦é€šçŸ¥çš„ å¾…åŠäº‹é¡¹
-        try {
-            int count = 0;
-            log.info("scheduled task of sending notify email startï¼š");
-            Todo queryParam = new Todo();
-            queryParam.setNotify(1);
-            queryParam.setStatus(0); //æœªå®Œæˆ
-            List<TodoResponse> todoList = todoService.queryForNotify(queryParam);
-            if (todoList != null && todoList.size() > 0) {
-                Map<String, List<TodoResponse>> userMap = new HashMap<>();
-                for (TodoResponse todo : todoList) {
-                    if (userMap.containsKey(todo.getEmail())) {
-                        userMap.get(todo.getEmail()).add(todo);
-                    } else {
-                        List<TodoResponse> list = new ArrayList<>();
-                        list.add(todo);
-                        userMap.put(todo.getEmail(), list);
-                    }
-                }
-                for (String email : userMap.keySet()) {
-                    List<TodoResponse> todos = userMap.get(email);
-                    StringBuilder sb = new StringBuilder();
-                    for (int x = 0; x < todos.size(); x++) {
-                        sb.append(x).append(",").append(todos.get(x).getContent()).append(".");
-                    }
-                    sendMail(email, sb.toString(), todos.size() + " é¡¹å¾…åŠçš„ä»»åŠ¡è¿˜æ²¡å¤„ç†ï¼");
-                    count++;
-                }
-            }
-            log.info("scheduled task of sending notify email end,count " + count);
-        } catch (Exception e) {
-            log.error("failed to todoNotify " + e);
+            log.info("¶¨Ê±ÈÎÎñ ÒÆ³ı »º´æÊı¾İÊıÁ¿£º" + count);
         }
     }
 
     private void sendMail(String to, String text, String subject) {
         long start = System.currentTimeMillis();
-        // çº¯æ–‡æœ¬é‚®ä»¶ã€‚æ”¯æŒhtml or é™„ä»¶éœ€è¦MimeMessage
+        // ´¿ÎÄ±¾ÓÊ¼ş¡£Ö§³Öhtml or ¸½¼şĞèÒªMimeMessage
         // todo https://blog.csdn.net/larger5/article/details/80534887
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(username);
-            message.setTo(to); // æ”¶ä»¶äºº
-            message.setSubject(subject);//ä¸»é¢˜
-            message.setText(text); // æ­£æ–‡
+            message.setTo(to); // ÊÕ¼şÈË
+            message.setSubject(subject);//Ö÷Ìâ
+            message.setText(text); // ÕıÎÄ
             mailSender.send(message);
         } catch (Exception e) {
             e.printStackTrace();
@@ -254,8 +125,8 @@ public class ScheduledTask {
         log.info("sendmail cost time " + (System.currentTimeMillis() - start) + " ms");
     }
 
-    // æ¯åˆ†é’Ÿæ‰“å°ä¸€æ¬¡å†…å­˜ ä¿¡æ¯åˆ°æ—¥å¿—æ–‡ä»¶
-    @Scheduled(fixedRate = 60 * 1000)
+    // Ã¿·ÖÖÓ´òÓ¡Ò»´ÎÄÚ´æ ĞÅÏ¢µ½ÈÕÖ¾ÎÄ¼ş
+    @Scheduled(fixedRate = 60 * 1000 * 5)
     public void printMemoryInfo() {
         int byteToMb = 1024 * 1024;
         Runtime rt = Runtime.getRuntime();
@@ -264,29 +135,29 @@ public class ScheduledTask {
         long vmMax = rt.maxMemory() / byteToMb;
         long vmUse = vmTotal - vmFree;
         log.info("================ start  ===============");
-        log.info("JVMå†…å­˜å·²ç”¨çš„ç©ºé—´ä¸ºï¼š" + vmUse + " MB");
-        log.info("JVMå†…å­˜çš„ç©ºé—²ç©ºé—´ä¸ºï¼š" + vmFree + " MB");
-        log.info("JVMæ€»å†…å­˜ç©ºé—´ä¸º(Xms)ï¼š" + vmTotal + " MB");
-        log.info("JVM å¯ç”¨æœ€å¤§å†…å­˜ç©ºé—´(Xmx)ï¼š" + vmMax + " MB");
-        // æ“ä½œç³»ç»Ÿçº§å†…å­˜æƒ…å†µæŸ¥è¯¢
+        log.info("JVMÄÚ´æÒÑÓÃµÄ¿Õ¼äÎª£º" + vmUse + " MB");
+        log.info("JVMÄÚ´æµÄ¿ÕÏĞ¿Õ¼äÎª£º" + vmFree + " MB");
+        log.info("JVM×ÜÄÚ´æ¿Õ¼äÎª(Xms)£º" + vmTotal + " MB");
+        log.info("JVM ¿ÉÓÃ×î´óÄÚ´æ¿Õ¼ä(Xmx)£º" + vmMax + " MB");
+        // ²Ù×÷ÏµÍ³¼¶ÄÚ´æÇé¿ö²éÑ¯
         OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         String os = System.getProperty("os.name");
         long physicalFree = osmxb.getFreePhysicalMemorySize() / byteToMb;
         long physicalTotal = osmxb.getTotalPhysicalMemorySize() / byteToMb;
         long physicalUse = physicalTotal - physicalFree;
-        log.info("æ“ä½œç³»ç»Ÿçš„ç‰ˆæœ¬ï¼š" + os);
-        log.info("æ“ä½œç³»ç»Ÿç‰©ç†å†…å­˜å·²ç”¨çš„ç©ºé—´ä¸ºï¼š" + physicalFree + " MB");
-        log.info("æ“ä½œç³»ç»Ÿç‰©ç†å†…å­˜çš„ç©ºé—²ç©ºé—´ä¸ºï¼š" + physicalUse + " MB");
-        log.info("æ“ä½œç³»ç»Ÿæ€»ç‰©ç†å†…å­˜ï¼š" + physicalTotal + " MB");
+        log.info("²Ù×÷ÏµÍ³µÄ°æ±¾£º" + os);
+        log.info("²Ù×÷ÏµÍ³ÎïÀíÄÚ´æÒÑÓÃµÄ¿Õ¼äÎª£º" + physicalFree + " MB");
+        log.info("²Ù×÷ÏµÍ³ÎïÀíÄÚ´æµÄ¿ÕÏĞ¿Õ¼äÎª£º" + physicalUse + " MB");
+        log.info("²Ù×÷ÏµÍ³×ÜÎïÀíÄÚ´æ£º" + physicalTotal + " MB");
 
-        // è·å¾—çº¿ç¨‹æ€»æ•°
+        // »ñµÃÏß³Ì×ÜÊı
         ThreadGroup parentThread;
         int totalThread = 0;
         for (parentThread = Thread.currentThread().getThreadGroup(); parentThread
                 .getParent() != null; parentThread = parentThread.getParent()) {
             totalThread = parentThread.activeCount();
         }
-        log.info("è·å¾—çº¿ç¨‹æ€»æ•°:" + totalThread);
+        log.info("»ñµÃÏß³Ì×ÜÊı:" + totalThread);
         log.info("================ end  ===============");
     }
 }

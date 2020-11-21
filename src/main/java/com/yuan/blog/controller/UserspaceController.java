@@ -219,25 +219,44 @@ public class UserspaceController {
             }
         }
 
-        // 判断操作用户的点赞情况 有的话前端展示取消，没有的话可以点赞
-        List<Vote> votes = blog.getVotes();
-        Vote currentVote = null; // 当前用户的点赞情况
-
-        if (principal != null) {
-            for (Vote vote : votes) {
-                // 从博客的vote列表里查出当前用户的点赞 vote 返回给页面
-                if (vote.getUser().getUsername().equals(principal.getUsername())) {
-                    currentVote = vote;
-                    break;
-                }
-            }
-        }
         model.addAttribute("isBlogOwner", isBlogOwner);
-        model.addAttribute("blogModel", blogService.getBlogById(id));
-        model.addAttribute("currentVote", currentVote);
+        model.addAttribute("blogModel", blog);
         model.addAttribute("keyword", keyword);
         return "userspace/blog";
     }
+
+    /**
+     *  random query one by catalog
+     *  if catalog is 0, query without catalog limit
+     */
+    @GetMapping("/{username}/blogs/random/{catalog}")
+    public String getBlogByCatalog(@PathVariable("username") String username, @PathVariable("catalog") Long catalog,
+                              Model model, @RequestParam(value = "keyword", required = false) String keyword) {
+        Blog blog = blogService.getBlogByCatalog(catalog);
+        boolean isBlogOwner = false;
+        // 判断操作用户是否是博客的所有者
+        User principal = NetUtil.getCurrentUser(false);
+        if (principal != null && username.equals(principal.getUsername())) {
+            isBlogOwner = true;
+        }
+        // 判断是否可以查看博客 0私密博客，1开放博客
+        // 公开博客，所有人可以看，加密的只有 自己or管理员 可以看
+        if (blog.getOpen() == 0 && !isBlogOwner) {// 加密博客 且不是owner
+            if (principal == null) return "error"; // 未登陆 直接返回error
+            // 已登陆 但是不是加密博客
+            if (!Authority.NAME_ADMIN.equals(principal.getFirstAuthority())) {
+                return "error";
+            }
+        }
+        blog.setUser(new User("milo","milo","777@qq.com","*"));
+        Catalog catalog1 = new Catalog(null,"",catalog);
+        blog.setCatalog(catalog1);
+        model.addAttribute("isBlogOwner", isBlogOwner);
+        model.addAttribute("blogModel", blog);
+        model.addAttribute("keyword", keyword);
+        return "userspace/blog";
+    }
+
 
     /**
      * 获取新增博客的界面
