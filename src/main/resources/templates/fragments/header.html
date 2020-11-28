@@ -6,11 +6,12 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Milo's Blog</title>
-    <link rel="shortcut icon" th:href="@{/images/icon.ico}">
-
+    <link rel="shortcut icon" href="http://assets.alicdn.com/p/mall/base/favicon.ico">
     <!-- CSRF 处理跨域防护后 除了get请求的其他请求会被拦截的问题
         除了携带token 也可以禁用crsf不过不安全-->
     <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!--  try to use weibo for image storage  -->
+    <meta name="referrer" content="no-referrer" />
     <!-- default header name is X-CSRF-TOKEN -->
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}" rel="stylesheet">

@@ -3,7 +3,6 @@ package com.yuan.blog.controller;
 import com.yuan.blog.domain.User;
 import com.yuan.blog.response.TodoResponse;
 import com.yuan.blog.service.TodoService;
-import com.yuan.blog.timer.ScheduledTask;
 import com.yuan.blog.util.NetUtil;
 import com.yuan.blog.vo.Response;
 import com.yuan.blog.vo.Todo;
